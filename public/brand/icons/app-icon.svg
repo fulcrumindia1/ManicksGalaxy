@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="512" viewBox="0 0 512 512">
+<defs>
+  <radialGradient id="bg"><stop stop-color="#0c1738"/><stop offset="1" stop-color="#030817"/></radialGradient>
+  <linearGradient id="outer" x1="0" x2="1" y1="1" y2="0"><stop stop-color="#1597ff"/><stop offset="0.47" stop-color="#67ebfc"/><stop offset="1" stop-color="#9b6bff"/></linearGradient>
+  <linearGradient id="inner" x1="0" x2="1" y1="0" y2="1"><stop stop-color="#e26cf4"/><stop offset="0.55" stop-color="#7963e9"/><stop offset="1" stop-color="#27c6ee"/></linearGradient>
+  <radialGradient id="core"><stop stop-color="#fffbe1"/><stop offset="0.31" stop-color="#ffdd73"/><stop offset="0.75" stop-color="#ff9449"/><stop offset="1" stop-color="#f46dc7"/></radialGradient>
+  <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="7"/></filter>
+</defs>
+<rect x="0" y="0" width="512" height="512" rx="116" fill="url(#bg)"/>
+<g fill="none" stroke-linecap="round">
+  <path d="M91 311 C63 194 163 88 280 90 C373 91 428 148 430 232" stroke="url(#outer)" stroke-width="25" opacity=".24" filter="url(#glow)"/>
+  <path d="M91 311 C63 194 163 88 280 90 C373 91 428 148 430 232" stroke="url(#outer)" stroke-width="23"/>
+  <path d="M423 196 C459 321 345 430 222 408 C137 392 104 326 111 271" stroke="url(#inner)" stroke-width="22"/>
+  <path d="M152 336 C172 390 254 400 320 356 C387 312 374 217 302 194 C246 176 200 213 209 255" stroke="#2ed8f4" stroke-width="20"/>
+  <path d="M360 225 C340 163 248 151 201 206 C168 245 184 296 229 310 C275 325 309 286 293 252" stroke="#b56eff" stroke-width="20"/>
+  <path d="M222 231 C249 215 288 224 301 258 C311 286 286 318 258 318 C238 318 219 302 219 282" stroke="#ffac62" stroke-width="21"/>
+</g>
+<circle cx="255" cy="270" r="32" fill="url(#core)"/>
+<path d="M418 79 L429 103 L453 114 L429 124 L418 148 L408 124 L384 114 L408 103Z" fill="#ffe5a1"/>
+<circle cx="104" cy="147" r="5" fill="#a0efff"/><circle cx="388" cy="378" r="5" fill="#81b7ff"/>
+</svg>

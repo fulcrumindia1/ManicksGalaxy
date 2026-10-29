@@ -1,0 +1,27 @@
+{
+  "name": "ManicksGalaxy",
+  "short_name": "ManicksGalaxy",
+  "description": "Explore planets, moons, galaxies and the universe in an immersive interactive planetarium.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030817",
+  "theme_color": "#030817",
+  "icons": [
+    {
+      "src": "/brand/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/brand/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
