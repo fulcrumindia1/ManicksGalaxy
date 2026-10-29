@@ -121,9 +121,11 @@ export function computeComparisonRadii(
   const diameterRatio = safeA / safeB;
 
   if (mode === 'true-scale') {
+    // True Scale: exact physical diameter proportion with no artificial minimum size clamp.
+    // Extremely small bodies (e.g. Pluto vs Sun) scale down to their genuine physical ratio.
     return {
-      radiusFractionA: Math.max(0.015, safeA / maxD),
-      radiusFractionB: Math.max(0.015, safeB / maxD),
+      radiusFractionA: safeA / maxD,
+      radiusFractionB: safeB / maxD,
       diameterRatio,
     };
   }

@@ -1,6 +1,16 @@
-import React, { useMemo, useState } from 'react';
-import { Pause, Play, Scale, Search } from 'lucide-react';
+import React, { useMemo, useRef, useState } from 'react';
+import {
+  Eye,
+  EyeOff,
+  Maximize2,
+  Minimize2,
+  Pause,
+  Play,
+  Scale,
+  Search,
+} from 'lucide-react';
 import { CELESTIAL_CATALOG, CelestialCategory } from '../data/catalog';
+import { useFullscreen } from '../lib/useFullscreen';
 import { UserPreferences } from '../lib/voyageStore';
 import { PlanetSceneCanvas } from '../three/PlanetSceneCanvas';
 import { AppRoute } from './Header';
@@ -26,6 +36,15 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [timeSpeed, setTimeSpeed] = useState<number>(15);
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [highlightedSlug, setHighlightedSlug] = useState<string>('saturn');
+
+  const solarMapContainerRef = useRef<HTMLDivElement | null>(null);
+  const {
+    isFullscreen,
+    isCinematic,
+    toggleFullscreen,
+    toggleCinematic,
+    exitFullscreen,
+  } = useFullscreen(solarMapContainerRef, { enableKeyboardShortcut: true });
 
   const filteredObjects = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -98,8 +117,16 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
       {/* Mode A: Interactive 3D Solar System Orbital Map */}
       {viewTab === 'solar-map' && (
-        <section className="max-w-[1280px] mx-auto px-4 sm:px-6 py-6">
-          <div className="rounded-2xl border border-white/15 bg-[#060B18] overflow-hidden relative h-[520px] sm:h-[600px]">
+        <section className={`${isFullscreen ? 'p-0' : 'max-w-[1280px] mx-auto px-4 sm:px-6 py-6'}`}>
+          <div
+            ref={solarMapContainerRef}
+            data-testid="solar-map-stage"
+            className={`transition-all overflow-hidden relative ${
+              isFullscreen
+                ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen bg-[#030713]'
+                : 'rounded-2xl border border-white/15 bg-[#060B18] h-[520px] sm:h-[600px] shadow-2xl'
+            }`}
+          >
             <PlanetSceneCanvas
               mode="solar-system"
               objectSlug={highlightedSlug}
@@ -114,94 +141,147 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             />
 
             {/* Top-left transparent scale honesty notice */}
-            <div className="absolute top-4 left-4 z-10 pointer-events-none bg-[#050B1A]/90 border border-white/15 rounded-xl px-4 py-2.5 max-w-md">
-              <div className="text-xs font-semibold text-[#F7FAFF]">
-                Heliocentric Ecliptic Overview · DATA-BASED
+            {!isCinematic && (
+              <div className="absolute top-4 left-4 z-10 pointer-events-none bg-[#050B1A]/90 border border-white/15 rounded-xl px-4 py-2.5 max-w-md shadow-lg">
+                <div className="text-xs font-semibold text-[#F7FAFF]">
+                  Heliocentric Ecliptic Overview · DATA-BASED
+                </div>
+                <p className="text-[11px] text-[#B8C4DE] mt-0.5">
+                  {scaleMode === 'educational'
+                    ? 'Educational spacing & compressed planet radii active so rocky worlds remain visible alongside Jupiter and Saturn.'
+                    : 'True Planet-to-Planet Radius Ratios active (Jupiter 11× Earth); orbital distances remain compressed to fit viewport.'}
+                </p>
               </div>
-              <p className="text-[11px] text-[#B8C4DE] mt-0.5">
-                {scaleMode === 'educational'
-                  ? 'Educational spacing & compressed planet radii active so rocky worlds remain visible alongside Jupiter and Saturn.'
-                  : 'True Planet-to-Planet Radius Ratios active (Jupiter 11× Earth); orbital distances remain compressed to fit viewport.'}
-              </p>
-            </div>
+            )}
+
+            {/* Top-right Fullscreen & Cinematic Action Buttons */}
+            {!isCinematic ? (
+              <div className="absolute top-4 right-4 z-20 flex items-center gap-1.5 p-1.5 rounded-xl bg-[#030713]/80 backdrop-blur-md border border-white/20 shadow-lg">
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  title={isFullscreen ? 'Exit Fullscreen (Esc or F)' : 'Fullscreen Orrery (F)'}
+                  aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen Solar System'}
+                  className="p-2 rounded-lg text-[#B8C4DE] hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  {isFullscreen ? (
+                    <Minimize2 className="w-4 h-4 text-[#79D9ED]" />
+                  ) : (
+                    <Maximize2 className="w-4 h-4" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={toggleCinematic}
+                  title="Cinematic Mode (C) - Hide UI overlays"
+                  aria-label="Toggle Cinematic Mode"
+                  className="p-2 rounded-lg text-[#B8C4DE] hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  <Eye className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="absolute top-4 right-4 z-30 pointer-events-auto">
+                <button
+                  type="button"
+                  onClick={toggleCinematic}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#030713]/85 backdrop-blur-md border border-white/20 text-xs text-[#B8C4DE] hover:text-white transition-all shadow-lg"
+                >
+                  <EyeOff className="w-3.5 h-3.5 text-[#79D9ED]" />
+                  <span>Cinematic Mode · Tap or press [C] to restore controls</span>
+                </button>
+              </div>
+            )}
 
             {/* Bottom Unified Control Dock */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[min(920px,94%)] bg-[#091224]/95 border border-white/15 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => setOrbitsPaused((prev) => !prev)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7FAFF] text-[#030713] text-xs font-semibold hover:bg-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
-                >
-                  {orbitsPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
-                  <span>{orbitsPaused ? 'Play Orbits' : 'Pause Orbits'}</span>
-                </button>
+            {!isCinematic && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 w-[min(940px,94%)] bg-[#091224]/95 backdrop-blur-md border border-white/15 rounded-xl px-4 py-3 flex flex-wrap items-center justify-between gap-3 shadow-2xl">
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setOrbitsPaused((prev) => !prev)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#F7FAFF] text-[#030713] text-xs font-semibold hover:bg-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+                  >
+                    {orbitsPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+                    <span>{orbitsPaused ? 'Play Orbits' : 'Pause Orbits'}</span>
+                  </button>
 
-                <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#030713] border border-white/10 text-xs">
-                  <label htmlFor="orbit-speed-slider" className="text-[#B8C4DE] whitespace-nowrap">
-                    Rate: <span className="font-mono text-[#F7FAFF]">{timeSpeed} d/s</span>
-                  </label>
-                  <input
-                    id="orbit-speed-slider"
-                    type="range"
-                    min={1}
-                    max={90}
-                    value={timeSpeed}
-                    onChange={(e) => setTimeSpeed(Number(e.target.value))}
-                    className="w-20 accent-[#79D9ED]"
-                  />
+                  <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#030713] border border-white/10 text-xs">
+                    <label htmlFor="orbit-speed-slider" className="text-[#B8C4DE] whitespace-nowrap">
+                      Rate: <span className="font-mono text-[#F7FAFF]">{timeSpeed} d/s</span>
+                    </label>
+                    <input
+                      id="orbit-speed-slider"
+                      type="range"
+                      min={1}
+                      max={90}
+                      value={timeSpeed}
+                      onChange={(e) => setTimeSpeed(Number(e.target.value))}
+                      className="w-20 accent-[#79D9ED]"
+                    />
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setScaleMode((prev) => (prev === 'educational' ? 'true-ratios' : 'educational'))
+                    }
+                    className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#F7FAFF] hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+                  >
+                    Scale: {scaleMode === 'educational' ? 'Educational' : 'True Planet Ratios'}
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setShowLabels((prev) => !prev)}
+                    aria-pressed={showLabels}
+                    className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#B8C4DE] hover:text-white transition-colors whitespace-nowrap shrink-0"
+                  >
+                    Axes: {showLabels ? 'On' : 'Off'}
+                  </button>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    setScaleMode((prev) => (prev === 'educational' ? 'true-ratios' : 'educational'))
-                  }
-                  className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#F7FAFF] hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
-                >
-                  Scale: {scaleMode === 'educational' ? 'Educational' : 'True Planet Ratios'}
-                </button>
+                {/* Quick Fly-To Planet Selector & Fullscreen Toggle */}
+                <div className="flex items-center gap-2">
+                  <label htmlFor="quick-planet-jump" className="text-xs text-[#B8C4DE] whitespace-nowrap">
+                    Inspect World:
+                  </label>
+                  <select
+                    id="quick-planet-jump"
+                    value={highlightedSlug}
+                    onChange={(e) => setHighlightedSlug(e.target.value)}
+                    className="px-2.5 py-1.5 rounded-lg bg-[#030713] border border-white/20 text-xs text-[#F7FAFF]"
+                  >
+                    <option value="sun">The Sun</option>
+                    <option value="mercury">Mercury</option>
+                    <option value="venus">Venus</option>
+                    <option value="earth">Earth</option>
+                    <option value="mars">Mars</option>
+                    <option value="jupiter">Jupiter</option>
+                    <option value="saturn">Saturn</option>
+                    <option value="uranus">Uranus</option>
+                    <option value="neptune">Neptune</option>
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => onInspectObject(highlightedSlug)}
+                    className="px-3.5 py-1.5 rounded-lg bg-[#79D9ED] text-[#030713] text-xs font-semibold hover:bg-[#9BE4F4] transition-colors whitespace-nowrap shrink-0"
+                  >
+                    Open 360° ↗
+                  </button>
 
-                <button
-                  type="button"
-                  onClick={() => setShowLabels((prev) => !prev)}
-                  aria-pressed={showLabels}
-                  className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#B8C4DE] hover:text-white transition-colors whitespace-nowrap shrink-0"
-                >
-                  Axes: {showLabels ? 'On' : 'Off'}
-                </button>
+                  {isFullscreen && (
+                    <button
+                      type="button"
+                      onClick={exitFullscreen}
+                      className="ml-1 px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-950/40 text-red-300 border border-red-500/30 hover:bg-red-900/50"
+                    >
+                      Exit Fullscreen
+                    </button>
+                  )}
+                </div>
               </div>
-
-              {/* Quick Fly-To Planet Selector */}
-              <div className="flex items-center gap-2">
-                <label htmlFor="quick-planet-jump" className="text-xs text-[#B8C4DE] whitespace-nowrap">
-                  Inspect World:
-                </label>
-                <select
-                  id="quick-planet-jump"
-                  value={highlightedSlug}
-                  onChange={(e) => setHighlightedSlug(e.target.value)}
-                  className="px-2.5 py-1.5 rounded-lg bg-[#030713] border border-white/20 text-xs text-[#F7FAFF]"
-                >
-                  <option value="sun">The Sun</option>
-                  <option value="mercury">Mercury</option>
-                  <option value="venus">Venus</option>
-                  <option value="earth">Earth</option>
-                  <option value="mars">Mars</option>
-                  <option value="jupiter">Jupiter</option>
-                  <option value="saturn">Saturn</option>
-                  <option value="uranus">Uranus</option>
-                  <option value="neptune">Neptune</option>
-                </select>
-                <button
-                  type="button"
-                  onClick={() => onInspectObject(highlightedSlug)}
-                  className="px-3.5 py-1.5 rounded-lg bg-[#79D9ED] text-[#030713] text-xs font-semibold hover:bg-[#9BE4F4] transition-colors whitespace-nowrap shrink-0"
-                >
-                  Open 360° ↗
-                </button>
-              </div>
-            </div>
+            )}
           </div>
         </section>
       )}

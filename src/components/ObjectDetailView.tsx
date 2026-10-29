@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   ChevronDown,
   ChevronUp,
   Eye,
+  EyeOff,
   GraduationCap,
+  Maximize2,
+  Minimize2,
   Pause,
   Play,
   RotateCcw,
@@ -12,6 +15,7 @@ import {
 } from 'lucide-react';
 import { CELESTIAL_CATALOG, getObjectBySlug } from '../data/catalog';
 import { ReadingDepth, ShowBookmark, UserPreferences } from '../lib/voyageStore';
+import { useFullscreen } from '../lib/useFullscreen';
 import { CameraPreset, PlanetSceneCanvas } from '../three/PlanetSceneCanvas';
 import { DeepSkyObservationPlate } from './DeepSkyObservationPlate';
 import { AppRoute } from './Header';
@@ -60,6 +64,15 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
     nonce: number;
   }>({ yawDeg: 0, pitchDeg: 0, zoomScale: 1, nonce: 0 });
 
+  const viewportRef = useRef<HTMLDivElement | null>(null);
+  const {
+    isFullscreen,
+    isCinematic,
+    toggleFullscreen,
+    toggleCinematic,
+    exitFullscreen,
+  } = useFullscreen(viewportRef, { enableKeyboardShortcut: true });
+
   // Reset preset when switching objects
   useEffect(() => {
     setCameraPreset(object.visual.hasRings ? 'rings' : 'default');
@@ -97,47 +110,96 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#030713] text-[#F7FAFF] flex flex-col lg:flex-row">
       {/* Left/Center 70% Immersive Viewport */}
-      <div className="flex-1 relative flex flex-col justify-between min-h-[520px] lg:min-h-[calc(100vh-4rem)] overflow-hidden">
+      <div
+        ref={viewportRef}
+        data-testid="object-viewport"
+        className={`flex-1 relative flex flex-col justify-between overflow-hidden transition-all ${
+          isFullscreen
+            ? 'fixed inset-0 z-50 w-screen h-screen bg-[#030713]'
+            : 'min-h-[520px] lg:min-h-[calc(100vh-4rem)]'
+        }`}
+      >
         {/* Top Breadcrumb & Return-to-Show Bar */}
-        <div className="relative z-20 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 bg-[#030713]/92 border-b border-white/10">
-          <div className="flex flex-wrap items-center gap-2.5 text-xs">
-            <button
-              type="button"
-              onClick={() => onNavigate('explore')}
-              className="inline-flex items-center gap-1.5 text-[#B8C4DE] hover:text-white font-medium transition-colors whitespace-nowrap shrink-0"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>Explorer</span>
-            </button>
-            <span className="text-white/30" aria-hidden="true">/</span>
-            <span className="text-[#F7FAFF] font-semibold">{object.name}</span>
-            <span className="text-white/30" aria-hidden="true">·</span>
-            <span className="font-mono text-[#79D9ED]">
-              {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {showBookmark && (
+        {!isCinematic ? (
+          <div className="relative z-20 px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3 bg-[#030713]/92 border-b border-white/10">
+            <div className="flex flex-wrap items-center gap-2.5 text-xs">
               <button
                 type="button"
-                onClick={onReturnToShow}
-                className="px-3.5 py-1.5 rounded-lg bg-[#D7B77B] text-[#030713] text-xs font-semibold hover:bg-[#e6c993] transition-colors whitespace-nowrap shrink-0"
+                onClick={() => onNavigate('explore')}
+                className="inline-flex items-center gap-1.5 text-[#B8C4DE] hover:text-white font-medium transition-colors whitespace-nowrap shrink-0"
               >
-                Return to Show (Ch. {showBookmark.chapterIndex + 1}) ↗
+                <ArrowLeft className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Explorer</span>
               </button>
-            )}
+              <span className="text-white/30" aria-hidden="true">/</span>
+              <span className="text-[#F7FAFF] font-semibold">{object.name}</span>
+              <span className="text-white/30" aria-hidden="true">·</span>
+              <span className="font-mono text-[#79D9ED]">
+                {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
+              </span>
+            </div>
 
+            <div className="flex items-center gap-2">
+              {showBookmark && (
+                <button
+                  type="button"
+                  onClick={onReturnToShow}
+                  className="px-3.5 py-1.5 rounded-lg bg-[#D7B77B] text-[#030713] text-xs font-semibold hover:bg-[#e6c993] transition-colors whitespace-nowrap shrink-0"
+                >
+                  Return to Show (Ch. {showBookmark.chapterIndex + 1}) ↗
+                </button>
+              )}
+
+              {!isFullscreen && (
+                <button
+                  type="button"
+                  onClick={() => setDrawerOpen((prev) => !prev)}
+                  aria-expanded={drawerOpen}
+                  className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#F7FAFF] hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+                >
+                  {drawerOpen ? 'Hide Encyclopedia' : 'Show Encyclopedia'}
+                </button>
+              )}
+
+              {/* Fullscreen & Cinematic Action Dock */}
+              <div className="flex items-center gap-1 border-l border-white/15 pl-2 ml-1">
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  title={isFullscreen ? 'Exit Fullscreen (Esc or F)' : 'Fullscreen 360° Dome (F)'}
+                  aria-label={isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen Stage'}
+                  className="p-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#B8C4DE] hover:text-white hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+                >
+                  {isFullscreen ? (
+                    <Minimize2 className="w-3.5 h-3.5 text-[#79D9ED]" />
+                  ) : (
+                    <Maximize2 className="w-3.5 h-3.5" />
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={toggleCinematic}
+                  title="Cinematic Mode (C) - Hide UI overlays"
+                  aria-label="Toggle Cinematic Mode"
+                  className="p-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#B8C4DE] hover:text-white hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+                >
+                  <Eye className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="relative z-30 p-4 flex justify-end pointer-events-none">
             <button
               type="button"
-              onClick={() => setDrawerOpen((prev) => !prev)}
-              aria-expanded={drawerOpen}
-              className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#F7FAFF] hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
+              onClick={toggleCinematic}
+              className="pointer-events-auto flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#030713]/85 backdrop-blur-md border border-white/20 text-xs text-[#B8C4DE] hover:text-white transition-all shadow-lg"
             >
-              {drawerOpen ? 'Hide Encyclopedia' : 'Show Encyclopedia'}
+              <EyeOff className="w-3.5 h-3.5 text-[#79D9ED]" />
+              <span>Cinematic Mode · Tap or press [C] to restore controls</span>
             </button>
           </div>
-        </div>
+        )}
 
         {/* Central Unobstructed 3D / Observation Viewport */}
         <div className="flex-1 relative min-h-[380px]">
@@ -165,22 +227,24 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
           )}
 
           {/* Top-Left Minimal Spec & Authenticity Provenance Overlay */}
-          <div className="relative z-10 pointer-events-none p-4 sm:p-5 max-w-md">
-            <div className="inline-block bg-[#060C1C]/90 border border-white/15 rounded-xl px-3.5 py-2">
-              <div className="text-[11px] font-mono text-[#79D9ED]">
-                {object.isOrbitable3D ? '360° ORBITABLE 3D MODEL' : 'ASTRONOMICAL OBSERVATION'} ·{' '}
-                {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
+          {!isCinematic && (
+            <div className="relative z-10 pointer-events-none p-4 sm:p-5 max-w-md">
+              <div className="inline-block bg-[#060C1C]/90 border border-white/15 rounded-xl px-3.5 py-2">
+                <div className="text-[11px] font-mono text-[#79D9ED]">
+                  {object.isOrbitable3D ? '360° ORBITABLE 3D MODEL' : 'ASTRONOMICAL OBSERVATION'} ·{' '}
+                  {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
+                </div>
+                <p className="text-[11px] text-[#B8C4DE] mt-0.5 leading-snug">
+                  {object.slug === 'venus' && surfaceVariant === 'radar'
+                    ? 'NASA Magellan Synthetic Aperture Radar (SAR) false-color topographic altimetry penetrating the opaque cloud deck.'
+                    : object.authenticityNote}
+                </p>
               </div>
-              <p className="text-[11px] text-[#B8C4DE] mt-0.5 leading-snug">
-                {object.slug === 'venus' && surfaceVariant === 'radar'
-                  ? 'NASA Magellan Synthetic Aperture Radar (SAR) false-color topographic altimetry penetrating the opaque cloud deck.'
-                  : object.authenticityNote}
-              </p>
             </div>
-          </div>
+          )}
 
           {/* Collapsible Unified Bottom Camera Control Dock (3D Objects only) */}
-          {object.isOrbitable3D && (
+          {!isCinematic && object.isOrbitable3D && (
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-[min(920px,94%)] flex flex-col items-center">
               <button
                 type="button"
@@ -353,6 +417,19 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                     <RotateCcw className="w-3 h-3" aria-hidden="true" />
                     <span>Reset</span>
                   </button>
+
+                  <span className="h-4 w-px bg-white/15 mx-0.5 hidden sm:inline-block" aria-hidden="true" />
+
+                  {/* Fullscreen Button in Dock */}
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    title={isFullscreen ? 'Exit Fullscreen (Esc or F)' : 'Fullscreen 360° Dome (F)'}
+                    className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-white/15 bg-[#030713] text-xs text-[#B8C4DE] hover:text-white whitespace-nowrap shrink-0"
+                  >
+                    {isFullscreen ? <Minimize2 className="w-3 h-3 text-[#79D9ED]" /> : <Maximize2 className="w-3 h-3" />}
+                    <span>{isFullscreen ? 'Exit' : 'Fullscreen'}</span>
+                  </button>
                 </div>
               )}
             </div>
@@ -361,7 +438,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
       </div>
 
       {/* Right 30% Collapsible Knowledge & Provenance Drawer */}
-      {drawerOpen && (
+      {!isFullscreen && drawerOpen && (
         <aside
           aria-label={`${object.name} encyclopedia panel`}
           className="w-full lg:w-[410px] xl:w-[440px] border-t lg:border-t-0 lg:border-l border-white/10 bg-[#080F20] p-6 sm:p-7 overflow-y-auto lg:max-h-[calc(100vh-4rem)] shrink-0 space-y-6"
