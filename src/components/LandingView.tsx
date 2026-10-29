@@ -143,18 +143,16 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     <button
                       type="button"
                       onClick={() => setHeroBody('saturn')}
-                      className={`px-2.5 py-1 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 ${
-                        heroBody === 'saturn' ? 'bg-[#79D9ED] text-[#030713]' : 'text-[#B8C4DE] hover:text-white'
-                      }`}
+                      className={`px-2.5 py-1 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 ${heroBody === 'saturn' ? 'bg-[#79D9ED] text-[#030713]' : 'text-[#B8C4DE] hover:text-white'
+                        }`}
                     >
                       Saturn
                     </button>
                     <button
                       type="button"
                       onClick={() => setHeroBody('earth')}
-                      className={`px-2.5 py-1 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 ${
-                        heroBody === 'earth' ? 'bg-[#79D9ED] text-[#030713]' : 'text-[#B8C4DE] hover:text-white'
-                      }`}
+                      className={`px-2.5 py-1 text-xs font-medium rounded transition-colors whitespace-nowrap shrink-0 ${heroBody === 'earth' ? 'bg-[#79D9ED] text-[#030713]' : 'text-[#B8C4DE] hover:text-white'
+                        }`}
                     >
                       Earth
                     </button>
@@ -281,11 +279,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   aria-selected={selected}
                   type="button"
                   onClick={() => setPreviewPlanetSlug(planet.slug)}
-                  className={`p-4 rounded-xl border text-left transition-colors ${
-                    selected
+                  className={`p-4 rounded-xl border text-left transition-colors ${selected
                       ? 'border-[#79D9ED] bg-[#101C36]'
                       : 'border-white/10 bg-[#0B1324] hover:border-white/30'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-3">
                     <span className="font-mono text-xs text-[#7F90B0]">0{index + 1}</span>
@@ -489,11 +486,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       type="button"
                       onClick={() => onUpdatePreferences({ readingDepth: mode.id })}
                       aria-pressed={active}
-                      className={`p-3.5 rounded-xl border text-left transition-colors ${
-                        active
+                      className={`p-3.5 rounded-xl border text-left transition-colors ${active
                           ? 'border-[#79D9ED] bg-[#79D9ED]/12 text-[#F7FAFF]'
                           : 'border-white/10 bg-[#070D1D] text-[#B8C4DE] hover:border-white/30'
-                      }`}
+                        }`}
                     >
                       <div className="text-xs font-semibold text-[#F7FAFF]">{mode.title}</div>
                       <div className="text-[11px] text-[#7F90B0] mt-1">{mode.sub}</div>

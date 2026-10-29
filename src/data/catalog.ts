@@ -134,7 +134,7 @@ export const CELESTIAL_CATALOG: CelestialObject[] = [
     category: 'star',
     classification: 'G-Type Main-Sequence Star · Solar System',
     scaleBand: 'Planetary System',
-    authenticityTier: 'DATA-BASED',
+    authenticityTier: 'OBSERVED',
     authenticityNote: '3D photosphere mapped with authentic NASA Solar Dynamics Observatory (SDO) multi-spectral solar physics imagery, resolving magnetic sunspots, granulation cells, and coronal flare emissions.',
     isOrbitable3D: true,
     hook: 'The blazing gravitational anchor containing 99.86% of all mass in our Solar System.',

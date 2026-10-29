@@ -352,7 +352,7 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
         sourceUrl: 'https://www.solarsystemscope.com/textures/',
         resolution: '2048 × 1024',
         sourceDate: 'Solar Dynamics Observatory Mission Data',
-        authenticity: 'DATA-BASED',
+        authenticity: 'OBSERVED',
         processingNotes:
           'Equirectangular projection derived from NASA Solar Dynamics Observatory AIA and HMI instruments, mapping solar granules and magnetic active regions across the photosphere.',
       },

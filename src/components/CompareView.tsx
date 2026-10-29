@@ -9,6 +9,7 @@ import {
   Pause,
   Play,
   RotateCcw,
+  X,
 } from 'lucide-react';
 import { CELESTIAL_CATALOG, getObjectBySlug } from '../data/catalog';
 import { computeComparisonRadii } from '../lib/astronomy';
@@ -38,6 +39,7 @@ export const CompareView: React.FC<CompareViewProps> = ({
   const [syncSpin, setSyncSpin] = useState<boolean>(false);
   const [cameraPreset, setCameraPreset] = useState<CompareCameraPreset>('front');
   const [presetNonce, setPresetNonce] = useState<number>(0);
+  const [dismissedCallout, setDismissedCallout] = useState<boolean>(false);
 
   const stageContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -267,22 +269,34 @@ export const CompareView: React.FC<CompareViewProps> = ({
             </div>
           )}
 
-          {/* Subpixel Callout Banner (when smaller world is < 2.5% of larger in true-scale) */}
-          {!isCinematic && isExtremeRatio && (
-            <div className="relative z-10 px-4 sm:px-6 pointer-events-none">
-              <div className="max-w-2xl mx-auto p-2.5 sm:p-3 rounded-xl bg-[#070D1D]/90 backdrop-blur-md border border-[#79D9ED]/40 text-xs text-[#EAF6FF] shadow-2xl pointer-events-auto flex items-start gap-2.5">
-                <span className="text-[#79D9ED] font-bold text-sm leading-none mt-0.5">ⓘ</span>
-                <div>
-                  <span className="font-semibold text-[#79D9ED]">Subpixel Scale Callout:</span>{' '}
-                  {smallerBody.name} is only{' '}
-                  <span className="font-mono font-bold text-white">
-                    {relativePercent.toFixed(2)}%
-                  </span>{' '}
-                  the physical diameter of {largerBody.name}. A cyan locator beacon marks its position.
-                  Zoom in with mouse wheel or pinch gesture to explore without geometric distortion.
+          {/* Subpixel Callout Banner (discreet top-right toast with instant dismiss button) */}
+          {!isCinematic && isExtremeRatio && !dismissedCallout && (
+            <aside
+              aria-label="Subpixel scale notice"
+              className="absolute top-16 right-4 sm:right-6 sm:max-w-md z-20 pointer-events-auto transition-all animate-fade-in"
+            >
+              <div className="p-2.5 sm:p-3 rounded-xl bg-[#070D1D]/90 backdrop-blur-md border border-[#79D9ED]/40 text-xs text-[#EAF6FF] shadow-2xl flex items-start justify-between gap-2.5">
+                <div className="flex items-start gap-2">
+                  <span className="text-[#79D9ED] font-bold text-sm leading-none mt-0.5">ⓘ</span>
+                  <div className="leading-relaxed">
+                    <span className="font-semibold text-[#79D9ED]">Scale Callout:</span>{' '}
+                    {smallerBody.name} is only{' '}
+                    <span className="font-mono font-bold text-white">
+                      {relativePercent.toFixed(2)}%
+                    </span>{' '}
+                    the physical diameter of {largerBody.name}. A cyan beacon marks its position.
+                  </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setDismissedCallout(true)}
+                  aria-label="Dismiss scale notice"
+                  className="text-[#B8C4DE] hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors flex-shrink-0"
+                >
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-            </div>
+            </aside>
           )}
 
           {/* Bottom Floating Control Dock */}

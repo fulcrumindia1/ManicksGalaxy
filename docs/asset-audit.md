@@ -3,7 +3,7 @@
 
 | Slug | Class | Authenticity | Texture Pipeline | Asset Path | Dimensions | Hash | Source / Mission | QA Status |
 |---|---|---|---|---|---|---|---|---|
-| **sun** | star | `DATA-BASED` | REAL_TEXTURE_MAP | `/assets/planets/sun/sun_2k.jpg` | 2048 × 1024 | `ff0f076ba65e` | NASA / GSFC / Solar System Scope | **VERIFIED_OBSERVED** |
+| **sun** | star | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/sun/sun_2k.jpg` | 2048 × 1024 | `ff0f076ba65e` | NASA / GSFC / Solar System Scope | **VERIFIED_OBSERVED** |
 | **mercury** | planet | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/mercury/mercury_2k.jpg` | 2048 × 1024 | `5a5c80607f64` | NASA / Johns Hopkins APL / Carnegie Institution / Solar System Scope | **VERIFIED_OBSERVED** |
 | **venus** | planet | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/venus/venus_atmosphere_2k.jpg` | 2048 × 1024 | `225012ad4911` | NASA / JPL-Caltech / Solar System Scope | **VERIFIED_OBSERVED** |
 | **earth** | planet | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/earth/earth_day_2k.jpg` | 2048 × 1024 | `767ee1dc6eb3` | Solar System Scope / NASA Visible Earth | **VERIFIED_OBSERVED** |
