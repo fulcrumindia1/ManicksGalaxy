@@ -77,3 +77,4 @@ for style_name in ['lettermark', 'ringed_planet', 'milky_way', 'nebula']:
         im_style.resize((32, 32), Image.Resampling.LANCZOS).save(os.path.join(styles_dir, f'{style_name}-32x32.png'))
 
 print("[SUCCESS] Favicon suite successfully regenerated from the exact reference image artwork!")
+
