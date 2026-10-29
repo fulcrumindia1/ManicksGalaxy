@@ -100,8 +100,9 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
           * {
             -webkit-print-color-adjust: exact !important;
             print-color-adjust: exact !important;
+            color-adjust: exact !important;
           }
-          body {
+          body, html, #root {
             background-color: #ffffff !important;
             color: #0f172a !important;
           }
@@ -156,8 +157,9 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
               title="Print classroom certificate and discovery recap"
             >
               <Printer className="w-3.5 h-3.5 text-[#79D9ED]" aria-hidden="true" />
-              <span>Print Classroom Recap</span>
+              <span>Print Passport &amp; Recap</span>
             </button>
+            <span className="text-[11px] text-[#7F90B0] hidden sm:inline">(Enable &ldquo;Background graphics&rdquo; in print dialog)</span>
 
             {!confirmClear ? (
               <button
@@ -195,41 +197,41 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
 
         {/* Summary Metrics Row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 print:grid-cols-4 print:gap-3 print-avoid-break">
-          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-3 print:rounded-lg">
-            <div className="text-xs text-[#7F90B0] print:text-slate-600 font-medium">Worlds Visited</div>
-            <div className="font-mono text-2xl font-bold text-[#79D9ED] print:text-sky-800 mt-1">
-              {voyage.visitedSlugs.length} <span className="text-sm text-[#7F90B0] print:text-slate-500">/ {CELESTIAL_CATALOG.length}</span>
+          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-100/80 print:border-2 print:border-slate-800 print:p-3 print:rounded-lg">
+            <div className="text-xs text-[#7F90B0] print:text-slate-800 font-medium">Worlds Visited</div>
+            <div className="font-mono text-2xl font-bold text-[#79D9ED] print:text-sky-900 mt-1">
+              {voyage.visitedSlugs.length} <span className="text-sm text-[#7F90B0] print:text-slate-600">/ {CELESTIAL_CATALOG.length}</span>
             </div>
           </div>
-          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-3 print:rounded-lg">
-            <div className="text-xs text-[#7F90B0] print:text-slate-600 font-medium">Show Chapters</div>
-            <div className="font-mono text-2xl font-bold text-[#D7B77B] print:text-amber-800 mt-1">
+          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-100/80 print:border-2 print:border-slate-800 print:p-3 print:rounded-lg">
+            <div className="text-xs text-[#7F90B0] print:text-slate-800 font-medium">Show Chapters</div>
+            <div className="font-mono text-2xl font-bold text-[#D7B77B] print:text-amber-900 mt-1">
               {voyage.completedChapters.length}
             </div>
           </div>
-          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-3 print:rounded-lg">
-            <div className="text-xs text-[#7F90B0] print:text-slate-600 font-medium">Quizzes Solved</div>
-            <div className="font-mono text-2xl font-bold text-[#9FDFB6] print:text-emerald-800 mt-1">
+          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-100/80 print:border-2 print:border-slate-800 print:p-3 print:rounded-lg">
+            <div className="text-xs text-[#7F90B0] print:text-slate-800 font-medium">Quizzes Solved</div>
+            <div className="font-mono text-2xl font-bold text-[#9FDFB6] print:text-emerald-900 mt-1">
               {voyage.quizCorrectIds.length}
             </div>
           </div>
-          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-3 print:rounded-lg">
-            <div className="text-xs text-[#7F90B0] print:text-slate-600 font-medium">Badges Earned</div>
-            <div className="font-mono text-2xl font-bold text-[#9F95F0] print:text-purple-800 mt-1">
-              {badges.filter((b) => b.earned).length} <span className="text-sm text-[#7F90B0] print:text-slate-500">/ {badges.length}</span>
+          <div className="p-5 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-100/80 print:border-2 print:border-slate-800 print:p-3 print:rounded-lg">
+            <div className="text-xs text-[#7F90B0] print:text-slate-800 font-medium">Badges Earned</div>
+            <div className="font-mono text-2xl font-bold text-[#9F95F0] print:text-purple-900 mt-1">
+              {badges.filter((b) => b.earned).length} <span className="text-sm text-[#7F90B0] print:text-slate-600">/ {badges.length}</span>
             </div>
           </div>
         </div>
 
         {/* Visited Destinations Stamps */}
-        <section className="p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-4 print:rounded-lg print-avoid-break">
+        <section className="p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-white print:border-2 print:border-slate-800 print:p-4 print:rounded-lg print-avoid-break">
           <h2 className="font-display text-lg font-bold text-[#F7FAFF] print:text-slate-900 mb-4 print:mb-2.5">
             Visited Celestial Destinations ({voyage.visitedSlugs.length})
           </h2>
           {voyage.visitedSlugs.length === 0 ? (
             <p className="text-xs text-[#B8C4DE] print:text-slate-600 italic">No celestial bodies visited yet. Explore any planet or moon to collect stamps.</p>
           ) : (
-            <div className="flex flex-wrap gap-3 print:grid print:grid-cols-3 print:gap-2">
+            <div className="flex flex-wrap gap-3 print:grid print:grid-cols-3 print:gap-2.5">
               {voyage.visitedSlugs.map((slug) => {
                 const obj = getObjectBySlug(slug);
                 if (!obj) return null;
@@ -238,18 +240,14 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
                     key={slug}
                     type="button"
                     onClick={() => onInspectObject(slug)}
-                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/15 bg-[#070D1D] hover:border-[#79D9ED] transition-colors text-left print:bg-white print:border-slate-300 print:p-2 print:rounded-md print:pointer-events-none"
+                    className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/15 bg-[#070D1D] hover:border-[#79D9ED] transition-colors text-left print:bg-white print:border-2 print:border-slate-700 print:p-2.5 print:rounded-md print:pointer-events-none"
                   >
-                    <span
-                      className="w-3.5 h-3.5 rounded-full shrink-0 print:border print:border-slate-400"
-                      style={{
-                        background: `radial-gradient(circle at 30% 30%, ${obj.visual.primaryColor}, ${obj.visual.secondaryColor})`,
-                      }}
-                      aria-hidden="true"
-                    />
+                    <svg className="w-4 h-4 shrink-0" viewBox="0 0 16 16" aria-hidden="true">
+                      <circle cx="8" cy="8" r="7" fill={obj.visual.primaryColor} stroke="#334155" strokeWidth="1.2" />
+                    </svg>
                     <div>
                       <div className="text-xs font-semibold text-[#F7FAFF] print:text-slate-900">{obj.name}</div>
-                      <div className="font-mono text-[10px] text-[#79D9ED] print:text-sky-800 font-bold">{obj.authenticityTier}</div>
+                      <div className="font-mono text-[10px] text-[#79D9ED] print:text-sky-900 font-bold">{obj.authenticityTier}</div>
                     </div>
                   </button>
                 );
@@ -260,7 +258,7 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
 
         {/* Remembered Scientific Facts & Earned Badges */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 print:grid-cols-12 print:gap-4 print-avoid-break">
-          <section className="lg:col-span-7 p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-4 print:rounded-lg print:col-span-7 print-avoid-break">
+          <section className="lg:col-span-7 p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-white print:border-2 print:border-slate-800 print:p-4 print:rounded-lg print:col-span-7 print-avoid-break">
             <h2 className="font-display text-lg font-bold text-[#F7FAFF] print:text-slate-900 mb-4 print:mb-2.5">
               Verified Facts Collected on Your Voyage
             </h2>
@@ -271,9 +269,9 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
                 {voyage.rememberedFacts.map((fact, idx) => (
                   <li
                     key={idx}
-                    className="p-3.5 rounded-xl border border-white/10 bg-[#070D1D] flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed print:bg-white print:border-slate-200 print:p-2.5 print:rounded-md print:text-xs"
+                    className="p-3.5 rounded-xl border border-white/10 bg-[#070D1D] flex items-start gap-2.5 text-xs sm:text-sm leading-relaxed print:bg-white print:border print:border-slate-400 print:p-2.5 print:rounded-md print:text-xs"
                   >
-                    <CheckCircle2 className="w-4 h-4 text-[#79D9ED] print:text-sky-700 shrink-0 mt-0.5" aria-hidden="true" />
+                    <CheckCircle2 className="w-4 h-4 text-[#79D9ED] print:text-sky-900 shrink-0 mt-0.5" aria-hidden="true" />
                     <span>{fact}</span>
                   </li>
                 ))}
@@ -281,7 +279,7 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
             )}
           </section>
 
-          <section className="lg:col-span-5 p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-slate-50 print:border-slate-300 print:p-4 print:rounded-lg print:col-span-5 print-avoid-break">
+          <section className="lg:col-span-5 p-6 sm:p-7 rounded-2xl border border-white/15 bg-[#0D1526] print:bg-white print:border-2 print:border-slate-800 print:p-4 print:rounded-lg print:col-span-5 print-avoid-break">
             <h2 className="font-display text-lg font-bold text-[#F7FAFF] print:text-slate-900 mb-4 print:mb-2.5">
               Discovery Milestones
             </h2>
@@ -290,20 +288,20 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
                 <div
                   key={b.id}
                   className={`p-3.5 rounded-xl border flex items-start gap-3 print:p-2.5 print:rounded-md ${b.earned
-                      ? 'border-[#9FDFB6]/40 bg-[#9FDFB6]/8 print:bg-emerald-50 print:border-emerald-300'
-                      : 'border-white/10 bg-[#070D1D] opacity-65 print:bg-white print:border-slate-200 print:opacity-100 print:border-dashed'
+                      ? 'border-[#9FDFB6]/40 bg-[#9FDFB6]/8 print:bg-emerald-50 print:border-2 print:border-emerald-700'
+                      : 'border-white/10 bg-[#070D1D] opacity-65 print:bg-white print:border print:border-slate-400 print:opacity-100 print:border-dashed'
                     }`}
                 >
                   <Award
-                    className={`w-4 h-4 shrink-0 mt-0.5 ${b.earned ? 'text-[#9FDFB6] print:text-emerald-700' : 'text-[#7F90B0] print:text-slate-400'
+                    className={`w-4 h-4 shrink-0 mt-0.5 ${b.earned ? 'text-[#9FDFB6] print:text-emerald-800' : 'text-[#7F90B0] print:text-slate-500'
                       }`}
                     aria-hidden="true"
                   />
                   <div>
                     <div className="text-xs font-semibold text-[#F7FAFF] print:text-slate-900">
-                      {b.title} <span className="font-normal print:font-semibold text-[11px] text-[#79D9ED] print:text-emerald-800">{b.earned ? '· Unlocked' : '· In Progress'}</span>
+                      {b.title} <span className="font-normal print:font-semibold text-[11px] text-[#79D9ED] print:text-emerald-900">{b.earned ? '· Unlocked' : '· In Progress'}</span>
                     </div>
-                    <p className="text-xs text-[#B8C4DE] print:text-slate-600 mt-0.5">{b.description}</p>
+                    <p className="text-xs text-[#B8C4DE] print:text-slate-700 mt-0.5">{b.description}</p>
                   </div>
                 </div>
               ))}

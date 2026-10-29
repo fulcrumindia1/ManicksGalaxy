@@ -605,11 +605,9 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     renderer.domElement.addEventListener('pointerdown', onPointerDown);
     renderer.domElement.addEventListener('pointerup', onPointerUp);
 
-    // Smooth hardware-accelerated frame animation loop
+    // Hardware-accelerated continuous frame animation loop
     let frameId = 0;
     let unmounted = false;
-    let renderBusy = false;
-    let renderDirty = false;
     let lastTimeMs = performance.now();
 
     function advanceSimulation(dt: number): boolean {
@@ -674,27 +672,24 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
       return stillMoving;
     }
 
+    // Continuous 60fps animation loop — drives rotations, orbits, and OrbitControls damping smoothly
+    function renderLoop(nowMs: number) {
+      if (unmounted) return;
+      frameId = requestAnimationFrame(renderLoop);
+      const dt = Math.min(0.1, Math.max(0, (nowMs - lastTimeMs) / 1000));
+      lastTimeMs = nowMs;
+      advanceSimulation(dt);
+      renderer.render(scene, camera);
+    }
+
     function requestRender() {
       if (unmounted) return;
-      if (renderBusy) {
-        renderDirty = true;
-        return;
-      }
-      renderBusy = true;
-      frameId = requestAnimationFrame(() => {
-        if (unmounted) return;
-        renderDirty = false;
-        const nowMs = performance.now();
-        const dt = Math.min(0.1, Math.max(0, (nowMs - lastTimeMs) / 1000));
-        lastTimeMs = nowMs;
-        const keepGoing = advanceSimulation(dt);
-        renderer.render(scene, camera);
-        renderBusy = false;
-        if (renderDirty || keepGoing) {
-          requestRender();
-        }
-      });
+      advanceSimulation(0);
+      renderer.render(scene, camera);
     }
+
+    // Start continuous animation loop immediately
+    frameId = requestAnimationFrame(renderLoop);
 
     controls.addEventListener('change', () => {
       requestRender();
@@ -768,7 +763,6 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         delete (window as any).__planetarium;
       }
       cancelAnimationFrame(frameId);
-      clearTimeout(timerId);
       resizeObserver.disconnect();
       renderer.domElement.removeEventListener('pointerdown', onPointerDown);
       renderer.domElement.removeEventListener('pointerup', onPointerUp);

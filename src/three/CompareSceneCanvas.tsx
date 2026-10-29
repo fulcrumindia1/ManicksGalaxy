@@ -425,8 +425,6 @@ export const CompareSceneCanvas: React.FC<CompareSceneCanvasProps> = ({
 
     let frameId = 0;
     let unmounted = false;
-    let renderBusy = false;
-    let renderDirty = false;
     let lastTimeMs = performance.now();
 
     function advanceSimulation(dt: number): boolean {
@@ -462,27 +460,24 @@ export const CompareSceneCanvas: React.FC<CompareSceneCanvasProps> = ({
       return stillMoving;
     }
 
+    // Continuous 60fps animation loop
+    function renderLoop(nowMs: number) {
+      if (unmounted) return;
+      frameId = requestAnimationFrame(renderLoop);
+      const dt = Math.min(0.1, Math.max(0, (nowMs - lastTimeMs) / 1000));
+      lastTimeMs = nowMs;
+      advanceSimulation(dt);
+      renderer.render(scene, camera);
+    }
+
     function requestRender() {
       if (unmounted) return;
-      if (renderBusy) {
-        renderDirty = true;
-        return;
-      }
-      renderBusy = true;
-      frameId = requestAnimationFrame(() => {
-        if (unmounted) return;
-        renderDirty = false;
-        const nowMs = performance.now();
-        const dt = Math.min(0.1, Math.max(0, (nowMs - lastTimeMs) / 1000));
-        lastTimeMs = nowMs;
-        const keepGoing = advanceSimulation(dt);
-        renderer.render(scene, camera);
-        renderBusy = false;
-        if (renderDirty || keepGoing) {
-          requestRender();
-        }
-      });
+      advanceSimulation(0);
+      renderer.render(scene, camera);
     }
+
+    // Start continuous animation loop immediately
+    frameId = requestAnimationFrame(renderLoop);
 
     controls.addEventListener('change', () => {
       requestRender();
