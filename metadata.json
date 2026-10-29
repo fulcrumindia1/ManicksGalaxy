@@ -1,0 +1,6 @@
+{
+  "name": "ManicksGalaxy — Interactive Planetarium & Space Encyclopedia",
+  "description": "An immersive browser-based 3D planetarium, night sky observatory, and source-verified astronomy encyclopedia for learners, educators, and curious minds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

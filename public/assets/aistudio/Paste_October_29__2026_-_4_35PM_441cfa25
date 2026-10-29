@@ -1,0 +1,544 @@
+ManicksGalaxy — Complete Product Requirements Document (PRD v0.2)
+29 October 2026 · Complete working draft
+
+This document integrates the scientific/product foundation from v0.1 with a new end-to-end UX blueprint and sitemap. It is a proposed design, not a claim that the described software already exists.
+Part I — Core Product, Science and Engineering
+Version: 0.1 — Discovery draft
+Date: 29 October 2026
+Working category: Interactive astronomy encyclopedia and 3D space exploration platform
+Audience: Children and schools, families, curious adults, astronomy enthusiasts
+Status: Proposal; technical and rights reviews required before implementation
+1. Executive summary
+ManicksGalaxy is an immersive, browser-based astronomy encyclopedia: a navigable 3D solar system, scientifically grounded night sky, a curated galaxy and nebula explorer, and learning journeys for different ages. People should be able to look, orbit, travel, compare and learn, not simply read entries or watch canned videos.
+
+North star: From a question about an object in the universe to a compelling visual explanation in fewer than three meaningful interactions.
+
+Product promise: "Explore the universe from every angle." The experience will distinguish observed imagery, data-based simulation, and artist's impression. Not all 360-degree views can be genuine photography, and the product must be honest about reconstructions.
+2. Product goals and non-goals
+Goals
+1. Make astronomy engaging without sacrificing factual accuracy.
+2. Offer controllable 360° object inspection with smooth, predictable camera movements.
+3. Map celestial objects to sourced encyclopedia entries, animations and curriculum-friendly explanations.
+4. Enable meaningful learning: scales, orbits, gravity, seasons, light, star patterns and deep space.
+5. Make the experience practical on school laptops and capable mobile devices.
+6. Store provenance and asset usage rights as first-class product data.
+Non-goals for MVP
+- Recreating every star and galaxy in the observable universe as individually accurate 3D meshes.
+- Claiming that rendered exoplanet or galaxy surfaces are photographs when they are not.
+- A real-time multiplayer universe, full VR headset support, realistic spacecraft piloting or entire-surface photogrammetry for all planets.
+- Unrestricted scraping or republishing of third-party models or videos.
+- Personalised accounts for children in the initial release.
+3. Target audiences and user jobs
+Audience	What they need	First release support
+Ages approximately 7–12	Visually guided, simple factual answers	Explore/Discover modes; narrated and text summaries; glossary; quizzes
+Ages 13–17	More scientific detail, controls and comparisons	Orbit controls, time scrubber, numeric data, concepts and diagrams
+Teachers	Reusable demonstrations and short lessons	Shareable links to a preset scene, classroom-friendly mode, source credits
+General audience	Beautiful immersive learning	Guided journeys, searchable encyclopedia, favourites on device
+Enthusiasts	Data provenance, coordinates, physical accuracy	Advanced data panel and observer-sky mode
+
+
+4. Experience architecture
+4.1 Main routes / areas
+- / — Cinematic entry, search, "Continue Exploring", featured journeys.
+- /explore/solar-system — Solar-system map with all eight planets, the Sun, selected moons, dwarf planets and key satellites.
+- /object/[slug] — Unified celestial object experience: 3D scene, facts, highlights, media, references, learning challenges.
+- /sky — Earth-observer night sky by optional location, date, time and direction; constellation overlays.
+- /constellations — 88 IAU-defined regions; educational line drawings clearly labelled as conventional illustrations.
+- /galaxies — Milky Way, selected galaxies and nebulae; 2D observation plus 3D interpretation when defensible.
+- /exoplanets — Searchable catalogue plus curated artist impressions; sizes, discovery methods, host star and uncertainties.
+- /journeys — Narrated or text-guided camera experiences such as "Journey to Saturn", "Earth to the Moon", "Through the Orion Nebula".
+- /learn — Topic collections, quizzes, glossary and teacher resources.
+- /sources — Licenses, attribution, data sources, correction history.
+4.2 Core screen structure
+1. Immersive viewport — 3D canvas or telescope sky viewer; overlay controls do not obscure the focal object.
+2. Object card — Name, type, key measurements, one-sentence hook, science/artist-impression badge.
+3. Camera tray — Orbit, pan, zoom, fly, reset, auto-tour, full screen and orientation indicator.
+4. Timeline — Pause, play, rate control and date/time selection for orbiting/sky scenes.
+5. Knowledge drawer — Overview, structure, composition, discoveries, missions, comparisons, sources.
+6. Learning layer — Guided questions, age/depth toggle, unit choice and optional narration.
+5. Camera and 360° interaction requirements
+Important terminology: A 360° object view is an orbitable 3D model; a 360° panorama is a photograph or rendering captured from a fixed observation point; a cinematic video is not interactively orbitable.
+Camera mode	User action	Expected behaviour
+Orbit	Drag or swipe around planet	Change yaw/pitch freely; maintain an intelligible focal point
+Inspect	Scroll/pinch zoom, touch controls	Move between wide planetary view and closer visual detail without clipping
+Fly-to	Select a planet, moon or star	Smooth camera path easing into the destination; allow skip and cancel
+Compare	Select two objects	Side-by-side objects; optional same-scale and educational-scale views
+Surface	Choose available landing site or panorama	360° panoramic look-around when real imagery exists; otherwise label reconstruction
+Sky observer	Change observer location/time and orientation	Render accurate apparent sky, constellation boundaries and selected object tracks
+Cinematic	Start guided journey	Scripted camera moves with narration/overlays and user skip controls
+Advanced	Choose view from above orbit plane/pole/equator	Change framing, axial tilt, illuminated phase and relevant measurements
+
+
+Required controls: Pointer drag, keyboard navigation and zoom, touch swipe and pinch, reset view, pause motion, reduced-motion setting, full-screen option, visible scale mode and camera origin. Camera moves must never trap the user in a noninterruptible animation.
+
+Scale and coordinate rules: Use explicit coordinate frames (e.g., heliocentric ecliptic vs ICRS), epoch/time, unit conversions and interpolation methodology. Implement camera-relative/floating-origin or hierarchical scene scales because ordinary GPU precision is insufficient for one literal 3D coordinate system spanning planetary to galactic distances. Explain when scale or orbital speeds are exaggerated for learning.
+6. Content inventory for MVP
+- 1 Sun, 8 planets, Earth’s Moon, a starter collection of major moons, 5 recognized dwarf planets as available.
+- 88 IAU constellation entries, with basic information and carefully sourced star map overlays; start with 10 richly narrated featured constellations.
+- 20–30 curated nebulae, galaxies and star clusters, primarily telescope-image-led with optional labelled visualization.
+- 20–30 curated exoplanets, with real NASA Exoplanet Archive data and clearly labelled illustrations where needed.
+- 10 introductory guided journeys and 25–40 short lesson modules (final scope dependent on the team and curriculum mapping).
+Each object record includes name, aliases, category, measurements with units, uncertainty where meaningful, observation references, image credits, 3D asset provenance, classification of visual authenticity and reading levels.
+7. Visual style and animation system
+Art direction
+- Dark, believable space with restrained volumetric light, accurate lighting direction and physically plausible planetary terminators.
+- High-detail planet textures, cloud/atmosphere layers where available, ring transparency for Saturn, moon crater detail where supported.
+- Intentional cinematic composition, smooth camera easing, very readable text and subdued interface chrome.
+- Choice between Science mode (accurate labels, explicit scale and sources) and Explore mode (dramatic transitions, educational exaggerations labelled).
+Visual authenticity tiers
+- OBSERVED: Image captured by telescope/spacecraft (may involve processing or composite wavelengths).
+- DATA-BASED: Simulation using observed orbital/catalogue data or remote-sensing textures.
+- RECONSTRUCTED: Artist's plausible approximation from partial data.
+- ARTISTIC: Interpretive scene not presented as scientifically proven visual truth.
+These labels must be visible on scenes and object metadata, including exoplanets, galaxy interiors, black holes and unobserved planetary regions.
+Engine separation
+- Motion (Framer Motion successor): Navigation, panel choreography, typography, loading transitions, quizzes and reduced-motion-aware UI.
+- Three.js + React Three Fiber + Drei: Real-time meshes, shaders, atmospheric effects, particle fields, orbiting objects and camera navigation.
+- Blender: Convert/edit models, create normals and LODs, bake details and export GLB.
+- Video: NASA SVS and other properly licensed MP4/WebM materials for cinematic cutaways and background journeys, never as a substitute for 360° interactive inspection.
+- Sky atlas: Aladin Lite embeds for real survey imagery; independently constructed constellations from catalogue coordinates where required.
+8. Source-of-truth data and asset suppliers
+Category	Primary source	Ingestion strategy	Key caution
+3D spacecraft/planets	NASA 3D Resources	Manual/API-permitted downloads, convert to GLB	Check per-asset metadata and NASA rules
+Science visualizations	NASA SVS	Direct downloads of selected MP4/WebM/frames	Verify audio rights and concepts vs measurements
+Surface textures	Solar System Scope	Download textures and record CC BY 4.0 credit	Some maps are enhanced and fill unmapped gaps artistically
+Earth detailed imagery	NASA Blue Marble	Ingest approved imagery, build multiresolution tiles	Display dataset year/season
+Solar-system ephemerides	JPL Horizons	Scheduled server-side/ingestion computation, cached time windows	Do not query the remote service every animation frame
+Stars	ESA Gaia Archive	Offline curated/filtered catalog subset; compression and spatial indexing	Astronomical uncertainties and distance estimation matter
+Constellations	IAU 88 constellation definitions/boundaries	Compile normalized region and star association data	IAU regions ≠ one universal set of artistic connecting lines
+Exoplanets	NASA Exoplanet Archive	Scheduled TAP/API import	Many properties are inferred and not complete
+Telescope surveys	CDS Aladin Lite/HiPS, applicable providers	Embed or legally licensed dataset references	Follow underlying survey attribution and service terms
+Other 3D props	Sketchfab (optional)	Manual download or authorized API only	Per-item Creative Commons license and author attribution
+
+
+Verified seed links
+- NASA 3D: https://science.nasa.gov/3d-resources/
+- NASA 3D GitHub: https://github.com/nasa/NASA-3D-Resources
+- NASA SVS: https://svs.gsfc.nasa.gov/ and help: https://svs.gsfc.nasa.gov/help/
+- Example NASA galaxy video: https://svs.gsfc.nasa.gov/14950/
+- Solar System Scope textures: https://edu.solarsystemscope.com/textures/
+- NASA Blue Marble: https://science.nasa.gov/earth/earth-observatory/blue-marble-next-generation/
+- Gaia Archive: https://gea.esac.esa.int/archive/
+- Gaia Sky reference viewer: https://gaiasky.space/ (review licenses separately)
+- JPL Horizons API: https://ssd-api.jpl.nasa.gov/doc/horizons.html
+- NASA Exoplanet Archive: https://exoplanetarchive.ipac.caltech.edu/
+- IAU constellations: https://www.iau.org/IAU/Astronomy-FAQs/Constellations.aspx
+- Aladin Lite: https://aladin.cds.unistra.fr/AladinLite/doc/
+- NASA PDS: https://pds.nasa.gov/
+- NASA media guidelines: https://www.nasa.gov/nasa-brand-center/images-and-media/
+- ESA/Webb license: https://esawebb.org/copyright/
+- ESA general media license: https://www.esa.int/ESA_Multimedia/Terms_and_conditions_of_use_of_images_and_videos_available_on_the_esa_website
+9. Asset-ingestion pipeline
+Workflow: Source discovery → permitted retrieval → license + author verification → asset manifest → integrity/antivirus scan → scientific/editing review → processing → previews → compressed CDN upload → attribution display → scheduled freshness review.
+
+Asset manifest (minimum): asset_id, object_id, title, kind, source_url, download_url_or_source_id, creator, credit_line, license_id, license_url, reuse_scope, authenticity_tier, capture_date_or_data_epoch, reviewer, rights_review_date, checksum_sha256, original_format, optimized_format, bytes, lod_level, attribution_required, last_verified, status.
+
+Preferred formats: .glb meshes, .ktx2 compressed textures, .webp/`.avif` images, .mp4/`.webm` cinematic video, processed binary star point sets and JSON metadata. Retain unmodified master files separately where license permits. Use source-specific attribution, e.g. "NASA/JPL-Caltech" rather than assuming generic "NASA" always suffices.
+
+Scraping policy: Only use official APIs, explicit open data exports, permitted bulk archives, or downloads provided by source owners. Check terms, attribution, robots directives where relevant, request rate limits, and hotlink policies. Do not capture another site's 3D viewer or copyrighted experience and repackage it as your own.
+10. Proposed technical architecture
+```mermaid
+flowchart LR
+  S[Official astronomy data + media] --> I[Licensed ingestion & processing]
+  I --> D[(Catalog DB + provenance)]
+  I --> O[(CDN object storage: GLB KTX2 images videos)]
+  D --> A[Content / astronomy APIs]
+  A --> W[React/Next.js application]
+  O --> W
+  W --> U[Motion UI + knowledge panels]
+  W --> T[React Three Fiber real-time universe]
+  W --> K[Aladin Lite real-sky survey view]
+  J[JPL ephemeris / cached science engine] --> A
+```
+Suggested baseline: React + Next.js + TypeScript + Tailwind; Three.js + @react-three/fiber + @react-three/drei; motion for UI; Zustand or equivalent lightweight scene state; PostgreSQL for structured content and citations; CDN/object storage for heavy media; offline scientific ingestion scripts, with backend caching. Avoid rendering large GPU canvases on the server; use progressive/client-side loading. Version all scientific data products and assets.
+
+Existing uploaded project opportunities: Rashinos already has React/Next and an astronomy-engine dependency, along with orbital visuals and JPL Horizons validation logic. Reuse validated mathematical and UI engineering patterns after code review; do not reuse astrological interpretation as astronomy lessons. PlyQuest, MusikFlo and PromptLaZ share React/Motion patterns that can inform consistent interface transitions. A new 3D renderer is still required; decorative SVG starfields are not a scientific spatial catalogue.
+11. Non-functional requirements
+Performance
+- Target smooth interactivity at ~60 fps on supported desktops and ~30 fps on mid-range mobile, with scene-specific tests rather than a guarantee on all devices.
+- Progressive loading: low-res preview first; lazy-load higher-res textures, models and star tiles; cull invisible content and set device-quality tiers.
+- Limit simultaneous particle count, texture memory and shader complexity; avoid shipping 8K textures to every device.
+- Keep accurate positions independent of visual rendering speed; camera motion must not drift with frame rate.
+Accessibility
+- WCAG-oriented UI, keyboard-operable controls, readable labels, captioned narration, high-contrast mode and reduced-motion support.
+- Fully readable text/facts fallback for devices unable to run WebGL; no learning objective may depend solely on animation or color.
+Trust, science and privacy
+- Editorial review for major facts and source dates; label uncertain quantities and approximations.
+- No account required to explore; no precise-location collection without explicit choice; child-appropriate defaults; legal review before school accounts or telemetry for children.
+- No implied NASA/ESA endorsement. Show visible credits and license terms for individual assets.
+12. User stories and acceptance criteria
+US-01: Visit Saturn
+As a learner, I can select Saturn and orbit it so I can examine its rings from above, the side and below.
+Acceptance: Saturn loads in a controllable 3D scene; orbit supports a complete horizontal revolution, adjustable vertical camera angle, pinch/scroll zoom, reset and pause; the model displays credited textures, ring inclination, and basic facts; performance fallback works.
+US-02: Discover Orion
+As a student, I can look at Orion in an observer sky and see which stars form the familiar pattern.
+Acceptance: Star positions derive from documented data; a recognisable line-art convention is disclosed; IAU region is distinct from the depicted asterism; significant stars have short descriptions; date/time change affects the apparent sky.
+US-03: Compare Earth with Jupiter
+As a child, I can compare the planets' sizes and learn why Jupiter is so much larger.
+Acceptance: Two representations have selectable same-scale and presentation-scale modes; numerical diameters have clear units; exaggeration is explicitly labelled; UI works by touch and keyboard.
+US-04: Navigate from Earth to a galaxy
+As a visitor, I can start a guided journey that zooms out from Earth through cosmic scales.
+Acceptance: Transition is interruptible, scene changes preserve clarity, distance units update, scale discontinuities are explained, and reconstructions are labelled.
+US-05: Verify an asset's origin
+As a teacher, I can find a source and media credit for every factual object and major visualization.
+Acceptance: Source panel contains accessible credits, original link, license and authenticity type; unreviewed assets are blocked from publishing.
+13. Phased delivery
+Phase 0 — technical proof: One photorealistic Saturn scene with rings, camera rig, atmospheric/lighting prototype, mobile performance measurements and complete rights manifest. One Jupiter/Earth compare view and one constellation prototype.
+
+Phase 1 — usable MVP: Solar system, core encyclopedia, search, 88 constellation entries (featured subset with richer narration), 10 guided journeys, basic quizzes, credits, mobile accessibility, telemetry limited to privacy-safe site quality.
+
+Phase 2 — deep-space expansion: Richer galaxies, interactive sky surveys, curated exoplanets, more moon flyovers, educator sharing, more languages and robust editorial tooling.
+
+Phase 3 — advanced immersion: Optional WebXR support, high-end volumetric and galaxy shaders, spatial audio, collaborative lessons, AR modes, and larger scientific star catalogs after profiling.
+14. KPIs and quality signals
+- Percentage of visitors who successfully orbit an object and open its knowledge panel.
+- Median time to a first interactive, educational 3D view; % of slow-device fallbacks working.
+- Number of guided journeys completed and quiz comprehension improvements, evaluated responsibly.
+- Broken media/licensing audit findings (target zero unresolved before publish).
+- Accuracy incidents and time-to-correction; credit completeness; accessibility defects.
+- Performance distributions by device class, not only synthetic desktop benchmarks.
+15. Top risks and mitigations
+Risk	Mitigation
+"Photorealistic" mistaken for "photographed"	Mandatory visual authenticity tags and source panels
+Unusable download/redistribution licenses	Pre-publish legal check, per-asset manifest, permitted sources first
+Mobile GPU overload	Device tiers, texture compression, LODs, fallback content
+Huge differences in astronomical scale	Hierarchical coordinate frames, floating origins, labelled scale switches
+Scientific data staleness or unavailable APIs	Versioned offline ingestion and cached scientific catalogs
+Too much scope at first release	Prove one superb 3D scene + one real-sky view before bulk content
+Children's privacy and cognitive load	Guest-first architecture, plain-language content, age-level controls
+
+
+16. Open product decisions
+1. Primary launch market: global English first or multilingual from day one?
+2. Priority format: a school curriculum tool, public exploration experience or subscription astronomy studio?
+3. MVP platform: desktop web first with mobile support, or mobile-first with simplified 3D?
+4. Highest desired fidelity tier and allowable CDN/storage budget?
+5. Editorial sources and learning curriculum mapping partner(s)?
+6. Accessibility and child-privacy compliance requirements in launch jurisdictions?
+7. Whether the product will monetize using subscriptions, school licences, or remain free?
+17. First implementation milestone
+Build a production-quality "Visit Saturn" vertical slice, not a giant catalog. It should combine a textured 3D Saturn, rings, 360° orbit camera, zoom, lighting, source provenance, 5 factual callouts, a 30-second optional narrated/captioned journey, lower-end mobile fallback and basic tests. This proves the core technical and learning experience before scale-up.
+Sources and permissions: See the companion ManicksGalaxy_Asset_Source_Register.csv for acquisition channels, license caveats and first-use priorities. All licensing guidance here is preliminary; consult current source-specific terms before release or commercial reuse.
+Part II — Planetarium UI/UX and End-to-End Visitor Experience
+Version: 0.2 — UX expansion of PRD v0.1
+Date: 29 October 2026
+Status: Product and interaction design proposal; this is a design specification, not a completed scientific simulation.
+North-star experience: Arrive curious → enter the planetarium → launch from Earth → explore and learn → finish a guided show → keep discovering.
+Core promise: The universe is not just something you read about. It's somewhere you can explore.
+1. Product experience vision
+ManicksGalaxy is an immersive web planetarium supported by a rigorously sourced interactive astronomy encyclopedia. It combines three complementary experiences: guided cinematic shows (lean back), free 3D exploration (lean forward), and structured discovery/learning (understand what you just saw). Every visitor can switch between them without losing context.
+Experience design principles
+1. Wonder first, understanding always. Spectacle introduces discovery; facts, context and references give it meaning.
+2. One spatial journey. Maintain camera/context continuity between overview, object focus, and learning overlay wherever technically possible.
+3. Agency is sacred. Skip intro, pause animation, reset camera, go home, switch modes, and access search at any time.
+4. Make depth optional. Child-friendly explanations first; expandable scientific details and source provenance.
+5. No fake science. Label observed, data-based, reconstructed and artistic scenes. Identify deliberate scale exaggeration.
+6. Desktop immersive, mobile usable. Full controls where devices support them; fast non-WebGL fallbacks for everything educational.
+7. Inclusive by default. Captions, keyboard support, touch targets, contrast, reduced motion, no forced audio, no surprise location permission.
+8. Site and app in one product. Landing, discovery, article, show and classroom pages share a unified identity and navigation.
+2. Audience and entry intents
+Visitor intent	Entry affordance	Fastest successful outcome
+'Show me something incredible'	Enter Planetarium	Start an optional guided 8-minute First Flight show
+'I want Saturn'	Global search / Explore Planets	Orbit Saturn in ≤3 meaningful actions from landing
+'What's in the sky tonight?'	Sky Tonight	See sky map using manually chosen city or voluntary location
+'I am teaching the solar system'	For Teachers / Classroom	Start a shareable lesson / presentation view without sign-up
+'I want reliable facts'	Encyclopedia	Source-labelled searchable object entry
+'I have a slow phone or reduced-motion setting'	Lightweight Experience	Static visual + navigation + all essential content
+
+
+No login, audio setup, or onboarding questionnaire is required to start the main experience.
+3. Full visitor journey: from first pixel to the finale
+Scene 00 — Landing / The invitation
+- Visitor sees: A realistic-looking Earth or Saturn in a black cosmos, tiny stars, softly lit celestial typography and a minimal navigation bar. A short elegant opening message: YOUR UNIVERSE AWAITS.
+- Primary CTAs: Enter the Planetarium; Explore the Universe.
+- Secondary action: See What's in the Sky Tonight.
+- Interaction: Subtle mouse/parallax response on capable devices; use high-quality static art if motion is reduced or the GPU is weak.
+- Purpose: Inspire immediately, while clearly showing the site is interactive and educational.
+- Do not: Start sound automatically, block with a forced cutscene, download gigabytes before showing navigation.
+Scene 01 — Observatory lobby / Choose your experience
+- A full-width 'virtual dome' with a 180° perspective star canopy. Onscreen cards float unobtrusively below the horizon.
+- Three choices: First Flight (beginner-friendly guided show), Explore on Your Own, Classroom & Group Show.
+- Smaller controls: Narration On/Off (off by default), Captions On/Off (on when narration is used), Motion level, Quality Auto/Low/High, Full screen. Show expected data usage if substantial.
+- Small notice: 'Views may combine actual observations, scientific simulations, and labelled artistic reconstructions.'
+Scene 02 — Launch / Earth to orbit
+- Smooth, skippable camera sequence: a blue atmospheric rim → Earth in full view → Moon → solar system overview.
+- Educational annotations: 'You are viewing Earth from space', 'The Moon orbits Earth', 'Objects are not shown to scale' when applicable.
+- Show controls: Pause/Resume, Back 15 seconds (within a guided chapter), Chapters, Explore this object, Skip intro, Exit show, Captions.
+- On mobile or reduced-motion: discrete cross-fades and optional still frames instead of forced flying movement.
+Scene 03 — Solar system / Your first destinations
+- Time controls and highlighted orbit paths; selectable planets. A guided show can steer attention, but the visitor can take over the camera.
+- Reveal: orbital paths and relative position; a visual scale mode that explicitly differentiates 'True ratios' vs 'Educational spacing'.
+- Branch: Click Saturn → travel to Saturn; click an info chip → learn fact; return to guided route at the chapter bookmark.
+Scene 04 — Planet encounter / A world you can inspect
+- Planet fills much of viewport. Orbit camera: drag, pinch/scroll to zoom, reset, presets 'From above', 'Equator', 'Rings', 'Moons'.
+- Facts drawer: Overview / Structure / Atmosphere / Moons / Missions / Sources.
+- Context controls: Return to System, Compare with Earth, Continue Show, Bookmark.
+- Data status: Show whether asset is observed texture, data-based motion or reconstruction.
+Scene 05 — Stars & constellations
+- Transition across scale frames (not falsely presented as one continuous, physically proportionate universe). Viewer enters a stellar perspective or realistic Earth-based sky.
+- Highlight Orion, the Big Dipper asterism or another verified group, and show line overlay separately from scientific constellation boundaries.
+- Star details use catalogue-derived position, magnitude and distance; optional cultural stories clearly attributed.
+Scene 06 — Deep cosmos
+- Milky Way structure → nebula/telescope gallery → other galaxies / exoplanet systems with explicit distinction between actual imagery and visualizations.
+- Wonder moments can include NASA-licensed footage between interactive scenes; these are not described as freely orbitable 3D.
+Scene 07 — Finale / The universe is vast
+- Brief visual montage of encountered destinations; final perspective on scale and light travel time. The tone should convey curiosity, not an inaccurate 'edge of the universe' claim.
+- Close with: You've only seen the beginning.
+- Actions: Explore Again, Continue from Saturn, Sky Tonight, Choose Another Journey, View My Voyage.
+Scene 08 — My Voyage / Meaningful completion
+- Guest-only, locally stored souvenir: visited destinations, chapters completed, 3 remembered facts, 'next mission'. Optional printable classroom recap.
+- No personally identifying information required. No child profiles needed for initial release.
+- Returning visitors may start from their last location or selected discovery card.
+4. Sitemap: comprehensive page inventory
+Global public site / discovery
+URL	Page / template	User purpose	Priority
+/	Cinematic Landing / Home	Understand value and enter	P0
+/enter	Planetarium Lobby	Choose how to experience	P0
+/shows	Planetarium Shows	Browse narrated journeys	P0
+/shows/first-flight	First Flight Guided Show	End-to-end beginner journey	P0
+/shows/[slug]	Reusable Show Player	Guided chapter experience	P1
+/explore	Universe Explorer / Mission Control	Search & choose a destination	P0
+/explore/solar-system	Solar System Explorer	Spatial overview	P0
+/explore/planets	Planet Directory	Filter and browse planets	P0
+/explore/galaxies	Galaxy Directory	Browse deep-sky highlights	P1
+/explore/nebulae	Nebula Gallery	Explore real observation media	P1
+/explore/exoplanets	Exoplanet Discovery	Search verified exoplanet data	P1
+/explore/constellations	Constellation Atlas	Explore 88 official constellations	P0/P1
+/object/[slug]	Celestial Object Detail	360° viewer + encyclopedia	P0
+/sky-tonight	Night Sky Viewer	Sky at chosen location/time	P1
+/compare	Compare Worlds	Compare radius, mass, day, gravity	P1
+/timeline	Cosmic / Solar Time Machine	Historical or orbital timeline	P1
+/missions	Spacecraft / Mission Directory	Browse verified missions	P2
+/missions/[slug]	Mission Detail	Missions, diagrams, footage, chronology	P2
+
+
+Learning, schools and support
+URL	Page / template	User purpose	Priority
+/learn	Learning Hub	Concepts by subject & age	P0
+/learn/topics/[slug]	Interactive Lesson	Learn a focused astronomy concept	P1
+/learn/quizzes/[slug]	Quiz / Challenge	Test understanding	P1
+/glossary	Astronomy Glossary	Explain scientific vocabulary	P1
+/for-teachers	Educator Portal	Ready-to-present lesson collections	P1
+/for-teachers/lesson/[slug]	Teacher Lesson Plan	Objectives, steps and links	P1
+/my-voyage	Voyage Passport	View exploration recap	P0
+/collections	Curated Collections	Save thematic discoveries	P1
+/search	Global Search Results	Find all objects and learning content	P0
+/about	Project About	Mission and approach	P1
+/sources	Scientific & media sources	Credibility, methodology, rights	P0
+/accessibility	Accessibility & motion controls	Inclusive access / help	P0
+/help	Controls and Help	Explain how to navigate	P0
+
+
+Template strategy: 30 URL patterns do not require 30 unique page designs. Reuse ~9 core templates: Landing, Lobby, Show Player, Explorer, Directory, Object Detail, Article/Lesson, Classroom, Passport/Utility.
+5. Navigation system & global UI
+Desktop header: ManicksGalaxy logo | Planetarium | Explore | Sky Tonight | Learn | For Teachers | search icon | accessibility/settings.
+
+Mobile: brand + Search + Menu; primary experiences surfaced as bottom navigation when in exploration mode (Universe, Journeys, Discover, My Voyage) with a back/exit affordance.
+
+Immersive viewer HUD: corner logo/home and exit, current destination breadcrumb, short floating facts panel, unobtrusive camera and time tray, show controls only when relevant. Auto-hide nonessential controls in presentation mode, show them on movement/keyboard focus/tap.
+
+Search: debounced results by Planets / Stars / Constellations / Galaxies / Lessons; suggested queries like 'Saturn', 'Orion', 'black holes'. Support keyboard shortcut / or Ctrl+K if it doesn't conflict with accessibility.
+
+Persistent preferences: local storage for narration, captions, reduced motion, text size, quality tier and last destination (respect privacy settings). Never override OS reduced-motion without explicit user preference.
+6. Landing page — detailed section-by-section specification
+1. Navigation: translucent/nav-on-dark header; logo, menu, search, accessible settings. Darken background as needed for contrast.
+2. Hero / The threshold: 65–100svh area. Huge planet occupying right/center; controlled star depth; headline YOUR UNIVERSE AWAITS and copy Step inside a living planetarium. Travel from Earth to the farthest worlds we can study. Primary Enter the Planetarium; secondary Explore Freely. 'Scroll to discover' indicator. Optional tiny 'Visuals are simulations' notice.
+3. What can you explore? Three illustrated action cards: Visit a Planet, Tour the Cosmos, Find Your Stars. Actual links with relevant preview states.
+4. The Solar System at a Glance: slim interactive horizontal planet rail; highlight on hover/focus/tap; clicking changes a preview, not an enormous heavy scene until user chooses 'Inspect'.
+5. Featured Planetarium Shows: 3–4 editorial cards with title, age/difficulty, accessibility labels, and approximate duration; e.g. First Flight, Journey to Saturn, Our Changing Night Sky, Galaxies Beyond. Avoid presenting proposed durations as timed verified assets.
+6. A Moment of Wonder: high-impact full-bleed telescope image/scene with a brief, sourced fact + 'Explore the story'. Provide media credits.
+7. Explore the Sky Tonight: manually selected city or optional geolocation, date/time, three visible highlights, 'Open Sky Map'. No default permission prompt.
+8. Learning for Everyone: quick mode cards Young Explorers, Curious Minds, Classroom; complexity choice changes language and scaffolding, not scientific facts.
+9. Science you can trust: Observed vs data-based vs reconstructed explainer; NASA/ESA/data-source attribution only, no false institutional partnership.
+10. Next Journey CTA: return to a full-width 'Begin your journey' banner.
+11. Footer: Site map, sources and media licenses, privacy, accessibility, contact/about, support/help, copyright for original product work.
+Landing success conditions: clear value in first viewport; primary CTA works without login; mobile visitors can find search; no forced audio or autoplay flashing; content remains accessible before 3D finishes loading.
+Landing wireframe (desktop)
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│ ✦ ManicksGalaxy    Planetarium  Explore  Sky Tonight  Learn  For Teachers     Search  ⚙ │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                         │
+│  DISCOVER THE COSMOS                         [Large cinematic Earth/Saturn render]       │
+│  YOUR UNIVERSE AWAITS.                              ⭘                                 │
+│  Step inside a living planetarium.                                                       │
+│  [ ENTER THE PLANETARIUM ]  [ EXPLORE FREELY ]                                           │
+│                                                        Scroll to discover ↓              │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│   VISIT A PLANET               TOUR THE COSMOS             FIND YOUR STARS                 │
+│   [planet preview]             [galaxy preview]           [constellation preview]          │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│  THE SOLAR SYSTEM AT A GLANCE                 ☿  ♀  ⊕  ♂  ♃  ♄  ♅  ♆                   │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│  FEATURED PLANETARIUM SHOWS                        [Journey cards with Start action]      │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│  THE SKY TONIGHT                      [City selector] [Date] [Open Sky Map]               │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│  LEARN AT YOUR OWN PACE   Young Explorers / Curious Minds / For Teachers                  │
+├─────────────────────────────────────────────────────────────────────────────────────────┤
+│                        [ READY FOR LIFTOFF? ENTER NOW ]                                  │
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+7. Planetarium Lobby specification
+- Visual: Immersive domed stars and glowing horizon; three elegant experience cards centered, with atmospheric low-chrome HUD.
+- Card 1: First Flight — introductory narrated/captioned show, great for first-timers.
+- Card 2: Free Exploration — open navigation/map immediately.
+- Card 3: Classroom Show — presenter mode with lesson checkpoints and clean projection view.
+- Optional preferences: Narration, captions, motion, quality. All adjustable later.
+- Safety: Exit and 'Skip' visible; no flashing, strobe, sudden sound or vestibular-inducing camera spin.
+8. Immersive show player: controls and state transitions
+Show stages
+Ready → Loading preview → Playing → Paused / Exploring object → Resuming chapter → Finale → Voyage summary
+Universal bottom player
+Chapter title + progress | Previous | Play/Pause | Next | Explore This | Chapters | Captions | Exit
+- Pressing Explore This saves chapter timestamp and camera destination; switch to object viewer with visible Return to Show.
+- Chapter menu provides random access and learning summary, never only 'next'.
+- Pause automatically on tab hidden if narration/video; preserve sync state.
+- Keyboard: Space pause/resume if safe, arrows navigate selected controls (not blanket canvas key traps), Esc dismiss overlay or presentation view, Tab all controls.
+- 'Time travel' applies only where astronomy model supports a valid time range; don't imply scientific precision for arbitrary galaxy motion.
+- Avoid forcing the user to watch travel transitions; every camera journey is skippable.
+9. Object/planet detail page UI
+Desktop split: 70–75% immersive canvas (adaptive) and 25–30% collapsible info drawer. On mobile, full-screen object with a bottom sheet. A control strip floats below the object when it doesn't obscure key visuals.
+
+Object page hierarchy
+1. Eyebrow: GAS GIANT · SOLAR SYSTEM + visual authenticity badge.
+2. Giant title: SATURN, short learning hook and distance context.
+3. Explore actions: orbit drag, zoom, camera presets, reset, labels on/off, real/educational scale toggle.
+4. Info tabs: Overview, Atmosphere, Rings, Moons, Missions, Sources (only relevant tabs on other objects).
+5. Fact tiles: diameter, length of day, orbital period, gravity (sourced and unit-aware).
+6. Related links: Compare with Earth, See Titan, Start Saturn Journey, Back to Solar System.
+7. Teacher mode: key concepts, misconception warnings, printable snapshot (licensed assets considered).
+Object screen wireframe
+┌───────────────────────────────────────────────────────────────────────────────────┐
+│ ← SOLAR SYSTEM   /   SATURN                          SEARCH      CAMERA       EXIT │
+├─────────────────────────────────────────────────────┬─────────────────────────────┤
+│                                                     │ SATURN                      │
+│                                                     │ Gas giant · Data-based      │
+│           [3D, orbitable Saturn scene]               │ [Overview] [Rings] [Moons]  │
+│                                                     │ One compelling introduction │
+│                                                     │ Key facts                   │
+│                                                     │ [Compare] [Visit Titan]     │
+├─────────────────────────────────────────────────────┤ [Sources / media credits]   │
+│ [Orbit] [Zoom] [Ring edge] [Top view] [Reset] [Scale]│                             │
+└─────────────────────────────────────────────────────┴─────────────────────────────┘
+10. Additional critical screens
+Explorer / Mission Control
+- Full universe navigator with search, recent destinations, curated category portals and controlled zoom across named scale bands (planetary / stellar / galactic / cosmic web). Labeled scale jumps are allowed; false 'truly continuous scale' is not.
+- Map layers: names, orbits, constellations, mission paths, scientific catalogues; default uncluttered.
+Sky Tonight
+- Star chart with date/time, manual location and optional geolocation. Highlights upcoming/rising objects within known prediction boundaries, never claim precise sighting through weather/clouds unless integrated with up-to-date weather service.
+- Toggles for stars, planets, constellations, asterisms, magnitude and cardinal directions; provide non-canvas event list.
+Constellation detail
+- Earth-observer sky chart + isolated constellation artwork, member stars and mythology/cultural variants sourced. Distinguish IAU-defined sky regions from informal line drawings.
+Learning Hub
+- Concept-first paths: Solar System Basics, Stars & Lifecycles, Galaxies, Night Sky, Space Exploration, Gravity/Orbits, Light and Time. Age/depth chips; quick experiments and quizzes; accessible text alternative.
+Teacher Portal
+- Lessons that tie an objective to a chosen scene; one-click presentation mode, classroom-safe show control, checkpoints, discussion questions, and downloadable handouts in later phase. Avoid mandatory student accounts.
+Voyage Passport / End screen
+- Journey map, places visited, short verified fact highlights, learning badges earned for educational actions (not meaningless engagement). Guest local storage and 'Clear data' control.
+11. Visual design system
+Art direction: Observationally grounded astronomy + museum-quality editorial design + premium cinematic interface. Avoid sci-fi weapons/ship cockpit chrome or gratuitous neon.
+Token	Proposal	Why
+--bg-space	#030713	Primary deep space
+--surface	#101729	Cards / drawers
+--surface-glass	translucent navy	Overlays without obscuring object
+--text-primary	#F7FAFF	Main labels
+--text-secondary	#B8C4DE	Secondary information
+--accent-cyan	#79D9ED	Interactive links and map focus
+--accent-orbit	#D7B77B	Solar / exploration accent
+--accent-violet	#9F95F0	Deep-space distinction
+--success	#9FDFB6	Confirmed result
+--border	rgba(220,235,255,.14)	Subtle card definition
+
+
+Typography: Editorial title font such as Space Grotesk/Manrope (license review), paired with highly legible UI type such as Inter. Responsive fluid headings, minimum comfortably readable text, generous line-height and no long fine-print over detailed images. Use established minimum contrast thresholds.
+
+Composition: Large planetary hero, 12-column desktop grid, modest glass panels, generous whitespace, restrained glowing halos, subtle linework suggesting orbital paths. UI overlays must not cover important science details.
+
+Components: CosmicHeader, MegaSearch, PlanetHero, JourneyCard, WorldCard, StoryChapter, DomeCanvas, CameraToolbar, KnowledgeDrawer, PlanetariumControls, ScaleLegend, ObjectBadge, SourceDrawer, LearningModeSelect, ConstellationOverlay, PassportCard, QualityPicker, AccessibilityPanel.
+12. Motion and sound direction
+Motion choreography
+Trigger	Motion response	Platform responsibility
+Home opens	Subtle planet rotation and star twinkle	WebGL scene / composited CSS
+Hover card	Small lift / rim highlight, no full-screen shake	Motion
+Tap Enter Planetarium	Circular iris-to-space or restrained crossfade	Motion + router
+Start show	Camera transition around actual objects, not a video masquerading as interactive scene	React Three Fiber
+Click planet	Fly-to with time/scale transition label; interruptible	Three.js camera rig
+Open facts	Drawer slides/fades without pausing rotation unless requested	Motion
+Reveal constellation	Lines draw gradually while actual star markers remain stable	Three.js + Motion overlay
+Finish journey	Camera pulls back / postcard recap appears	Three.js + Motion
+Reduced motion	Discrete cuts, fades, static illustrations	Accessible variant
+
+
+Timing guidance: UI feedback 120–250 ms, large drawer transitions 250–450 ms; long camera journeys should be user-controlled or skippable rather than hard-timed. Smoothness matters more than dramatic duration.
+
+Audio: No autoplay. Optional original/licensed orchestral ambient soundtrack, spatial sound only if it enhances comprehension; mute available everywhere. Optional voiceover + synchronized captions. No claim that sound travels through a vacuum; soundtrack is an artistic accompaniment.
+13. Responsive and fallback UX
+- Desktop: Full 3D viewport, side drawers, extensive camera presets and keyboard support.
+- Tablet: Canvas with slide-over facts drawer; touch pinch/orbit; show controls dock.
+- Mobile: Simpler LOD, bottom sheets, larger touch targets, constrained camera controls, 'Focus' action; content-first when GPU underpowered.
+- Low-spec / no WebGL: Static image or short video with accessible factual summaries; quiz and encyclopedia fully functional.
+- Loading: Skeleton/fact preview first; meaningful % only if asset pipeline can calculate it; allow cancel.
+- Failures: Scene fails → retry / lower-quality / read article. Location denied → manual city input. NASA API unavailable → versioned cached data + last-updated note.
+- School networks: Compressed media, limited third-party scripts, optional low-bandwidth mode, no required login.
+14. Accessibility, child safety and trust gates
+1. Accessible global navigation, proper semantic headings and landmarks, visible focus and skip link.
+2. All control functionality operable with mouse/touch/keyboard where feasible; alternative text workflows for 3D-only gestures.
+3. Reduced motion must affect page transitions and 3D flight sequences; optional still experience.
+4. Captions and transcripts for all educational narration; no essential educational content only in audio.
+5. Never force geolocation, microphone, headset or personal account before exploration.
+6. Age-appropriate language; no user-generated public chat for MVP; child guest browsing by default.
+7. Source and license for every significant image/model, authenticity tier and deliberate scale change visible.
+8. Avoid making visitors believe they landed on real filmed exoplanet terrain when it is reconstructed.
+9. High color contrast and font size settings; visually obvious control names rather than unlabeled icons only.
+15. MVP release slices (prioritized)
+Slice A — irresistible entry + real core interaction:
+- Cinematic, responsive landing page (all primary sections, lightweight previews).
+- Planetarium Lobby with working paths and accessible settings.
+- Solar System Explorer, verified Saturn 360° viewer, source-labelled encyclopedia drawer.
+- 3–5 chapter 'First Flight' with play/pause/skip/exit and return-to-show behavior.
+- Global search, fallback article views, initial voyage recap.
+Slice B — learning and larger content:
+- Full eight-planet explorer and dedicated object entries; selected moons.
+- All 88 constellation entries with featured interactive examples; Sky Tonight.
+- Learning Hub and quiz mini modules; teacher classroom mode.
+- Four editorial journeys, Compare Worlds and more faithful time controls.
+Slice C — broad universe:
+- Deep-space, galaxy, nebula and exoplanet galleries, cinematic clips with individual rights attribution.
+- Additional educational journeys, favorites/collections, advanced data overlays.
+- Richer mobile performance tiers and optional WebXR after feasibility testing.
+The dates/durations/quantities in product planning are targets; validate with team and technical profiling, not guarantees.
+16. Page-level acceptance criteria
+Landing: A new visitor understands the product within a few seconds; can click Planetarium / Explore / Search on desktop and mobile; no audio starts without consent; first meaningful content is available before 3D assets load.
+
+Lobby: All three modes navigate to working destinations; user can skip settings; keyboard and touch work; preferences persist responsibly.
+
+Guided show: Pause/resume, skip, chapter jump, Explore This, Return to Show and Exit work; captions sync when audio enabled; motion-limited variant exists; chapter progress recovers after interruption.
+
+Planet viewer: Full horizontal camera revolution, vertical orbit/pitch limits, zoom, reset, named camera presets and sourced facts all work; correct texture/source label; no false scale claim.
+
+Explorer: Visitors can search and select any available MVP planet, follow its route to object view, and return to the correct explorer context.
+
+Learning: All featured goals have text equivalents and an understandable answer; sources are available; no quiz requires precise timing or difficult movement.
+
+Recap: End-screen shows visited chapters and a few learned facts; visitor can explore next without logging in; local saved record can be cleared.
+
+Performance: Test at least desktop integrated GPU, mid-range phone, high-end phone, poor-network and disabled-WebGL; dynamic quality selection avoids crashing or a permanently black canvas.
+17. Product measurements
+- First meaningful interactive choice / first successful planet-orbit / first sourced fact revealed.
+- Click-through Landing → Lobby → Started show, plus Landing → Explore.
+- Chapter start/completion, pauses/skips/returns, meaningful educational interactions.
+- Search success, exit/back behavior, errors and falls back to text.
+- School and mobile accessibility failures and reduced-motion feature parity.
+- Rights-provenance coverage and scientific review completeness.
+- Respect children's privacy; avoid individualized behavioral tracking for children and use aggregated privacy-safe site quality analytics after legal review.
+18. Implementation guidance and references
+The UI layer should use Next.js + React + TypeScript; Motion handles nav and overlays, while Three.js + React Three Fiber handles interactive celestial rendering. Astronomy calculations need documented data frames and source provenance. Use a shared route-aware scene state (e.g. destination, camera mode, scene scale, active chapter) to connect the explorer and show player. Keep cinematic NASA/ESA media distinct from real-time control.
+
+UX benchmarks to study — inspiration, not assets to copy:
+- NASA's Eyes hub: https://science.nasa.gov/eyes/ — real-data 3D exploration and mission journeys.
+- NASA's Eyes on the Solar System: https://eyes.nasa.gov/apps/solar-system/ — follow, time, orbit and mission-layer interaction concepts.
+- Stellarium Web: https://stellarium-web.org/ — sky chart and observer viewpoint interaction patterns.
+Asset and rights plan: See ManicksGalaxy_PRD_v0.1.md and ManicksGalaxy_Asset_Source_Register.csv; retain originals and source/license metadata. NASA/ESA affiliation must not be implied merely because their media or data is used.
+19. The differentiator
+The competitive idea is not a larger catalogue or more elaborate space wallpaper. It is a coherent museum-grade journey connecting planetarium storytelling, interactive 360° exploration, a trustworthy encyclopedia, and school-friendly learning within one intuitive experience.
+
+Every important screen answers one of three questions: Where can I go? What am I seeing? What can I learn?

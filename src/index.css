@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-space: #030713;
+    --surface: #0d1526;
+    --surface-elevated: #131d33;
+    --text-primary: #f7faff;
+    --text-secondary: #b8c4de;
+    --text-muted: #7f90b0;
+    --accent-cyan: #79d9ed;
+    --accent-orbit: #d7b77b;
+    --accent-violet: #9f95f0;
+    --border-hairline: rgba(214, 235, 255, 0.14);
+  }
+
+  html {
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+    background-color: #030713;
+    color: #f7faff;
+    scroll-behavior: smooth;
+  }
+
+  h1, h2, h3, h4, .font-display {
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+    text-wrap: balance;
+  }
+
+  .font-mono {
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+html.text-scale-large {
+  font-size: 18px;
+}
+
+html.high-contrast {
+  --border-hairline: rgba(255, 255, 255, 0.38);
+}
+
+html.reduced-motion *,
+html.reduced-motion *::before,
+html.reduced-motion *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+  scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.force-motion) *,
+  html:not(.force-motion) *::before,
+  html:not(.force-motion) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
