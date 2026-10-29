@@ -21,15 +21,15 @@
 | **trappist-1e** | exoplanet | `RECONSTRUCTED` | EXOPLANET_MODEL | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **RECONSTRUCTION_DISCLOSED** |
 | **55-cancri-e** | exoplanet | `RECONSTRUCTED` | EXOPLANET_MODEL | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **RECONSTRUCTION_DISCLOSED** |
 | **io** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/io/io_natural_2k.jpg` | 4096 × 2048 (master: 11445 × 3643 + polar stereographic caps) | `2e21eae3a9d1` | USGS Astrogeology Science Center / NASA / JPL | **VERIFIED_OBSERVED** |
-| **ganymede** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **callisto** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **enceladus** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **triton** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **charon** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **phobos** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **deimos** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **ceres** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
-| **vesta** | moon-dwarf | `DATA-BASED` | PROCEDURAL_FALLBACK | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **NEEDS_ASSET** |
+| **ganymede** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/ganymede/ganymede_2k.jpg` | 4096 × 2048 | `52e0daccbf59` | USGS Astrogeology / NASA / JPL / Askaniy Anpilogov | **VERIFIED_OBSERVED** |
+| **callisto** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/callisto/callisto_2k.jpg` | 4096 × 2048 | `1fd636839886` | USGS Astrogeology / NASA / JPL / John van Vliet / Askaniy Anpilogov | **VERIFIED_OBSERVED** |
+| **enceladus** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/enceladus/enceladus_2k.jpg` | 4096 × 2048 | `73478251cff8` | NASA / JPL-Caltech / Space Science Institute | **VERIFIED_OBSERVED** |
+| **triton** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/triton/triton_2k.jpg` | 4096 × 2048 | `4fe9e1dffd42` | NASA / JPL / USGS Astrogeology Science Center | **VERIFIED_OBSERVED** |
+| **charon** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/charon/charon_2k.jpg` | 4096 × 2048 | `ce04329db7bc` | NASA / Johns Hopkins APL / Southwest Research Institute | **VERIFIED_OBSERVED** |
+| **phobos** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/phobos/phobos_2k.jpg` | 2048 × 1024 | `17465161abc3` | DLR (German Aerospace Center) / NASA Viking / ESA Mars Express | **VERIFIED_OBSERVED** |
+| **deimos** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/deimos/deimos_2k.jpg` | 2048 × 1024 | `8892a62de1e9` | NASA / JPL / University of Arizona (HiRISE) / Phil Stooke | **VERIFIED_OBSERVED** |
+| **ceres** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/ceres/ceres_2k.jpg` | 2048 × 1024 | `505f183714e4` | NASA / JPL-Caltech / UCLA / MPS / DLR / IDA | **VERIFIED_OBSERVED** |
+| **vesta** | moon-dwarf | `OBSERVED` | REAL_TEXTURE_MAP | `/assets/planets/vesta/vesta_2k.jpg` | 2048 × 1024 | `7fb86c3378ae` | NASA / JPL-Caltech / UCLA / MPS / DLR / IDA | **VERIFIED_OBSERVED** |
 | **proxima-centauri** | star | `DATA-BASED` | STELLAR_CORONA_MODEL | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **DATA_INFORMED_STAR** |
 | **betelgeuse** | star | `DATA-BASED` | STELLAR_CORONA_MODEL | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **DATA_INFORMED_STAR** |
 | **sirius** | star | `DATA-BASED` | STELLAR_CORONA_MODEL | `procedural` | Procedural 1024x512 | `N/A` | Procedural | **DATA_INFORMED_STAR** |

@@ -87,26 +87,42 @@ export function buildCompositeCelestialGroup(
     });
   } else if (hasRealTextures) {
     // Real NASA/Spacecraft imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune, Europa, Titan, Pluto, Io
-    const isRockyAirless = ['mercury', 'moon', 'mars'].includes(obj.slug);
+    const isRockyAirless = ['mercury', 'moon', 'mars', 'ceres', 'vesta', 'phobos', 'deimos'].includes(obj.slug);
     const isIo = obj.slug === 'io';
     const isVenus = obj.slug === 'venus';
     const isGasGiant = ['jupiter', 'saturn', 'uranus', 'neptune'].includes(obj.slug);
-    const isIcyMoon = ['europa', 'pluto'].includes(obj.slug);
+    const isEuropa = obj.slug === 'europa';
+    const isEnceladus = obj.slug === 'enceladus';
+    const isTriton = obj.slug === 'triton';
+    const isGanymede = obj.slug === 'ganymede';
+    const isCallisto = obj.slug === 'callisto';
+    const isPlutoCharon = ['pluto', 'charon'].includes(obj.slug);
     const isTitan = obj.slug === 'titan';
+
     const baseRoughness = isRockyAirless
-      ? 0.88
+      ? 0.92
       : isIo
         ? 0.90
-        : isVenus
-          ? 0.52
-          : isGasGiant
-            ? 0.68
-            : isIcyMoon
-              ? 0.38
-              : isTitan
-                ? 0.72
-                : 0.62;
-    const baseMetalness = isRockyAirless ? 0.02 : isIo ? 0.0 : isGasGiant ? 0.0 : isIcyMoon ? 0.04 : 0.04;
+        : isEnceladus
+          ? 0.28
+          : isEuropa
+            ? 0.32
+            : isTriton
+              ? 0.48
+              : isVenus
+                ? 0.52
+                : isPlutoCharon
+                  ? 0.68
+                  : isGanymede
+                    ? 0.72
+                    : isCallisto
+                      ? 0.82
+                      : isGasGiant
+                        ? 0.68
+                        : isTitan
+                          ? 0.72
+                          : 0.62;
+    const baseMetalness = isRockyAirless ? 0.0 : isIo ? 0.0 : isGasGiant ? 0.0 : 0.02;
 
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,

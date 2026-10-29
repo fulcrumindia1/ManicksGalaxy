@@ -127,7 +127,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             <PlanetSceneCanvas
               mode="solar-system"
               objectSlug={highlightedSlug}
-              isPaused={orbitsPaused || preferences.reducedMotion}
+              isPaused={orbitsPaused}
               reducedMotion={preferences.reducedMotion}
               showScienceLabels={showLabels}
               scaleMode={scaleMode}

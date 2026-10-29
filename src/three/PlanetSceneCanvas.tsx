@@ -633,7 +633,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         }
       }
 
-      const animateMotion = !p.isPaused && !p.reducedMotion;
+      const animateMotion = !p.isPaused;
       if (animateMotion) {
         stillMoving = true;
         activeSpinMeshes.forEach((item) => {
@@ -716,6 +716,18 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         requestRender,
         stepOrbitCamera,
         applyCameraPreset,
+        getDebugState: () => ({
+          simDays,
+          animateMotion: !propsRef.current.isPaused && !propsRef.current.reducedMotion,
+          isPaused: propsRef.current.isPaused,
+          reducedMotion: propsRef.current.reducedMotion,
+          timeSpeedDaysPerSec: propsRef.current.timeSpeedDaysPerSec,
+          activeSpinMeshesCount: activeSpinMeshes.length,
+          solarPlanetsCount: solarPlanets.length,
+          spinMeshRot0: activeSpinMeshes[0]?.mesh?.rotation?.y,
+          planet0Pos: solarPlanets[0]?.holder?.position?.clone(),
+          mode: propsRef.current.mode,
+        }),
         setCameraPosition: (x: number, y: number, z: number) => {
           transitionActive = false;
           camera.position.set(x, y, z);

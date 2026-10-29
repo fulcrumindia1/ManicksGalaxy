@@ -125,7 +125,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <PlanetSceneCanvas
                 mode="hero"
                 objectSlug={heroBody}
-                isPaused={preferences.reducedMotion}
+                isPaused={false}
                 reducedMotion={preferences.reducedMotion}
                 qualityTier={preferences.qualityTier}
                 ariaLabel={`Live 3D preview of ${heroBody === 'saturn' ? 'Saturn and its icy rings' : 'Earth and its Moon'}`}

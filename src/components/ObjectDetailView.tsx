@@ -115,8 +115,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
         ref={viewportRef}
         data-testid="object-viewport"
         className={`flex-1 relative flex flex-col justify-between overflow-hidden transition-all ${isFullscreen
-            ? 'fixed inset-0 z-50 w-screen h-screen bg-[#030713]'
-            : 'min-h-[520px] lg:min-h-[calc(100vh-4rem)]'
+          ? 'fixed inset-0 z-50 w-screen h-screen bg-[#030713]'
+          : 'min-h-[520px] lg:min-h-[calc(100vh-4rem)]'
           }`}
       >
         {/* Top Breadcrumb & Return-to-Show Bar */}
@@ -212,7 +212,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                 cameraPreset={cameraPreset}
                 presetNonce={presetNonce}
                 orbitStepCommand={orbitCmd}
-                isPaused={spinPaused || preferences.reducedMotion}
+                isPaused={spinPaused}
                 reducedMotion={preferences.reducedMotion}
                 showScienceLabels={showScienceAxes}
                 qualityTier={preferences.qualityTier}

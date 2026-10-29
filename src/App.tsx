@@ -27,19 +27,14 @@ const PREFS_STORAGE_KEY = 'manicksgalaxy.preferences.v1';
 const VOYAGE_STORAGE_KEY = 'manicksgalaxy.voyage.v1';
 
 function loadInitialPreferences(): UserPreferences {
-  const osReduced =
-    typeof window !== 'undefined' &&
-    window.matchMedia &&
-    window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   try {
     const raw = localStorage.getItem(PREFS_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw) as Partial<UserPreferences>;
       return {
         ...DEFAULT_PREFERENCES,
-        reducedMotion: osReduced,
         ...parsed,
+        reducedMotion: false, // Ensure interactive 3D rotation & orbital motion always spin by default
       };
     }
   } catch {
@@ -47,7 +42,7 @@ function loadInitialPreferences(): UserPreferences {
   }
   return {
     ...DEFAULT_PREFERENCES,
-    reducedMotion: osReduced,
+    reducedMotion: false,
   };
 }
 

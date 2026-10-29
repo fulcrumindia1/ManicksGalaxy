@@ -441,6 +441,191 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
       },
     ],
   },
+  ganymede: {
+    textureStyle: 'ganymede',
+    dayMap2k: '/assets/planets/ganymede/ganymede_2k.jpg',
+    dayMap4k: '/assets/planets/ganymede/ganymede_4k.jpg',
+    sources: [
+      {
+        assetId: 'USGS-NASA-GANYMEDE-GALILEO-VOYAGER',
+        title: 'Ganymede Galileo SSI & Voyager 1/2 Global Controlled Mosaic',
+        creator: 'USGS Astrogeology / NASA / JPL / Askaniy Anpilogov',
+        license: 'NASA Open Data / CC BY-SA 3.0',
+        creditLine:
+          'Ganymede global mosaic: USGS Astrogeology controlled global mosaic combining NASA Galileo SSI and Voyager 1/2 imaging data.',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Ganymede_map_by_Askaniy.png',
+        resolution: '4096 × 2048',
+        sourceDate: 'Galileo SSI (1996–2000) & Voyager (1979)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular global cylindrical mosaic resolving dark ancient cratered terrain (Galileo Regio) and brighter, younger grooved terrain (sulci) created by extensional tectonism.',
+      },
+    ],
+  },
+  callisto: {
+    textureStyle: 'callisto',
+    dayMap2k: '/assets/planets/callisto/callisto_2k.jpg',
+    dayMap4k: '/assets/planets/callisto/callisto_4k.jpg',
+    sources: [
+      {
+        assetId: 'USGS-NASA-CALLISTO-GALILEO-VOYAGER',
+        title: 'Callisto Galileo SSI & Voyager Global Controlled Mosaic',
+        creator: 'USGS Astrogeology / NASA / JPL / John van Vliet / Askaniy Anpilogov',
+        license: 'NASA Open Data / CC BY-SA 3.0',
+        creditLine:
+          'Callisto global mosaic: USGS Astrogeology and NASA Galileo/Voyager mission data, synthesis by John van Vliet & Askaniy Anpilogov.',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Callisto_map_by_Askaniy.png',
+        resolution: '4096 × 2048',
+        sourceDate: 'Galileo SSI (1996–2001) & Voyager 1/2 (1979)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular cylindrical projection showing Callisto ancient heavily cratered ice-rock surface, multi-ring impact structures Valhalla and Asgard, and bright frost deposits.',
+      },
+    ],
+  },
+  enceladus: {
+    textureStyle: 'enceladus',
+    dayMap2k: '/assets/planets/enceladus/enceladus_2k.jpg',
+    dayMap4k: '/assets/planets/enceladus/enceladus_4k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-CASSINI-ENCELADUS-PIA18435',
+        title: 'Cassini ISS Enceladus Global Color Mosaic',
+        creator: 'NASA / JPL-Caltech / Space Science Institute',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JPL-Caltech/SSI: Cassini Imaging Science Subsystem (ISS) global color mosaic of Saturn icy moon Enceladus (PIA18435).',
+        sourceUrl: 'https://photojournal.jpl.nasa.gov/catalog/PIA18435',
+        resolution: '4096 × 2048',
+        sourceDate: 'Cassini Equinox and Solstice Missions (November 2014)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular cylindrical projection using clear, green, infrared, and ultraviolet filter composites. Accurately maps the south-polar terrain fractures (tiger stripes: Damascus, Baghdad, Alexandria, and Cairo Sulci) that vent cryovolcanic water-ice plumes.',
+      },
+    ],
+  },
+  triton: {
+    textureStyle: 'triton',
+    dayMap2k: '/assets/planets/triton/triton_2k.jpg',
+    dayMap4k: '/assets/planets/triton/triton_4k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-VOYAGER2-TRITON-GLOBAL',
+        title: 'Voyager 2 Triton Global Cylindrical Map',
+        creator: 'NASA / JPL / USGS Astrogeology Science Center',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JPL/USGS Astrogeology: Global color-controlled mosaic of Neptune moon Triton from Voyager 2 narrow-angle camera flyby.',
+        sourceUrl: 'https://photojournal.jpl.nasa.gov/catalog/PIA00317',
+        resolution: '4096 × 2048',
+        sourceDate: 'Voyager 2 Flyby (August 1989)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Simple cylindrical equirectangular projection showing Triton cantaloupe terrain, bright pinkish south polar nitrogen frost cap, and dark wind streaks from cryovolcanic nitrogen geysers.',
+      },
+    ],
+  },
+  charon: {
+    textureStyle: 'charon',
+    dayMap2k: '/assets/planets/charon/charon_2k.jpg',
+    dayMap4k: '/assets/planets/charon/charon_4k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-NH-CHARON-LORRI-MVIC',
+        title: 'New Horizons LORRI & MVIC Charon Global Color Mosaic',
+        creator: 'NASA / Johns Hopkins APL / Southwest Research Institute',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JHUAPL/SwRI: New Horizons Long Range Reconnaissance Imager (LORRI) and Multispectral Visible Imaging Camera (MVIC) global mosaic of Charon.',
+        sourceUrl: 'https://photojournal.jpl.nasa.gov/catalog/PIA22687',
+        resolution: '4096 × 2048',
+        sourceDate: 'New Horizons Flyby (July 2015)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular projection resolving Charon reddish north polar hood (Mordor Macula) coated in organic tholins, massive tectonic chasmata (Serenity Chasma), and southern plains (Vulcan Planitia).',
+      },
+    ],
+  },
+  ceres: {
+    textureStyle: 'ceres',
+    dayMap2k: '/assets/planets/ceres/ceres_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-DAWN-CERES-PIA19606',
+        title: 'Dawn FC Ceres Global Unannotated Mosaic',
+        creator: 'NASA / JPL-Caltech / UCLA / MPS / DLR / IDA',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JPL-Caltech/UCLA/MPS/DLR/IDA: Global mosaic of dwarf planet Ceres from Dawn Framing Camera Survey orbit.',
+        sourceUrl: 'https://photojournal.jpl.nasa.gov/catalog/PIA19606',
+        resolution: '2048 × 1024',
+        sourceDate: 'Dawn Mission Survey Orbit (August 2015)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular cylindrical projection resolving impact craters and the bright sodium carbonate deposits inside Occator Crater (Cerealia Facula and Vinalia Faculae) and conical cryovolcano Ahuna Mons.',
+      },
+    ],
+  },
+  vesta: {
+    textureStyle: 'vesta',
+    dayMap2k: '/assets/planets/vesta/vesta_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-DAWN-VESTA-PIA14703',
+        title: 'Dawn FC 4 Vesta Global Photomap',
+        creator: 'NASA / JPL-Caltech / UCLA / MPS / DLR / IDA',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JPL-Caltech/UCLA/MPS/DLR/IDA: First global photomap of asteroid 4 Vesta from Dawn Framing Camera imagery.',
+        sourceUrl: 'https://photojournal.jpl.nasa.gov/catalog/PIA14703',
+        resolution: '2048 × 1024',
+        sourceDate: 'Dawn Mission High Altitude Mapping Orbit (September 2011)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Simple cylindrical projection showing the massive Rheasilvia south-polar impact basin, central mountain peak, and the parallel equatorial troughs (Divalia Fossae).',
+      },
+    ],
+  },
+  phobos: {
+    textureStyle: 'phobos',
+    dayMap2k: '/assets/planets/phobos/phobos_2k.jpg',
+    sources: [
+      {
+        assetId: 'DLR-NASA-PHOBOS-VIKING-MEX',
+        title: 'Phobos Controlled Global Viking & Mars Express Mosaic',
+        creator: 'DLR (German Aerospace Center) / NASA Viking / ESA Mars Express',
+        license: 'NASA / ESA / DLR Open Science Data',
+        creditLine:
+          'DLR / NASA / ESA: Global controlled mosaic of Martian moon Phobos derived from Viking Orbiter and Mars Express High Resolution Stereo Camera (HRSC) data.',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Phobos_Viking_Mosaic_DLRcontrol_7200.jpg',
+        resolution: '2048 × 1024',
+        sourceDate: 'Viking Orbiter & Mars Express (1976–2010)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Simple cylindrical projection centered on Phobos sub-Mars point, accurately mapping the 9-km Stickney impact crater, its ejecta blanket, and parallel surface grooves.',
+      },
+    ],
+  },
+  deimos: {
+    textureStyle: 'deimos',
+    dayMap2k: '/assets/planets/deimos/deimos_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-VIKING-MRO-DEIMOS-COLOR',
+        title: 'Deimos Global Cylindrical Color Map',
+        creator: 'NASA / JPL / University of Arizona (HiRISE) / Phil Stooke',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'NASA/JPL/Univ of Arizona/Phil Stooke: Global cylindrical map of Martian moon Deimos compiled from Viking Orbiter and MRO HiRISE color imagery.',
+        sourceUrl: 'https://commons.wikimedia.org/wiki/File:Deimos_color_map.jpg',
+        resolution: '2048 × 1024',
+        sourceDate: 'Viking Orbiter & MRO HiRISE (1977–2009)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Cylindrical projection showing Deimos smooth regolith-mantled surface, prominent craters Swift and Voltaire, and bright albedo streaks along ridges.',
+      },
+    ],
+  },
 };
 
 /**
