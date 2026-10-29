@@ -16,6 +16,7 @@ import {
   loadRealPlanetTextures,
   releaseLoadedTextures,
   type LoadedPlanetTextures,
+  type SurfaceVariant,
 } from './loadPlanetTextures';
 import { buildCompositeCelestialGroup } from './celestialFactory';
 
@@ -24,7 +25,7 @@ export type CameraPreset = 'default' | 'above' | 'equator' | 'rings' | 'moons' |
 export interface PlanetSceneCanvasProps {
   mode: 'object' | 'solar-system' | 'hero';
   objectSlug: string;
-  surfaceVariant?: 'standard' | 'radar';
+  surfaceVariant?: SurfaceVariant;
   cameraPreset?: CameraPreset;
   presetNonce?: number;
   orbitStepCommand?: { yawDeg: number; pitchDeg: number; zoomScale: number; nonce: number };
@@ -683,17 +684,11 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     }
 
     function requestRender() {
-      if (unmounted) return;
-      advanceSimulation(0);
-      renderer.render(scene, camera);
+      // Continuous 60fps renderLoop drives rendering; no-op to prevent re-entrant recursion
     }
 
     // Start continuous animation loop immediately
     frameId = requestAnimationFrame(renderLoop);
-
-    controls.addEventListener('change', () => {
-      requestRender();
-    });
 
     const resizeObserver = new ResizeObserver(() => {
       if (!container || unmounted) return;
@@ -746,7 +741,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           forceProceduralFallback = val;
           rebuildSubject();
         },
-        setSurfaceVariant: (variant: 'standard' | 'radar') => {
+        setSurfaceVariant: (variant: SurfaceVariant) => {
           propsRef.current.surfaceVariant = variant;
           rebuildSubject();
         },

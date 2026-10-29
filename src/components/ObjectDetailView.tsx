@@ -17,6 +17,7 @@ import { CELESTIAL_CATALOG, getObjectBySlug } from '../data/catalog';
 import { ReadingDepth, ShowBookmark, UserPreferences } from '../lib/voyageStore';
 import { useFullscreen } from '../lib/useFullscreen';
 import { CameraPreset, PlanetSceneCanvas } from '../three/PlanetSceneCanvas';
+import { SurfaceVariant } from '../three/loadPlanetTextures';
 import { DeepSkyObservationPlate } from './DeepSkyObservationPlate';
 import { AppRoute } from './Header';
 
@@ -56,7 +57,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
   const [dockCollapsed, setDockCollapsed] = useState<boolean>(false);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
   const [teacherOpen, setTeacherOpen] = useState<boolean>(classroomPresentation);
-  const [surfaceVariant, setSurfaceVariant] = useState<'standard' | 'radar'>('standard');
+  const [surfaceVariant, setSurfaceVariant] = useState<SurfaceVariant>('standard');
   const [orbitCmd, setOrbitCmd] = useState<{
     yawDeg: number;
     pitchDeg: number;
@@ -231,12 +232,22 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
               <div className="inline-block bg-[#060C1C]/90 border border-white/15 rounded-xl px-3.5 py-2">
                 <div className="text-[11px] font-mono text-[#79D9ED]">
                   {object.isOrbitable3D ? '360° ORBITABLE 3D MODEL' : 'ASTRONOMICAL OBSERVATION'} ·{' '}
-                  {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
+                  {object.slug === 'venus' && surfaceVariant === 'radar'
+                    ? 'DATA-BASED'
+                    : object.slug === 'io' && surfaceVariant === 'enhanced'
+                      ? 'DATA-BASED (ENHANCED COLOR)'
+                      : object.slug === 'io' && surfaceVariant === 'coverage'
+                        ? 'DATA-BASED (COVERAGE MAP)'
+                        : object.authenticityTier}
                 </div>
                 <p className="text-[11px] text-[#B8C4DE] mt-0.5 leading-snug">
                   {object.slug === 'venus' && surfaceVariant === 'radar'
                     ? 'NASA Magellan Synthetic Aperture Radar (SAR) false-color topographic altimetry penetrating the opaque cloud deck.'
-                    : object.authenticityNote}
+                    : object.slug === 'io' && surfaceVariant === 'enhanced'
+                      ? 'NASA Photojournal / Galileo SSI false-color multispectral composite highlighting SO2 frost and active silicate lava flows.'
+                      : object.slug === 'io' && surfaceVariant === 'coverage'
+                        ? 'USGS Astrogeology Galileo SSI & Voyager 1 observation coverage confidence map (Green: high resolution photographic mosaic, Amber: polar stereographic mapping).'
+                        : object.authenticityNote}
                 </p>
               </div>
             </div>
@@ -329,6 +340,48 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                             }`}
                         >
                           Magellan Radar Surface
+                        </button>
+                      </div>
+                      <span className="h-4 w-px bg-white/15 mx-0.5 hidden sm:inline-block" aria-hidden="true" />
+                    </>
+                  )}
+
+                  {/* Io Scientific Surface Mode (Approximate Natural Color vs Enhanced Scientific Color vs Observation Coverage) */}
+                  {object.slug === 'io' && (
+                    <>
+                      <div className="inline-flex rounded-lg p-0.5 bg-[#030713] border border-white/15" role="group" aria-label="Io Surface Mode">
+                        <button
+                          type="button"
+                          onClick={() => setSurfaceVariant('standard')}
+                          className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${surfaceVariant === 'standard'
+                            ? 'bg-[#EAB308]/25 text-[#FDE047] border border-[#EAB308]/50'
+                            : 'text-[#B8C4DE] hover:text-white'
+                            }`}
+                          title="USGS Galileo SSI & Voyager global 1km/pix natural sulfur-yellow mosaic"
+                        >
+                          Approx. Natural Color
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSurfaceVariant('enhanced')}
+                          className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${surfaceVariant === 'enhanced'
+                            ? 'bg-[#F97316]/25 text-[#FB923C] border border-[#F97316]/50'
+                            : 'text-[#B8C4DE] hover:text-white'
+                            }`}
+                          title="Multispectral composite accentuating SO2 frost and silicate volcanic centers"
+                        >
+                          Enhanced Color
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSurfaceVariant('coverage')}
+                          className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${surfaceVariant === 'coverage'
+                            ? 'bg-[#22C55E]/25 text-[#4ADE80] border border-[#22C55E]/50'
+                            : 'text-[#B8C4DE] hover:text-white'
+                            }`}
+                          title="USGS high-resolution photographic mosaic vs high-latitude mapping"
+                        >
+                          Coverage Map
                         </button>
                       </div>
                       <span className="h-4 w-px bg-white/15 mx-0.5 hidden sm:inline-block" aria-hidden="true" />

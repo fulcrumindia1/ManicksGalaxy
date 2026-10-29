@@ -49,6 +49,10 @@ export interface PlanetTextureSet {
   specularMap2k?: string;
   /** Alternate scientific observation map (e.g. Venus Magellan radar surface) */
   radarMap2k?: string;
+  /** Enhanced scientific / false-color multispectral composite */
+  enhancedMap2k?: string;
+  /** Observation coverage / quality confidence map */
+  coverageMap2k?: string;
   /** Ring color map (for ringed planets) */
   ringMap?: string;
   /** Ring alpha (transparency) map */
@@ -411,6 +415,29 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
         authenticity: 'OBSERVED',
         processingNotes:
           'Equirectangular mosaic from New Horizons Long Range Reconnaissance Imager (LORRI) and Multispectral Visible Imaging Camera (MVIC). Shows Tombaugh Regio, the bright nitrogen-ice glacier Sputnik Planitia, and darker tholin-coated equatorial regions (Cthulhu Macula). Non-encounter hemisphere derived from lower-resolution approach imagery.',
+      },
+    ],
+  },
+  io: {
+    textureStyle: 'io',
+    dayMap2k: '/assets/planets/io/io_natural_2k.jpg',
+    dayMap4k: '/assets/planets/io/io_natural_4k.jpg',
+    enhancedMap2k: '/assets/planets/io/io_enhanced_2k.jpg',
+    coverageMap2k: '/assets/planets/io/io_coverage_2k.png',
+    sources: [
+      {
+        assetId: 'USGS-NASA-IO-GALILEO-VOYAGER-1KM',
+        title: 'Io Galileo SSI & Voyager 1 Global Color Merge Mosaic (1 km/pixel)',
+        creator: 'USGS Astrogeology Science Center / NASA / JPL',
+        license: 'Public Domain / NASA Open Data',
+        creditLine:
+          'NASA/JPL/USGS Astrogeology: Global color mosaic of Io derived from Galileo Solid-State Imaging (SSI) and Voyager 1/2 clear, green, and violet filter data. Processed and reprojected to equirectangular with polar stereographic integration.',
+        sourceUrl: 'https://astrogeology.usgs.gov/search/map/io_galileo_ssi_global_color_merge_mosaic_1km',
+        resolution: '4096 × 2048 (master: 11445 × 3643 + polar stereographic caps)',
+        sourceDate: 'Galileo SSI (1996–2001) & Voyager 1 (1979)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular projection merging USGS equatorial simple cylindrical mosaic with USGS North and South Polar stereographic projections. Natural color approximation based on clear, green, and violet filter composites. Accurately maps verified volcanic calderas Loki Patera, Pele, and Prometheus.',
       },
     ],
   },

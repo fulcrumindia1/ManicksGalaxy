@@ -86,24 +86,27 @@ export function buildCompositeCelestialGroup(
       metalness: 0.0,
     });
   } else if (hasRealTextures) {
-    // Real NASA/Spacecraft imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune, Europa, Titan, Pluto
+    // Real NASA/Spacecraft imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune, Europa, Titan, Pluto, Io
     const isRockyAirless = ['mercury', 'moon', 'mars'].includes(obj.slug);
+    const isIo = obj.slug === 'io';
     const isVenus = obj.slug === 'venus';
     const isGasGiant = ['jupiter', 'saturn', 'uranus', 'neptune'].includes(obj.slug);
     const isIcyMoon = ['europa', 'pluto'].includes(obj.slug);
     const isTitan = obj.slug === 'titan';
     const baseRoughness = isRockyAirless
       ? 0.88
-      : isVenus
-        ? 0.52
-        : isGasGiant
-          ? 0.68
-          : isIcyMoon
-            ? 0.38
-            : isTitan
-              ? 0.72
-              : 0.62;
-    const baseMetalness = isRockyAirless ? 0.02 : isGasGiant ? 0.0 : isIcyMoon ? 0.04 : 0.04;
+      : isIo
+        ? 0.90
+        : isVenus
+          ? 0.52
+          : isGasGiant
+            ? 0.68
+            : isIcyMoon
+              ? 0.38
+              : isTitan
+                ? 0.72
+                : 0.62;
+    const baseMetalness = isRockyAirless ? 0.02 : isIo ? 0.0 : isGasGiant ? 0.0 : isIcyMoon ? 0.04 : 0.04;
 
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -267,6 +270,40 @@ export function buildCompositeCelestialGroup(
     disposables.push(eqGeo, eqMat);
     const eqRing = new THREE.Mesh(eqGeo, eqMat);
     axialTiltGroup.add(eqRing);
+
+    // Geological landmark markers for Io (USGS / IAU nomenclature coordinates)
+    if (obj.slug === 'io') {
+      const ioLandmarks = [
+        { name: 'Loki Patera', lat: 13.0, lonW: 308.8, desc: 'Largest volcanic depression (~200 km across) with episodic lava lake overturn' },
+        { name: 'Pele', lat: -18.7, lonW: 255.3, desc: 'Active sulfur eruption center with 400 km high plume and orange-red fallout ring' },
+        { name: 'Prometheus', lat: -1.5, lonW: 153.9, desc: 'Persistent 100 km volcanic plume and active silicate lava flows' },
+        { name: 'Babbar Patera', lat: -39.8, lonW: 272.0, desc: 'Steep-walled volcanic caldera depression in southern hemisphere' },
+      ];
+      ioLandmarks.forEach((lm) => {
+        const lonE = (360 - lm.lonW) % 360;
+        const phi = THREE.MathUtils.degToRad(90 - lm.lat);
+        const theta = THREE.MathUtils.degToRad(lonE + 180);
+        const r = 1.018;
+        const x = -r * Math.sin(phi) * Math.cos(theta);
+        const y = r * Math.cos(phi);
+        const z = r * Math.sin(phi) * Math.sin(theta);
+
+        const pinGeo = new THREE.SphereGeometry(0.022, 12, 12);
+        const pinMat = new THREE.MeshStandardMaterial({
+          color: 0xef4444,
+          emissive: 0xdc2626,
+          emissiveIntensity: 0.85,
+          roughness: 0.3,
+        });
+        disposables.push(pinGeo, pinMat);
+        const pin = new THREE.Mesh(pinGeo, pinMat);
+        pin.position.set(x, y, z);
+        pin.userData.slug = 'io';
+        pin.userData.landmarkName = lm.name;
+        pin.userData.landmarkDesc = lm.desc;
+        spinMesh.add(pin);
+      });
+    }
   }
 
   // Part 6: Orbiting 3D Moons & Orbital Tracks

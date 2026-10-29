@@ -123,11 +123,13 @@ function shouldUseLowQuality(qualityTier: QualityTier): boolean {
  * Loads real planet textures from the manifest, falling back gracefully.
  * Returns a LoadedPlanetTextures with isRealImagery=true on success.
  */
+export type SurfaceVariant = 'standard' | 'radar' | 'enhanced' | 'coverage';
+
 export async function loadRealPlanetTextures(
   style: TextureStyle,
   maxAnisotropy: number,
   qualityTier: QualityTier = 'auto',
-  variant: 'standard' | 'radar' = 'standard',
+  variant: SurfaceVariant = 'standard',
 ): Promise<LoadedPlanetTextures | null> {
   const set = getTextureSet(style);
   if (!set) return null;
@@ -140,6 +142,10 @@ export async function loadRealPlanetTextures(
     let dayMapUrl: string;
     if (variant === 'radar' && set.radarMap2k) {
       dayMapUrl = set.radarMap2k;
+    } else if (variant === 'enhanced' && set.enhancedMap2k) {
+      dayMapUrl = set.enhancedMap2k;
+    } else if (variant === 'coverage' && set.coverageMap2k) {
+      dayMapUrl = set.coverageMap2k;
     } else {
       dayMapUrl = (!lowQ && set.dayMap4k) ? set.dayMap4k : set.dayMap2k;
     }

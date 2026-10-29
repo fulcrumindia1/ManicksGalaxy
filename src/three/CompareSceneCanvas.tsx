@@ -471,17 +471,11 @@ export const CompareSceneCanvas: React.FC<CompareSceneCanvasProps> = ({
     }
 
     function requestRender() {
-      if (unmounted) return;
-      advanceSimulation(0);
-      renderer.render(scene, camera);
+      // Continuous 60fps renderLoop drives rendering; no-op to prevent re-entrant recursion
     }
 
     // Start continuous animation loop immediately
     frameId = requestAnimationFrame(renderLoop);
-
-    controls.addEventListener('change', () => {
-      requestRender();
-    });
 
     const resizeObserver = new ResizeObserver(() => {
       if (!container || unmounted) return;

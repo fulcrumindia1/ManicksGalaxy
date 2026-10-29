@@ -159,7 +159,7 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
               <Printer className="w-3.5 h-3.5 text-[#79D9ED]" aria-hidden="true" />
               <span>Print Passport &amp; Recap</span>
             </button>
-            <span className="text-[11px] text-[#7F90B0] hidden sm:inline">(Enable &ldquo;Background graphics&rdquo; in print dialog)</span>
+            <span className="text-[11px] text-[#7F90B0] hidden sm:inline">(Enable &quot;Background graphics&quot; in print dialog)</span>
 
             {!confirmClear ? (
               <button
@@ -288,8 +288,8 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
                 <div
                   key={b.id}
                   className={`p-3.5 rounded-xl border flex items-start gap-3 print:p-2.5 print:rounded-md ${b.earned
-                      ? 'border-[#9FDFB6]/40 bg-[#9FDFB6]/8 print:bg-emerald-50 print:border-2 print:border-emerald-700'
-                      : 'border-white/10 bg-[#070D1D] opacity-65 print:bg-white print:border print:border-slate-400 print:opacity-100 print:border-dashed'
+                    ? 'border-[#9FDFB6]/40 bg-[#9FDFB6]/8 print:bg-emerald-50 print:border-2 print:border-emerald-700'
+                    : 'border-white/10 bg-[#070D1D] opacity-65 print:bg-white print:border print:border-slate-400 print:opacity-100 print:border-dashed'
                     }`}
                 >
                   <Award
