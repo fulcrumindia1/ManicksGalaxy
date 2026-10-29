@@ -11,6 +11,11 @@ import {
 import { computeOrbitalAngleRad } from '../lib/astronomy';
 import { QualityTier } from '../lib/voyageStore';
 import { getProceduralPlanetMaps } from './proceduralTextures';
+import {
+  loadRealPlanetTextures,
+  releaseLoadedTextures,
+  type LoadedPlanetTextures,
+} from './loadPlanetTextures';
 
 export type CameraPreset = 'default' | 'above' | 'equator' | 'rings' | 'moons' | 'system';
 
@@ -52,6 +57,7 @@ const _scratchTargetPos = new THREE.Vector3();
 const _scratchLookAt = new THREE.Vector3();
 const _scratchSphere = new THREE.Spherical();
 const _scratchOffset = new THREE.Vector3();
+const _scratchSunDir = new THREE.Vector3();
 
 function createCustomRingGeometry(innerRadius: number, outerRadius: number, segments: number): THREE.RingGeometry {
   const geo = new THREE.RingGeometry(innerRadius, outerRadius, segments, 4);
@@ -73,47 +79,76 @@ function buildCompositeCelestialGroup(
   maxAnisotropy: number,
   lowQuality: boolean,
   showScienceLabels: boolean,
-  includeMoons: boolean
+  includeMoons: boolean,
+  sunLightRef?: THREE.DirectionalLight,
+  realTextures?: LoadedPlanetTextures | null,
 ): {
   root: THREE.Group;
   spinMesh: THREE.Mesh;
   cloudMesh?: THREE.Mesh;
+  nightMesh?: THREE.Mesh;
   moonpivots: Array<{ pivot: THREE.Group; speed: number }>;
   disposables: Array<{ dispose: () => void }>;
 } {
   const disposables: Array<{ dispose: () => void }> = [];
   const root = new THREE.Group();
-  const maps = getProceduralPlanetMaps(obj.visual.textureStyle, maxAnisotropy, lowQuality);
+
+  const hasRealTextures = realTextures?.isRealImagery && realTextures.albedoMap;
+
+  // Only use procedural maps as fallback when no real textures available
+  const maps = hasRealTextures ? null : getProceduralPlanetMaps(obj.visual.textureStyle, maxAnisotropy, lowQuality);
 
   // Tilt group applies true physical axial obliquity
   const axialTiltGroup = new THREE.Group();
   axialTiltGroup.rotation.z = THREE.MathUtils.degToRad(obj.metrics.axialTiltDeg || 0);
   root.add(axialTiltGroup);
 
-  const segs = lowQuality ? 32 : 48;
+  const segs = lowQuality ? 32 : 64;
   // Part 1: Primary planetary body spheroid (oblate scaled for gas giants)
   const bodyGeo = new THREE.SphereGeometry(1, segs, segs);
   disposables.push(bodyGeo);
 
   const isStar = obj.category === 'star';
-  const bodyMat = isStar
-    ? new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        map: maps.albedoMap,
-        emissive: new THREE.Color('#f97316'),
-        emissiveMap: maps.albedoMap,
-        emissiveIntensity: 1.35,
-        roughness: 0.4,
-        metalness: 0.0,
-      })
-    : new THREE.MeshStandardMaterial({
-        color: 0xffffff,
-        map: maps.albedoMap,
-        bumpMap: maps.bumpMap,
-        bumpScale: obj.category === 'planet' && obj.visual.hasRings ? 0.008 : 0.024,
-        roughness: obj.slug === 'earth' ? 0.58 : obj.slug === 'europa' ? 0.32 : 0.78,
-        metalness: 0.06,
-      });
+  let bodyMat: THREE.MeshStandardMaterial;
+
+  if (isStar) {
+    bodyMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: maps?.albedoMap,
+      emissive: new THREE.Color('#f97316'),
+      emissiveMap: maps?.albedoMap,
+      emissiveIntensity: 1.35,
+      roughness: 0.4,
+      metalness: 0.0,
+    });
+  } else if (hasRealTextures) {
+    // Real NASA/Satellite imagery path for Earth (and future planets)
+    bodyMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: realTextures!.albedoMap,
+      normalMap: realTextures!.normalMap || undefined,
+      normalScale: new THREE.Vector2(0.08, 0.08), // Subtle — Earth terrain is tiny at planetary scale
+      roughness: 0.62,
+      metalness: 0.04,
+    });
+
+    // If specular map is available, use it as roughness modulation
+    // (ocean areas should be more reflective, land areas rougher)
+    if (realTextures!.specularMap) {
+      bodyMat.roughnessMap = realTextures!.specularMap;
+      bodyMat.roughness = 0.85; // Base roughness; specular map reduces for oceans
+      bodyMat.metalness = 0.06;
+    }
+  } else {
+    bodyMat = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      map: maps!.albedoMap,
+      bumpMap: maps!.bumpMap,
+      bumpScale: obj.category === 'planet' && obj.visual.hasRings ? 0.008 : 0.024,
+      roughness: obj.slug === 'earth' ? 0.58 : obj.slug === 'europa' ? 0.32 : 0.78,
+      metalness: 0.06,
+    });
+  }
   disposables.push(bodyMat);
 
   const spinMesh = new THREE.Mesh(bodyGeo, bodyMat);
@@ -123,21 +158,68 @@ function buildCompositeCelestialGroup(
   spinMesh.userData.slug = obj.slug;
   axialTiltGroup.add(spinMesh);
 
-  // Part 2: Secondary atmospheric cloud / haze shell (varied roughness >= 0.25 from core)
+  // Part 1b: Night-side city-lights emissive layer (Earth only, real textures)
+  // Dedicated shader ensures city lights ONLY illuminate the night hemisphere
+  let nightMesh: THREE.Mesh | undefined;
+  if (hasRealTextures && realTextures!.nightMap && sunLightRef) {
+    const nightGeo = new THREE.SphereGeometry(1.002, segs, segs);
+    const sunDirInit = sunLightRef.position.clone().normalize();
+    const nightMat = new THREE.ShaderMaterial({
+      uniforms: {
+        tNight: { value: realTextures!.nightMap },
+        uSunDirection: { value: sunDirInit },
+      },
+      vertexShader: `
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        void main() {
+          vUv = uv;
+          vWorldNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }
+      `,
+      fragmentShader: `
+        uniform sampler2D tNight;
+        uniform vec3 uSunDirection;
+        varying vec2 vUv;
+        varying vec3 vWorldNormal;
+        void main() {
+          vec4 nightTex = texture2D(tNight, vUv);
+          float sunDot = dot(normalize(vWorldNormal), normalize(uSunDirection));
+          // Sharp daylight cutoff: 0.0 in sunlight, 1.0 in shadow
+          float nightFactor = 1.0 - smoothstep(-0.22, 0.02, sunDot);
+          gl_FragColor = vec4(nightTex.rgb * nightFactor, nightFactor);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    disposables.push(nightGeo, nightMat);
+    nightMesh = new THREE.Mesh(nightGeo, nightMat);
+    nightMesh.renderOrder = 1;
+    axialTiltGroup.add(nightMesh);
+  }
+
+  // Part 2: Cloud shell — use real cloud texture if available, else procedural
   let cloudMesh: THREE.Mesh | undefined;
-  if (maps.cloudMap) {
+  const cloudTexture = hasRealTextures ? realTextures!.cloudMap : maps?.cloudMap;
+  if (cloudTexture) {
     const cloudGeo = new THREE.SphereGeometry(1.018, segs, segs);
     const cloudMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      map: maps.cloudMap,
+      map: cloudTexture,
       transparent: true,
-      opacity: 0.82,
+      alphaMap: hasRealTextures ? cloudTexture : undefined, // Use cloud map as its own alpha for real textures
+      opacity: hasRealTextures ? 0.92 : 0.82,
       roughness: 0.92,
       metalness: 0.0,
       depthWrite: false,
     });
     disposables.push(cloudGeo, cloudMat);
     cloudMesh = new THREE.Mesh(cloudGeo, cloudMat);
+    cloudMesh.renderOrder = 2;
     axialTiltGroup.add(cloudMesh);
   }
 
@@ -169,8 +251,8 @@ function buildCompositeCelestialGroup(
     );
     const ringMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      map: maps.ringMap,
-      alphaMap: maps.ringAlphaMap,
+      map: maps?.ringMap,
+      alphaMap: maps?.ringAlphaMap,
       transparent: true,
       side: THREE.DoubleSide,
       roughness: 0.45,
@@ -253,7 +335,7 @@ function buildCompositeCelestialGroup(
     });
   }
 
-  return { root, spinMesh, cloudMesh, moonpivots, disposables };
+  return { root, spinMesh, cloudMesh, nightMesh, moonpivots, disposables };
 }
 
 export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
@@ -440,6 +522,10 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     let activeDisposables: Array<{ dispose: () => void }> = [];
     let activeSpinMeshes: Array<{ mesh: THREE.Mesh; rate: number }> = [];
     let activeMoonPivots: Array<{ pivot: THREE.Group; speed: number }> = [];
+    let activeNightMaterials: THREE.Material[] = [];
+    let forceProceduralFallback = false;
+    const cachedPlanetTextures = new Map<string, LoadedPlanetTextures>();
+    let buildGeneration = 0;
     let solarPlanets: Array<{
       obj: CelestialObject;
       holder: THREE.Group;
@@ -468,6 +554,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
       activeDisposables = [];
       activeSpinMeshes = [];
       activeMoonPivots = [];
+      activeNightMaterials = [];
       solarPlanets = [];
       clickables = [];
     };
@@ -519,6 +606,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     };
 
     const rebuildSubject = () => {
+      const currentGen = ++buildGeneration;
       clearStage();
       const p = propsRef.current;
       const lowQ = isSoftwareGl || p.qualityTier === 'low';
@@ -534,7 +622,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         // Build Sun at origin
         const sunObj = getObjectBySlug('sun')!;
-        const sunBuilt = buildCompositeCelestialGroup(sunObj, maxAnisotropy, lowQ, false, false);
+        const sunBuilt = buildCompositeCelestialGroup(sunObj, maxAnisotropy, lowQ, false, false, sunKeyLight);
         sunBuilt.root.scale.setScalar(2.6);
         stageGroup.add(sunBuilt.root);
         activeDisposables.push(...sunBuilt.disposables);
@@ -592,7 +680,16 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           stageGroup.add(new THREE.LineLoop(oGeo, oMat));
 
           const holder = new THREE.Group();
-          const built = buildCompositeCelestialGroup(planet, maxAnisotropy, lowQ, p.showScienceLabels, false);
+          const cachedTex = cachedPlanetTextures.get(planet.visual.textureStyle);
+          const built = buildCompositeCelestialGroup(
+            planet,
+            maxAnisotropy,
+            lowQ,
+            p.showScienceLabels,
+            false,
+            sunKeyLight,
+            cachedTex
+          );
 
           // Scale mode: True planet-to-planet ratios vs Educational legibility
           const earthDiam = 12742;
@@ -615,9 +712,24 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
           activeDisposables.push(...built.disposables);
           activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.35 });
+          if (built.nightMesh) {
+            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.35 });
+            activeNightMaterials.push(built.nightMesh.material as THREE.Material);
+          }
           clickables.push(built.spinMesh);
           solarPlanets.push({ obj: planet, holder, meshGroup: built.root, orbitDist: dist });
         });
+
+        // Preload real Earth textures for solar-system mode if not yet loaded
+        if (!cachedPlanetTextures.has('earth')) {
+          loadRealPlanetTextures('earth', maxAnisotropy, p.qualityTier).then((loaded) => {
+            if (unmounted || buildGeneration !== currentGen) return;
+            if (loaded) {
+              cachedPlanetTextures.set('earth', loaded);
+              rebuildSubject();
+            }
+          });
+        }
       } else {
         sunKeyLight.intensity = 2.75;
         solarPointLight.intensity = 0;
@@ -625,25 +737,54 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         controls.maxDistance = 16;
 
         const targetObj = getObjectBySlug(p.objectSlug) || getObjectBySlug('saturn')!;
-        const built = buildCompositeCelestialGroup(
-          targetObj,
-          maxAnisotropy,
-          lowQ,
-          p.showScienceLabels,
-          p.mode === 'object'
-        );
-        stageGroup.add(built.root);
-        activeDisposables.push(...built.disposables);
-        activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.16 });
-        if (built.cloudMesh) {
-          activeSpinMeshes.push({ mesh: built.cloudMesh, rate: 0.21 });
-        }
-        activeMoonPivots.push(...built.moonpivots);
-        built.root.traverse((child) => {
-          if ((child as THREE.Mesh).isMesh && child.userData.slug) {
-            clickables.push(child);
+        const cachedTex = forceProceduralFallback ? null : cachedPlanetTextures.get(targetObj.visual.textureStyle);
+
+        const buildSingle = (texturesToUse?: LoadedPlanetTextures | null) => {
+          clearStage();
+          const built = buildCompositeCelestialGroup(
+            targetObj,
+            maxAnisotropy,
+            lowQ,
+            p.showScienceLabels,
+            p.mode === 'object',
+            sunKeyLight,
+            texturesToUse
+          );
+          stageGroup.add(built.root);
+          activeDisposables.push(...built.disposables);
+          activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.16 });
+          if (built.nightMesh) {
+            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.16 });
+            activeNightMaterials.push(built.nightMesh.material as THREE.Material);
           }
-        });
+          if (built.cloudMesh) {
+            activeSpinMeshes.push({ mesh: built.cloudMesh, rate: 0.21 });
+          }
+          activeMoonPivots.push(...built.moonpivots);
+          built.root.traverse((child) => {
+            if ((child as THREE.Mesh).isMesh && child.userData.slug) {
+              clickables.push(child);
+            }
+          });
+          if (!isSoftwareGl) {
+            renderer.compile(scene, camera);
+          }
+          requestRender();
+        };
+
+        // If cached textures exist, build immediately with them
+        buildSingle(cachedTex);
+
+        // If not yet cached, attempt to load real textures asynchronously
+        if (!cachedTex && !forceProceduralFallback) {
+          loadRealPlanetTextures(targetObj.visual.textureStyle, maxAnisotropy, p.qualityTier).then((loaded) => {
+            if (unmounted || buildGeneration !== currentGen) return;
+            if (loaded) {
+              cachedPlanetTextures.set(targetObj.visual.textureStyle, loaded);
+              buildSingle(loaded);
+            }
+          });
+        }
       }
 
       if (!isSoftwareGl) {
@@ -783,6 +924,16 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         }
       }
 
+      if (activeNightMaterials.length > 0) {
+        const sunDir = _scratchSunDir.copy(sunKeyLight.position).normalize();
+        activeNightMaterials.forEach((mat) => {
+          const shaderMat = mat as THREE.ShaderMaterial;
+          if (shaderMat.uniforms?.uSunDirection) {
+            shaderMat.uniforms.uSunDirection.value.copy(sunDir);
+          }
+        });
+      }
+
       controls.update();
       return stillMoving;
     }
@@ -841,12 +992,51 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
       requestRender,
     };
 
+    if (typeof window !== 'undefined') {
+      (window as any).__planetarium = {
+        camera,
+        controls,
+        renderer,
+        requestRender,
+        stepOrbitCamera,
+        applyCameraPreset,
+        setCameraPosition: (x: number, y: number, z: number) => {
+          transitionActive = false;
+          camera.position.set(x, y, z);
+          controls.target.set(0, 0, 0);
+          controls.update();
+          requestRender();
+        },
+        setGlobeState: (opts: { camPos?: [number, number, number]; rotationY?: number }) => {
+          transitionActive = false;
+          if (opts.camPos) {
+            camera.position.set(opts.camPos[0], opts.camPos[1], opts.camPos[2]);
+            controls.target.set(0, 0, 0);
+            controls.update();
+          }
+          if (opts.rotationY !== undefined) {
+            activeSpinMeshes.forEach((item) => {
+              item.mesh.rotation.y = opts.rotationY!;
+            });
+          }
+          requestRender();
+        },
+        setForceProcedural: (val: boolean) => {
+          forceProceduralFallback = val;
+          rebuildSubject();
+        },
+      };
+    }
+
     rebuildSubject();
     applyCameraPreset(propsRef.current.cameraPreset, true);
 
     return () => {
       unmounted = true;
       engineRef.current = null;
+      if (typeof window !== 'undefined' && (window as any).__planetarium) {
+        delete (window as any).__planetarium;
+      }
       cancelAnimationFrame(frameId);
       clearTimeout(timerId);
       resizeObserver.disconnect();
@@ -855,6 +1045,8 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
       renderer.domElement.removeEventListener('webglcontextlost', handleContextLost);
       controls.dispose();
       clearStage();
+      cachedPlanetTextures.forEach((tex) => releaseLoadedTextures(tex));
+      cachedPlanetTextures.clear();
       starGeo.dispose();
       starMat.dispose();
       envRT.dispose();
