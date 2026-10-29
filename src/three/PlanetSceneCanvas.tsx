@@ -6,6 +6,7 @@ import {
   CELESTIAL_CATALOG,
   CelestialObject,
   SOLAR_SYSTEM_PLANETS,
+  TextureStyle,
   getObjectBySlug,
 } from '../data/catalog';
 import { computeOrbitalAngleRad } from '../lib/astronomy';
@@ -22,6 +23,7 @@ export type CameraPreset = 'default' | 'above' | 'equator' | 'rings' | 'moons' |
 export interface PlanetSceneCanvasProps {
   mode: 'object' | 'solar-system' | 'hero';
   objectSlug: string;
+  surfaceVariant?: 'standard' | 'radar';
   cameraPreset?: CameraPreset;
   presetNonce?: number;
   orbitStepCommand?: { yawDeg: number; pitchDeg: number; zoomScale: number; nonce: number };
@@ -122,14 +124,19 @@ function buildCompositeCelestialGroup(
       metalness: 0.0,
     });
   } else if (hasRealTextures) {
-    // Real NASA/Satellite imagery path for Earth (and future planets)
+    // Real NASA/Satellite imagery path for Earth, Mercury, Venus, Moon, Mars, etc.
+    const isRockyAirless = ['mercury', 'moon', 'mars'].includes(obj.slug);
+    const isVenus = obj.slug === 'venus';
+    const baseRoughness = isRockyAirless ? 0.88 : isVenus ? 0.52 : 0.62;
+    const baseMetalness = isRockyAirless ? 0.02 : 0.04;
+
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: realTextures!.albedoMap,
       normalMap: realTextures!.normalMap || undefined,
-      normalScale: new THREE.Vector2(0.08, 0.08), // Subtle — Earth terrain is tiny at planetary scale
-      roughness: 0.62,
-      metalness: 0.04,
+      normalScale: new THREE.Vector2(0.08, 0.08), // Subtle — surface terrain at planetary scale
+      roughness: baseRoughness,
+      metalness: baseMetalness,
     });
 
     // If specular map is available, use it as roughness modulation
@@ -341,6 +348,7 @@ function buildCompositeCelestialGroup(
 export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
   mode,
   objectSlug,
+  surfaceVariant = 'standard',
   cameraPreset = 'default',
   presetNonce = 0,
   orbitStepCommand,
@@ -359,6 +367,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
   const propsRef = useRef({
     mode,
     objectSlug,
+    surfaceVariant,
     cameraPreset,
     presetNonce,
     isPaused,
@@ -372,6 +381,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
   propsRef.current = {
     mode,
     objectSlug,
+    surfaceVariant,
     cameraPreset,
     presetNonce,
     isPaused,
@@ -680,7 +690,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           stageGroup.add(new THREE.LineLoop(oGeo, oMat));
 
           const holder = new THREE.Group();
-          const cachedTex = cachedPlanetTextures.get(planet.visual.textureStyle);
+          const cachedTex = cachedPlanetTextures.get(`${planet.visual.textureStyle}:standard`);
           const built = buildCompositeCelestialGroup(
             planet,
             maxAnisotropy,
@@ -720,16 +730,20 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           solarPlanets.push({ obj: planet, holder, meshGroup: built.root, orbitDist: dist });
         });
 
-        // Preload real Earth textures for solar-system mode if not yet loaded
-        if (!cachedPlanetTextures.has('earth')) {
-          loadRealPlanetTextures('earth', maxAnisotropy, p.qualityTier).then((loaded) => {
-            if (unmounted || buildGeneration !== currentGen) return;
-            if (loaded) {
-              cachedPlanetTextures.set('earth', loaded);
-              rebuildSubject();
-            }
-          });
-        }
+        // Preload real inner planet textures for solar-system mode if not yet loaded
+        const stylesToPreload: TextureStyle[] = ['mercury', 'venus', 'earth', 'mars'];
+        stylesToPreload.forEach((style) => {
+          const cKey = `${style}:standard`;
+          if (!cachedPlanetTextures.has(cKey)) {
+            loadRealPlanetTextures(style, maxAnisotropy, p.qualityTier).then((loaded) => {
+              if (unmounted || buildGeneration !== currentGen) return;
+              if (loaded) {
+                cachedPlanetTextures.set(cKey, loaded);
+                rebuildSubject();
+              }
+            });
+          }
+        });
       } else {
         sunKeyLight.intensity = 2.75;
         solarPointLight.intensity = 0;
@@ -737,7 +751,9 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         controls.maxDistance = 16;
 
         const targetObj = getObjectBySlug(p.objectSlug) || getObjectBySlug('saturn')!;
-        const cachedTex = forceProceduralFallback ? null : cachedPlanetTextures.get(targetObj.visual.textureStyle);
+        const variantKey = p.surfaceVariant || 'standard';
+        const cacheKey = `${targetObj.visual.textureStyle}:${variantKey}`;
+        const cachedTex = forceProceduralFallback ? null : cachedPlanetTextures.get(cacheKey);
 
         const buildSingle = (texturesToUse?: LoadedPlanetTextures | null) => {
           clearStage();
@@ -777,10 +793,10 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         // If not yet cached, attempt to load real textures asynchronously
         if (!cachedTex && !forceProceduralFallback) {
-          loadRealPlanetTextures(targetObj.visual.textureStyle, maxAnisotropy, p.qualityTier).then((loaded) => {
+          loadRealPlanetTextures(targetObj.visual.textureStyle, maxAnisotropy, p.qualityTier, p.surfaceVariant).then((loaded) => {
             if (unmounted || buildGeneration !== currentGen) return;
             if (loaded) {
-              cachedPlanetTextures.set(targetObj.visual.textureStyle, loaded);
+              cachedPlanetTextures.set(cacheKey, loaded);
               buildSingle(loaded);
             }
           });
@@ -1025,6 +1041,10 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           forceProceduralFallback = val;
           rebuildSubject();
         },
+        setSurfaceVariant: (variant: 'standard' | 'radar') => {
+          propsRef.current.surfaceVariant = variant;
+          rebuildSubject();
+        },
       };
     }
 
@@ -1054,11 +1074,11 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     };
   }, []);
 
-  // Rebuild subject when objectSlug, mode, science labels, scaleMode, or qualityTier change
+  // Rebuild subject when objectSlug, mode, surfaceVariant, science labels, scaleMode, or qualityTier change
   useEffect(() => {
     engineRef.current?.rebuildSubject();
     engineRef.current?.applyCameraPreset(cameraPreset, mode === 'hero');
-  }, [mode, objectSlug, showScienceLabels, scaleMode, qualityTier]);
+  }, [mode, objectSlug, surfaceVariant, showScienceLabels, scaleMode, qualityTier]);
 
   // Apply camera preset when preset or nonce changes
   useEffect(() => {

@@ -52,6 +52,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
   const [dockCollapsed, setDockCollapsed] = useState<boolean>(false);
   const [drawerOpen, setDrawerOpen] = useState<boolean>(true);
   const [teacherOpen, setTeacherOpen] = useState<boolean>(classroomPresentation);
+  const [surfaceVariant, setSurfaceVariant] = useState<'standard' | 'radar'>('standard');
   const [orbitCmd, setOrbitCmd] = useState<{
     yawDeg: number;
     pitchDeg: number;
@@ -64,6 +65,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
     setCameraPreset(object.visual.hasRings ? 'rings' : 'default');
     setPresetNonce((n) => n + 1);
     setActiveTab('overview');
+    setSurfaceVariant('standard');
   }, [object.slug, object.visual.hasRings]);
 
   useEffect(() => {
@@ -110,7 +112,9 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
             <span className="text-white/30" aria-hidden="true">/</span>
             <span className="text-[#F7FAFF] font-semibold">{object.name}</span>
             <span className="text-white/30" aria-hidden="true">·</span>
-            <span className="font-mono text-[#79D9ED]">{object.authenticityTier}</span>
+            <span className="font-mono text-[#79D9ED]">
+              {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
+            </span>
           </div>
 
           <div className="flex items-center gap-2">
@@ -142,6 +146,7 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
               <PlanetSceneCanvas
                 mode="object"
                 objectSlug={object.slug}
+                surfaceVariant={surfaceVariant}
                 cameraPreset={cameraPreset}
                 presetNonce={presetNonce}
                 orbitStepCommand={orbitCmd}
@@ -163,10 +168,13 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
           <div className="relative z-10 pointer-events-none p-4 sm:p-5 max-w-md">
             <div className="inline-block bg-[#060C1C]/90 border border-white/15 rounded-xl px-3.5 py-2">
               <div className="text-[11px] font-mono text-[#79D9ED]">
-                {object.isOrbitable3D ? '360° ORBITABLE 3D MODEL' : 'ASTRONOMICAL OBSERVATION'} · {object.authenticityTier}
+                {object.isOrbitable3D ? '360° ORBITABLE 3D MODEL' : 'ASTRONOMICAL OBSERVATION'} ·{' '}
+                {object.slug === 'venus' && surfaceVariant === 'radar' ? 'DATA-BASED' : object.authenticityTier}
               </div>
               <p className="text-[11px] text-[#B8C4DE] mt-0.5 leading-snug">
-                {object.authenticityNote}
+                {object.slug === 'venus' && surfaceVariant === 'radar'
+                  ? 'NASA Magellan Synthetic Aperture Radar (SAR) false-color topographic altimetry penetrating the opaque cloud deck.'
+                  : object.authenticityNote}
               </p>
             </div>
           </div>
@@ -234,6 +242,37 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                   </button>
 
                   <span className="h-4 w-px bg-white/15 mx-0.5 hidden sm:inline-block" aria-hidden="true" />
+
+                  {/* Venus Dual Observation Mode (Visible Clouds vs Magellan Radar) */}
+                  {object.slug === 'venus' && (
+                    <>
+                      <div className="inline-flex rounded-lg p-0.5 bg-[#030713] border border-white/15" role="group" aria-label="Venus Surface View">
+                        <button
+                          type="button"
+                          onClick={() => setSurfaceVariant('standard')}
+                          className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                            surfaceVariant === 'standard'
+                              ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
+                              : 'text-[#B8C4DE] hover:text-white'
+                          }`}
+                        >
+                          Visible Cloud Deck
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setSurfaceVariant('radar')}
+                          className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                            surfaceVariant === 'radar'
+                              ? 'bg-[#EAB308]/20 text-[#FDE047] border border-[#EAB308]/40'
+                              : 'text-[#B8C4DE] hover:text-white'
+                          }`}
+                        >
+                          Magellan Radar Surface
+                        </button>
+                      </div>
+                      <span className="h-4 w-px bg-white/15 mx-0.5 hidden sm:inline-block" aria-hidden="true" />
+                    </>
+                  )}
 
                   {/* Named Camera Presets */}
                   <button

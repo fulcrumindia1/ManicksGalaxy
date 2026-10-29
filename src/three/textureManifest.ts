@@ -47,6 +47,8 @@ export interface PlanetTextureSet {
   normalMap2k?: string;
   /** Specular / roughness map */
   specularMap2k?: string;
+  /** Alternate scientific observation map (e.g. Venus Magellan radar surface) */
+  radarMap2k?: string;
   /** Ring color map (for ringed planets) */
   ringMap?: string;
   /** Ring alpha (transparency) map */
@@ -60,6 +62,61 @@ export interface PlanetTextureSet {
  * Keyed by TextureStyle for O(1) lookup.
  */
 export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> = {
+  mercury: {
+    textureStyle: 'mercury',
+    dayMap2k: '/assets/planets/mercury/mercury_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-MERC-MESSENGER-2K',
+        title: 'Mercury Dual Imaging System (MDIS) Global Albedo Mosaic',
+        creator: 'NASA / Johns Hopkins APL / Carnegie Institution / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Mercury surface map: NASA/JHUAPL/CIW MESSENGER MDIS global mosaic, processed by Solar System Scope. CC BY 4.0.',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'MESSENGER Orbital Science (2011–2015)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular projection derived from MESSENGER MDIS calibrated reflectance images. Features Caloris Planitia, Beethoven Basin, and lobate scarps.',
+      },
+    ],
+  },
+  venus: {
+    textureStyle: 'venus',
+    dayMap2k: '/assets/planets/venus/venus_atmosphere_2k.jpg',
+    radarMap2k: '/assets/planets/venus/venus_surface_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-VENUS-ATMO-2K',
+        title: 'Venus Natural Optical / Ultraviolet Cloud Deck',
+        creator: 'NASA / JPL-Caltech / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Venus visible atmosphere: NASA/JPL Pioneer Venus & Akatsuki cloud deck composite. CC BY 4.0.',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'Pioneer Venus & JAXA Akatsuki composite',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'True-color / calibrated UV-visible representation of Venus opaque sulfuric acid cloud deck (~65 km altitude) concealing the solid planetary crust.',
+      },
+      {
+        assetId: 'NASA-MAGELLAN-RADAR-2K',
+        title: 'Venus Magellan Synthetic Aperture Radar (SAR) Topography Map',
+        creator: 'NASA / JPL-Caltech / USGS Astrogeology Science Center',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'Venus radar surface: NASA Magellan Synthetic Aperture Radar (SAR) mosaic with interpretive hypsometric coloration. NASA/JPL-Caltech.',
+        sourceUrl: 'https://astrogeology.usgs.gov/search/map/Venus/Magellan/Venus_Magellan_Topography_Global_4641m',
+        resolution: '2048 × 1024',
+        sourceDate: 'Magellan Radar Mapper (1990–1994)',
+        authenticity: 'DATA-BASED',
+        processingNotes:
+          'Radar-derived hypsometric surface map penetrating opaque clouds. Note: Color coding represents radar reflectivity and radar altimetry elevation, not optical photography.',
+      },
+    ],
+  },
   earth: {
     textureStyle: 'earth',
     dayMap2k: '/assets/planets/earth/earth_day_2k.jpg',
@@ -152,6 +209,46 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
         authenticity: 'DATA-BASED',
         processingNotes:
           'Water/land mask used to differentiate ocean specular reflections from matte land surfaces.',
+      },
+    ],
+  },
+  moon: {
+    textureStyle: 'moon',
+    dayMap2k: '/assets/planets/moon/moon_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-LRO-LROC-WAC-2K',
+        title: 'Lunar Reconnaissance Orbiter Camera (LROC) Global Morphology Map',
+        creator: 'NASA / GSFC / Arizona State University / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Moon surface map: NASA/GSFC/ASU LRO Camera global mosaic. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'LROC Science Operations (2009–present)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular mosaic from Lunar Reconnaissance Orbiter Wide Angle Camera. Accurately portrays nearside basalt maria (Oceanus Procellarum, Mare Imbrium) and farside cratered anorthositic highlands.',
+      },
+    ],
+  },
+  mars: {
+    textureStyle: 'mars',
+    dayMap2k: '/assets/planets/mars/mars_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-MGS-MOLA-VIKING-2K',
+        title: 'Mars Global Surveyor & Viking Color Albedo Mosaic',
+        creator: 'NASA / JPL / USGS Astrogeology Science Center / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Mars surface map: NASA/JPL/USGS MOLA and Viking Orbiter color mosaic. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'MGS MOLA / Viking MDIM 2.1',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular map compiled from Mars Global Surveyor MOLA elevation and Viking Orbiter color images. Displays real geographic features: Valles Marineris, Olympus Mons, Tharsis Montes, Syrtis Major, and polar carbon-dioxide/water ice caps.',
       },
     ],
   },

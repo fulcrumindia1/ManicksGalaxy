@@ -127,6 +127,7 @@ export async function loadRealPlanetTextures(
   style: TextureStyle,
   maxAnisotropy: number,
   qualityTier: QualityTier = 'auto',
+  variant: 'standard' | 'radar' = 'standard',
 ): Promise<LoadedPlanetTextures | null> {
   const set = getTextureSet(style);
   if (!set) return null;
@@ -135,25 +136,33 @@ export async function loadRealPlanetTextures(
   const disposables: THREE.Texture[] = [];
 
   try {
-    // Choose resolution tier for day map
-    const dayMapUrl = (!lowQ && set.dayMap4k) ? set.dayMap4k : set.dayMap2k;
+    // Choose albedo map based on variant & resolution tier
+    let dayMapUrl: string;
+    if (variant === 'radar' && set.radarMap2k) {
+      dayMapUrl = set.radarMap2k;
+    } else {
+      dayMapUrl = (!lowQ && set.dayMap4k) ? set.dayMap4k : set.dayMap2k;
+    }
 
     // Load all available textures in parallel
     const promises: Record<string, Promise<THREE.Texture | null>> = {
       albedo: loadTextureCached(dayMapUrl, THREE.SRGBColorSpace, maxAnisotropy),
     };
 
-    if (set.normalMap2k) {
-      promises.normal = loadTextureCached(set.normalMap2k, THREE.NoColorSpace, maxAnisotropy);
-    }
-    if (set.nightMap2k) {
-      promises.night = loadTextureCached(set.nightMap2k, THREE.SRGBColorSpace, maxAnisotropy);
-    }
-    if (set.cloudMap2k) {
-      promises.cloud = loadTextureCached(set.cloudMap2k, THREE.SRGBColorSpace, maxAnisotropy);
-    }
-    if (set.specularMap2k) {
-      promises.specular = loadTextureCached(set.specularMap2k, THREE.NoColorSpace, maxAnisotropy);
+    // Only load standard supplementary maps if in standard mode
+    if (variant === 'standard') {
+      if (set.normalMap2k) {
+        promises.normal = loadTextureCached(set.normalMap2k, THREE.NoColorSpace, maxAnisotropy);
+      }
+      if (set.nightMap2k) {
+        promises.night = loadTextureCached(set.nightMap2k, THREE.SRGBColorSpace, maxAnisotropy);
+      }
+      if (set.cloudMap2k) {
+        promises.cloud = loadTextureCached(set.cloudMap2k, THREE.SRGBColorSpace, maxAnisotropy);
+      }
+      if (set.specularMap2k) {
+        promises.specular = loadTextureCached(set.specularMap2k, THREE.NoColorSpace, maxAnisotropy);
+      }
     }
 
     const keys = Object.keys(promises);
