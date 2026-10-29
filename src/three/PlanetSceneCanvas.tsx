@@ -134,14 +134,14 @@ function buildCompositeCelestialGroup(
     const baseRoughness = isRockyAirless
       ? 0.88
       : isVenus
-      ? 0.52
-      : isGasGiant
-      ? 0.68
-      : isIcyMoon
-      ? 0.38
-      : isTitan
-      ? 0.72
-      : 0.62;
+        ? 0.52
+        : isGasGiant
+          ? 0.68
+          : isIcyMoon
+            ? 0.38
+            : isTitan
+              ? 0.72
+              : 0.62;
     const baseMetalness = isRockyAirless ? 0.02 : isGasGiant ? 0.0 : isIcyMoon ? 0.04 : 0.04;
 
     bodyMat = new THREE.MeshStandardMaterial({
