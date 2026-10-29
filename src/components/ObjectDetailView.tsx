@@ -113,11 +113,10 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
       <div
         ref={viewportRef}
         data-testid="object-viewport"
-        className={`flex-1 relative flex flex-col justify-between overflow-hidden transition-all ${
-          isFullscreen
+        className={`flex-1 relative flex flex-col justify-between overflow-hidden transition-all ${isFullscreen
             ? 'fixed inset-0 z-50 w-screen h-screen bg-[#030713]'
             : 'min-h-[520px] lg:min-h-[calc(100vh-4rem)]'
-        }`}
+          }`}
       >
         {/* Top Breadcrumb & Return-to-Show Bar */}
         {!isCinematic ? (
@@ -315,8 +314,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                           type="button"
                           onClick={() => setSurfaceVariant('standard')}
                           className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${surfaceVariant === 'standard'
-                              ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
-                              : 'text-[#B8C4DE] hover:text-white'
+                            ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
+                            : 'text-[#B8C4DE] hover:text-white'
                             }`}
                         >
                           Visible Cloud Deck
@@ -325,8 +324,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                           type="button"
                           onClick={() => setSurfaceVariant('radar')}
                           className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors ${surfaceVariant === 'radar'
-                              ? 'bg-[#EAB308]/20 text-[#FDE047] border border-[#EAB308]/40'
-                              : 'text-[#B8C4DE] hover:text-white'
+                            ? 'bg-[#EAB308]/20 text-[#FDE047] border border-[#EAB308]/40'
+                            : 'text-[#B8C4DE] hover:text-white'
                             }`}
                         >
                           Magellan Radar Surface
@@ -341,8 +340,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                     type="button"
                     onClick={() => applyPreset('above')}
                     className={`px-2.5 py-1.5 rounded-lg border text-xs whitespace-nowrap shrink-0 ${cameraPreset === 'above'
-                        ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
-                        : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
+                      ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
+                      : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
                       }`}
                   >
                     From Above
@@ -351,8 +350,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                     type="button"
                     onClick={() => applyPreset('equator')}
                     className={`px-2.5 py-1.5 rounded-lg border text-xs whitespace-nowrap shrink-0 ${cameraPreset === 'equator'
-                        ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
-                        : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
+                      ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
+                      : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
                       }`}
                   >
                     Equator
@@ -362,8 +361,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                       type="button"
                       onClick={() => applyPreset('rings')}
                       className={`px-2.5 py-1.5 rounded-lg border text-xs whitespace-nowrap shrink-0 ${cameraPreset === 'rings'
-                          ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
-                          : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
+                        ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
+                        : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
                         }`}
                     >
                       Ring Tilt
@@ -374,8 +373,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                       type="button"
                       onClick={() => applyPreset('moons')}
                       className={`px-2.5 py-1.5 rounded-lg border text-xs whitespace-nowrap shrink-0 ${cameraPreset === 'moons'
-                          ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
-                          : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
+                        ? 'border-[#79D9ED] bg-[#79D9ED]/15 text-[#79D9ED]'
+                        : 'border-white/15 bg-[#030713] text-[#B8C4DE] hover:text-white'
                         }`}
                     >
                       Moons View
@@ -390,8 +389,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                     onClick={() => setShowScienceAxes((prev) => !prev)}
                     aria-pressed={showScienceAxes}
                     className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg border text-xs whitespace-nowrap shrink-0 ${showScienceAxes
-                        ? 'border-[#D7B77B] text-[#D7B77B] bg-[#030713]'
-                        : 'border-white/15 text-[#B8C4DE] bg-[#030713] hover:text-white'
+                      ? 'border-[#D7B77B] text-[#D7B77B] bg-[#030713]'
+                      : 'border-white/15 text-[#B8C4DE] bg-[#030713] hover:text-white'
                       }`}
                   >
                     <Eye className="w-3.5 h-3.5" aria-hidden="true" />
@@ -469,8 +468,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                   type="button"
                   onClick={() => onUpdatePreferences({ readingDepth: lvl.id })}
                   className={`flex-1 py-1.5 px-2 rounded text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${preferences.readingDepth === lvl.id
-                      ? 'bg-[#79D9ED] text-[#030713] font-semibold'
-                      : 'text-[#B8C4DE] hover:text-white'
+                    ? 'bg-[#79D9ED] text-[#030713] font-semibold'
+                    : 'text-[#B8C4DE] hover:text-white'
                     }`}
                 >
                   {lvl.label}
@@ -504,8 +503,8 @@ export const ObjectDetailView: React.FC<ObjectDetailViewProps> = ({
                 type="button"
                 onClick={() => setActiveTab(t.id)}
                 className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${activeTab === t.id
-                    ? 'bg-white/15 text-[#F7FAFF]'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-white/15 text-[#F7FAFF]'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 {t.label}

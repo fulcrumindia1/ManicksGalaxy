@@ -427,6 +427,311 @@ export function getProceduralPlanetMaps(
       ctx.ellipse(rand() * w, rand() * h, 18 + rand() * 48, 12 + rand() * 30, rand(), 0, Math.PI * 2);
       ctx.fill();
     }
+  } else if (style === 'io') {
+    // Volcanic moon Io: sulfur dioxide frost, orange-red lava rings, dark calderas
+    ctx.fillStyle = '#eab308';
+    ctx.fillRect(0, 0, w, h);
+    // Mottled sulfur-green and orange patches
+    for (let i = 0; i < 40; i++) {
+      ctx.fillStyle = rand() > 0.5 ? 'rgba(132, 204, 22, 0.28)' : 'rgba(234, 88, 12, 0.32)';
+      ctx.beginPath();
+      ctx.arc(rand() * w, rand() * h, 20 + rand() * 60, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Volcanic calderas (Pele, Loki Patera, Prometheus)
+    for (let i = 0; i < 35; i++) {
+      const cx = rand() * w;
+      const cy = rand() * h;
+      const r = 4 + rand() * 16;
+      // White SO2 frost halo
+      ctx.fillStyle = 'rgba(254, 249, 195, 0.75)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r * 2.2, 0, Math.PI * 2);
+      ctx.fill();
+      // Dark red/black caldera pit
+      ctx.fillStyle = rand() > 0.4 ? '#451a03' : '#7f1d1d';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      // Bump map indent
+      bCtx.fillStyle = 'rgba(40, 40, 40, 0.6)';
+      bCtx.beginPath();
+      bCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      bCtx.fill();
+    }
+  } else if (style === 'ganymede') {
+    // Two-tone icy moon: dark ancient cratered terrain + light grooved sulci
+    ctx.fillStyle = '#64748b';
+    ctx.fillRect(0, 0, w, h);
+    // Dark ancient polygonal regions (Galileo Regio)
+    for (let i = 0; i < 18; i++) {
+      ctx.fillStyle = 'rgba(30, 41, 59, 0.7)';
+      ctx.beginPath();
+      ctx.ellipse(rand() * w, rand() * h, 40 + rand() * 90, 30 + rand() * 70, rand() * Math.PI, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Light grooved terrain bands (sulci)
+    for (let i = 0; i < 45; i++) {
+      ctx.strokeStyle = `rgba(226, 232, 240, ${0.2 + rand() * 0.35})`;
+      ctx.lineWidth = 2 + rand() * 4;
+      ctx.beginPath();
+      const sy = rand() * h;
+      ctx.moveTo(0, sy);
+      ctx.bezierCurveTo(w * 0.3, sy + (rand() - 0.5) * 50, w * 0.7, sy + (rand() - 0.5) * 50, w, sy + (rand() - 0.5) * 40);
+      ctx.stroke();
+    }
+    // Bright ray craters
+    for (let i = 0; i < 60; i++) {
+      const cx = rand() * w;
+      const cy = rand() * h;
+      const r = 2 + rand() * 10;
+      ctx.fillStyle = '#f8fafc';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (style === 'callisto') {
+    // Dark, ancient, saturated cratered world
+    ctx.fillStyle = '#374151';
+    ctx.fillRect(0, 0, w, h);
+    // Valhalla-style concentric multi-ring basin
+    const vx = w * 0.42;
+    const vy = h * 0.48;
+    for (let r = 15; r < 140; r += 12) {
+      ctx.strokeStyle = 'rgba(156, 163, 175, 0.35)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(vx, vy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    // High density bright ice-excavated craters
+    for (let i = 0; i < 220; i++) {
+      const cx = rand() * w;
+      const cy = rand() * h;
+      const r = 1 + rand() * 9;
+      ctx.fillStyle = rand() > 0.7 ? '#f1f5f9' : '#9ca3af';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      bCtx.fillStyle = 'rgba(210, 210, 210, 0.35)';
+      bCtx.beginPath();
+      bCtx.arc(cx, cy, r, 0, Math.PI * 2);
+      bCtx.fill();
+    }
+  } else if (style === 'enceladus') {
+    // Ultra-bright icy moon with south-polar blue tiger stripes
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, w, h);
+    // Subtle ice crust shading
+    for (let i = 0; i < 25; i++) {
+      ctx.fillStyle = 'rgba(226, 232, 240, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(rand() * w, rand() * h * 0.65, 30 + rand() * 50, 15 + rand() * 30, rand(), 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // South polar "Tiger Stripes" (Alexandria, Cairo, Baghdad, Damascus Sulci)
+    const tigerColors = ['rgba(56, 189, 248, 0.65)', 'rgba(14, 165, 233, 0.55)', 'rgba(2, 132, 199, 0.45)'];
+    for (let i = 0; i < 4; i++) {
+      const baseY = h * (0.84 + i * 0.035);
+      ctx.strokeStyle = tigerColors[i % tigerColors.length];
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.25, baseY);
+      ctx.bezierCurveTo(w * 0.4, baseY - 8, w * 0.6, baseY + 8, w * 0.75, baseY - 4);
+      ctx.stroke();
+      bCtx.strokeStyle = 'rgba(30, 30, 30, 0.5)';
+      bCtx.lineWidth = 3;
+      bCtx.stroke();
+    }
+  } else if (style === 'triton') {
+    // Cantaloupe terrain, nitrogen frost and pink south polar cap
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillRect(0, 0, w, h);
+    // Cantaloupe dimple texture
+    for (let i = 0; i < 160; i++) {
+      ctx.fillStyle = rand() > 0.5 ? 'rgba(71, 85, 105, 0.35)' : 'rgba(203, 213, 225, 0.35)';
+      ctx.beginPath();
+      ctx.arc(rand() * w, rand() * h * 0.65, 4 + rand() * 12, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Pinkish-peach nitrogen/methane ice south polar cap
+    ctx.fillStyle = 'rgba(251, 207, 232, 0.55)';
+    ctx.beginPath();
+    ctx.ellipse(w * 0.5, h * 0.88, w * 0.5, h * 0.25, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Dark geyser streaks trailing north-east from cryovolcanism
+    for (let i = 0; i < 20; i++) {
+      const gx = w * (0.3 + rand() * 0.4);
+      const gy = h * (0.75 + rand() * 0.15);
+      ctx.strokeStyle = 'rgba(30, 41, 59, 0.7)';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(gx, gy);
+      ctx.lineTo(gx + 15 + rand() * 25, gy - 8 - rand() * 10);
+      ctx.stroke();
+    }
+  } else if (style === 'charon') {
+    // Grey water-ice crust + reddish Mordor Macula north polar tholin cap + canyon
+    ctx.fillStyle = '#9ca3af';
+    ctx.fillRect(0, 0, w, h);
+    // Reddish-brown Mordor Macula at north pole
+    const mordor = ctx.createRadialGradient(w * 0.5, 0, 10, w * 0.5, 0, w * 0.25);
+    mordor.addColorStop(0, '#7f1d1d');
+    mordor.addColorStop(0.5, '#991b1b');
+    mordor.addColorStop(1, 'rgba(156, 163, 175, 0)');
+    ctx.fillStyle = mordor;
+    ctx.fillRect(0, 0, w, h * 0.3);
+    // Serenity Chasma equatorial canyon
+    ctx.strokeStyle = '#4b5563';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.moveTo(0, h * 0.52);
+    ctx.bezierCurveTo(w * 0.3, h * 0.5, w * 0.7, h * 0.56, w, h * 0.52);
+    ctx.stroke();
+    bCtx.strokeStyle = 'rgba(20, 20, 20, 0.7)';
+    bCtx.lineWidth = 5;
+    bCtx.stroke();
+  } else if (style === 'phobos' || style === 'deimos') {
+    // Irregular dark carbonaceous Mars moons
+    const isPhobos = style === 'phobos';
+    ctx.fillStyle = isPhobos ? '#403d39' : '#4a4744';
+    ctx.fillRect(0, 0, w, h);
+    if (isPhobos) {
+      // Giant Stickney crater
+      const sx = w * 0.38;
+      const sy = h * 0.5;
+      const sr = w * 0.14;
+      ctx.fillStyle = '#292524';
+      ctx.beginPath();
+      ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#78716c';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      // Radial groove lineations
+      for (let i = 0; i < 20; i++) {
+        const angle = rand() * Math.PI * 2;
+        ctx.strokeStyle = 'rgba(28, 25, 23, 0.45)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(sx + Math.cos(angle) * sr, sy + Math.sin(angle) * sr);
+        ctx.lineTo(sx + Math.cos(angle) * (sr * 2.2), sy + Math.sin(angle) * (sr * 2.2));
+        ctx.stroke();
+      }
+    } else {
+      // Deimos smooth thick regolith
+      for (let i = 0; i < 30; i++) {
+        ctx.fillStyle = 'rgba(120, 113, 108, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(rand() * w, rand() * h, 20 + rand() * 40, 10 + rand() * 20, rand(), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  } else if (style === 'ceres' || style === 'vesta') {
+    // Asteroid belt worlds: Ceres (carbonaceous + Occator salt) vs Vesta (basaltic + Rheasilvia)
+    const isCeres = style === 'ceres';
+    ctx.fillStyle = isCeres ? '#475569' : '#78716c';
+    ctx.fillRect(0, 0, w, h);
+    if (isCeres) {
+      // Occator Crater bright sodium carbonate faculae
+      const ox = w * 0.45;
+      const oy = h * 0.42;
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(ox, oy, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+      ctx.beginPath();
+      ctx.arc(ox, oy, 14, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // Vesta south-polar Rheasilvia basin
+      const rx = w * 0.5;
+      const ry = h * 0.82;
+      ctx.fillStyle = '#44403c';
+      ctx.beginPath();
+      ctx.arc(rx, ry, w * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      // Central peak
+      ctx.fillStyle = '#d6d3d1';
+      ctx.beginPath();
+      ctx.arc(rx, ry, 7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (style === 'star-red-dwarf') {
+    // Proxima Centauri flare star: deep crimson with dark spots and bright flare zones
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#991b1b');
+    grad.addColorStop(0.5, '#dc2626');
+    grad.addColorStop(1, '#7f1d1d');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    // Dark magnetic starspots
+    for (let i = 0; i < 35; i++) {
+      ctx.fillStyle = 'rgba(69, 10, 10, 0.75)';
+      ctx.beginPath();
+      ctx.arc(rand() * w, rand() * h, 8 + rand() * 24, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // High-temperature white-gold flare zones
+    for (let i = 0; i < 20; i++) {
+      ctx.fillStyle = 'rgba(254, 240, 138, 0.5)';
+      ctx.beginPath();
+      ctx.arc(rand() * w, rand() * h, 4 + rand() * 12, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (style === 'star-red-supergiant') {
+    // Betelgeuse: pulsating convective supergranulation, orange-red giant cells
+    ctx.fillStyle = '#c2410c';
+    ctx.fillRect(0, 0, w, h);
+    for (let i = 0; i < 80; i++) {
+      const cx = rand() * w;
+      const cy = rand() * h;
+      const r = 20 + rand() * 50;
+      const g = ctx.createRadialGradient(cx, cy, 2, cx, cy, r);
+      g.addColorStop(0, '#fde047');
+      g.addColorStop(0.5, '#ea580c');
+      g.addColorStop(1, 'rgba(124, 45, 18, 0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (style === 'star-white') {
+    // Sirius A: luminous diamond blue-white photosphere
+    const grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, '#bae6fd');
+    grad.addColorStop(0.5, '#f8fafc');
+    grad.addColorStop(1, '#7dd3fc');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+    // Subtle granular shimmer
+    for (let i = 0; i < 100; i++) {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+      ctx.beginPath();
+      ctx.arc(rand() * w, rand() * h, 3 + rand() * 15, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  } else if (style === 'deepsky-andromeda' || style === 'deepsky-crab' || style === 'deepsky-blackhole') {
+    // Deep-sky fallback textures for sphere preview
+    ctx.fillStyle = '#030712';
+    ctx.fillRect(0, 0, w, h);
+    const rad = ctx.createRadialGradient(w * 0.5, h * 0.5, 10, w * 0.5, h * 0.5, w * 0.4);
+    if (style === 'deepsky-andromeda') {
+      rad.addColorStop(0, '#fef3c7');
+      rad.addColorStop(0.4, '#38bdf8');
+      rad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+    } else if (style === 'deepsky-crab') {
+      rad.addColorStop(0, '#67e8f9');
+      rad.addColorStop(0.5, '#f43f5e');
+      rad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+    } else {
+      rad.addColorStop(0, '#000000');
+      rad.addColorStop(0.2, '#f97316');
+      rad.addColorStop(1, 'rgba(3, 7, 18, 0)');
+    }
+    ctx.fillStyle = rad;
+    ctx.fillRect(0, 0, w, h);
   } else {
     // Mercury & Moon cratered grey regolith
     const isMoon = style === 'moon';

@@ -604,3 +604,4 @@ export const CompareSceneCanvas: React.FC<CompareSceneCanvasProps> = ({
     />
   );
 };
+

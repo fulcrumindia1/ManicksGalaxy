@@ -216,3 +216,4 @@ export function useFullscreen(
     setCinematic: setIsCinematic,
   };
 }
+

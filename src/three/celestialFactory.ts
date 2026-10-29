@@ -71,10 +71,15 @@ export function buildCompositeCelestialGroup(
 
   if (isStar) {
     const starMap = hasRealTextures ? realTextures!.albedoMap : maps?.albedoMap;
+    let starEmissive = '#f97316';
+    if (obj.visual.textureStyle === 'star-red-dwarf') starEmissive = '#dc2626';
+    else if (obj.visual.textureStyle === 'star-red-supergiant') starEmissive = '#ea580c';
+    else if (obj.visual.textureStyle === 'star-white') starEmissive = '#93c5fd';
+
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
       map: starMap,
-      emissive: new THREE.Color('#f97316'),
+      emissive: new THREE.Color(starEmissive),
       emissiveMap: starMap,
       emissiveIntensity: hasRealTextures ? 1.15 : 1.35,
       roughness: 0.4,

@@ -32,7 +32,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
   const [query, setQuery] = useState<string>('');
   const [orbitsPaused, setOrbitsPaused] = useState<boolean>(false);
-  const [scaleMode, setScaleMode] = useState<'educational' | 'true-ratios'>('educational');
+  const [scaleMode, setScaleMode] = useState<'educational' | 'true-ratios' | 'distance-scale'>('educational');
   const [timeSpeed, setTimeSpeed] = useState<number>(15);
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [highlightedSlug, setHighlightedSlug] = useState<string>('saturn');
@@ -82,22 +82,20 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
               <button
                 type="button"
                 onClick={() => setViewTab('solar-map')}
-                className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                  viewTab === 'solar-map'
+                className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${viewTab === 'solar-map'
                     ? 'bg-[#79D9ED] text-[#030713]'
                     : 'text-[#B8C4DE] hover:text-white'
-                }`}
+                  }`}
               >
                 3D Solar System Map
               </button>
               <button
                 type="button"
                 onClick={() => setViewTab('directory')}
-                className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                  viewTab === 'directory'
+                className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${viewTab === 'directory'
                     ? 'bg-[#79D9ED] text-[#030713]'
                     : 'text-[#B8C4DE] hover:text-white'
-                }`}
+                  }`}
               >
                 Encyclopedia Directory ({CELESTIAL_CATALOG.length})
               </button>
@@ -121,11 +119,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
           <div
             ref={solarMapContainerRef}
             data-testid="solar-map-stage"
-            className={`transition-all overflow-hidden relative ${
-              isFullscreen
+            className={`transition-all overflow-hidden relative ${isFullscreen
                 ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen bg-[#030713]'
                 : 'rounded-2xl border border-white/15 bg-[#060B18] h-[520px] sm:h-[600px] shadow-2xl'
-            }`}
+              }`}
           >
             <PlanetSceneCanvas
               mode="solar-system"
@@ -149,7 +146,9 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 <p className="text-[11px] text-[#B8C4DE] mt-0.5">
                   {scaleMode === 'educational'
                     ? 'Educational spacing & compressed planet radii active so rocky worlds remain visible alongside Jupiter and Saturn.'
-                    : 'True Planet-to-Planet Radius Ratios active (Jupiter 11× Earth); orbital distances remain compressed to fit viewport.'}
+                    : scaleMode === 'true-ratios'
+                      ? 'True Planet-to-Planet Radius Ratios active (Jupiter 11× Earth); orbital distances remain compressed to fit viewport.'
+                      : 'Distance to Scale active: orbits proportionally spaced by AU distance (0.39 AU to 30.1 AU). Zoom out to see outer giants.'}
                 </p>
               </div>
             )}
@@ -224,11 +223,22 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                   <button
                     type="button"
                     onClick={() =>
-                      setScaleMode((prev) => (prev === 'educational' ? 'true-ratios' : 'educational'))
+                      setScaleMode((prev) =>
+                        prev === 'educational'
+                          ? 'true-ratios'
+                          : prev === 'true-ratios'
+                            ? 'distance-scale'
+                            : 'educational'
+                      )
                     }
                     className="px-3 py-1.5 rounded-lg border border-white/15 bg-[#0D1526] text-xs font-medium text-[#F7FAFF] hover:border-[#79D9ED] transition-colors whitespace-nowrap shrink-0"
                   >
-                    Scale: {scaleMode === 'educational' ? 'Educational' : 'True Planet Ratios'}
+                    Scale:{' '}
+                    {scaleMode === 'educational'
+                      ? 'Educational Spacing'
+                      : scaleMode === 'true-ratios'
+                        ? 'True Planet Ratios'
+                        : 'Distance to Scale'}
                   </button>
 
                   <button
@@ -310,11 +320,10 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 aria-selected={categoryFilter === tab.id}
                 type="button"
                 onClick={() => setCategoryFilter(tab.id)}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${
-                  categoryFilter === tab.id
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${categoryFilter === tab.id
                     ? 'bg-[#79D9ED] text-[#030713] font-semibold'
                     : 'text-[#B8C4DE] hover:text-white'
-                }`}
+                  }`}
               >
                 {tab.label}
               </button>

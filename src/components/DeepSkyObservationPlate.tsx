@@ -7,11 +7,11 @@ interface DeepSkyObservationPlateProps {
 
 export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = ({ object }) => {
   const [wavelengthLayer, setWavelengthLayer] = useState<'optical' | 'infrared' | 'annotated'>('annotated');
-  const isMilkyWay = object.slug === 'milky-way';
+  const slug = object.slug;
 
   // Scientific dataset metadata for each view mode
   const getDatasetInfo = () => {
-    if (isMilkyWay) {
+    if (slug === 'milky-way') {
       switch (wavelengthLayer) {
         case 'optical':
           return {
@@ -42,7 +42,93 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
             caption: 'External face-on reconstruction derived from Spitzer infrared star counts and ESA Gaia parallax distances.',
           };
       }
+    } else if (slug === 'andromeda') {
+      switch (wavelengthLayer) {
+        case 'optical':
+          return {
+            title: 'GALEX & Palomar Observatory High-Resolution Mosaic of M31',
+            facility: 'NASA / JPL-Caltech / GALEX Ultraviolet & Optical',
+            band: 'Ultraviolet & Visible Starlight (150–650 nm)',
+            src: '/assets/deepsky/andromeda/andromeda_optical.jpg',
+            alt: 'Andromeda Galaxy full disc photographed in ultraviolet and visible light',
+            caption: 'Ultraviolet and visible mosaic tracing blue young star clusters across the spiral arms of our 1-trillion-star neighbor.',
+          };
+        case 'infrared':
+          return {
+            title: 'Herschel Space Observatory & Planck Submillimeter Dust Map',
+            facility: 'ESA / NASA / Herschel Space Observatory & Planck',
+            band: 'Far-Infrared & Submillimeter (70–850 µm)',
+            src: '/assets/deepsky/andromeda/andromeda_infrared.jpg',
+            alt: 'Far-infrared emission highlighting cold interstellar dust rings in Andromeda',
+            caption: 'Far-infrared radiation mapping the coldest dust lanes where new stars are currently coalescing inside spiral rings.',
+          };
+        case 'annotated':
+        default:
+          return {
+            title: 'Andromeda Galaxy (M31) Multi-Wavelength Science Plate',
+            facility: 'NASA / ESA / STScI & Astrometric Markers',
+            band: 'Panchromatic Composite with Satellite Dwarf Galaxies',
+            src: '/assets/deepsky/andromeda/andromeda_optical.jpg',
+            alt: 'Annotated plate of the Andromeda galaxy with satellite companions',
+            caption: 'Core bulge harboring a 100M M☉ black hole, companion dwarf galaxies M32 and M110, and 220,000 ly span.',
+          };
+      }
+    } else if (slug === 'crab-nebula') {
+      switch (wavelengthLayer) {
+        case 'optical':
+          return {
+            title: 'Hubble Space Telescope Most Detailed M1 Mosaic',
+            facility: 'NASA / ESA / STScI (Hubble WFPC2 Mosaic)',
+            band: 'Optical Emission Lines (H-alpha, [S II], [O III])',
+            src: '/assets/deepsky/crab/crab_optical.jpg',
+            alt: 'Hubble Space Telescope mosaic of the expanding filaments of the Crab Nebula',
+            caption: 'Intricate filaments of hydrogen, helium, and oxygen ejected in the supernova of 1054 CE, expanding at 1,500 km/s.',
+          };
+        case 'infrared':
+          return {
+            title: 'Herschel Space Observatory & Hubble Infrared Composite',
+            facility: 'ESA / NASA / Herschel & STScI',
+            band: 'Far-Infrared & Optical Multi-Wavelength',
+            src: '/assets/deepsky/crab/crab_infrared.jpg',
+            alt: 'Infrared and optical composite tracing warm cosmic dust inside the supernova remnant',
+            caption: 'Infrared observations revealing newly formed cosmic dust grains forged in the heart of the ancient exploded star.',
+          };
+        case 'annotated':
+        default:
+          return {
+            title: 'Crab Pulsar & Wind Nebula Science Plate',
+            facility: 'NASA / ESA / Chandra / STScI + Astrometric Markers',
+            band: 'Synchrotron Wind and Expanding Supernova Debris',
+            src: '/assets/deepsky/crab/crab_optical.jpg',
+            alt: 'Annotated telescope plate of the Crab Nebula showing pulsar and expansion dynamics',
+            caption: 'Central 30-Hz spinning Crab Pulsar driving relativistic magnetic particle wind across 11 light-years.',
+          };
+      }
+    } else if (slug === 'sagittarius-a') {
+      switch (wavelengthLayer) {
+        case 'optical':
+        case 'annotated':
+          return {
+            title: 'Great Observatories Multi-Wavelength Galactic Center',
+            facility: 'NASA / ESA / CXC / STScI / JPL-Caltech (Hubble, Spitzer, Chandra)',
+            band: 'X-ray (blue), Infrared (red/yellow), Visible (cyan)',
+            src: '/assets/deepsky/sagittarius-a/sagittarius_a_multispectral.jpg',
+            alt: 'Multi-wavelength mosaic of the Galactic Center showing Sagittarius A and stellar nurseries',
+            caption: 'Composite penetrating 26,000 light-years of dust to reveal intense star formation and the supermassive black hole core.',
+          };
+        case 'infrared':
+        default:
+          return {
+            title: 'Chandra X-Ray Observatory Sagittarius A* High-Energy View',
+            facility: 'NASA / CXC / Massachusetts Institute of Technology',
+            band: 'High-Energy X-Ray (2–10 keV)',
+            src: '/assets/deepsky/sagittarius-a/sagittarius_a_xray.jpg',
+            alt: 'High-energy X-ray emission surrounding Sagittarius A* supermassive black hole',
+            caption: 'Intense X-ray flares produced by million-degree plasma heating as matter spirals toward the event horizon.',
+          };
+      }
     } else {
+      // Default: Orion Nebula (orion-nebula)
       switch (wavelengthLayer) {
         case 'optical':
           return {
@@ -97,7 +183,7 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
           {/* Scientific Overlay for Annotated Mode */}
           {wavelengthLayer === 'annotated' && (
             <div className="absolute inset-0 pointer-events-none">
-              {isMilkyWay ? (
+              {slug === 'milky-way' ? (
                 <svg
                   viewBox="0 0 800 500"
                   className="w-full h-full"
@@ -145,6 +231,100 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
                     <line x1="736" y1="459" x2="736" y2="471" stroke="#F7FAFF" strokeWidth="2" />
                     <text x="602" y="458" fill="#F7FAFF" fontSize="11" fontWeight="bold">
                       ~35,000 light-years
+                    </text>
+                  </g>
+                </svg>
+              ) : slug === 'andromeda' ? (
+                <svg
+                  viewBox="0 0 800 500"
+                  className="w-full h-full"
+                  role="presentation"
+                >
+                  <g className="font-mono text-xs">
+                    {/* Galactic Bulge / Core */}
+                    <circle cx="395" cy="245" r="28" fill="none" stroke="#FDE047" strokeWidth="1.5" strokeDasharray="3 3" />
+                    <circle cx="395" cy="245" r="5" fill="#FEF08A" />
+                    <rect x="430" y="233" width="235" height="24" rx="4" fill="#030713" fillOpacity="0.85" stroke="#FDE047" strokeWidth="0.8" />
+                    <text x="438" y="249" fill="#FEF08A" fontSize="11" fontWeight="bold">
+                      M31 Core (100M M☉ Black Hole)
+                    </text>
+
+                    {/* Satellite M32 */}
+                    <circle cx="360" cy="335" r="14" fill="none" stroke="#79D9ED" strokeWidth="1.5" />
+                    <rect x="220" y="325" width="130" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#79D9ED" strokeWidth="0.8" />
+                    <text x="228" y="340" fill="#79D9ED" fontSize="11" fontWeight="bold">
+                      M32 (Compact Dwarf)
+                    </text>
+
+                    {/* Satellite M110 */}
+                    <circle cx="485" cy="140" r="18" fill="none" stroke="#A78BFA" strokeWidth="1.5" />
+                    <rect x="510" y="130" width="130" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#A78BFA" strokeWidth="0.8" />
+                    <text x="518" y="145" fill="#A78BFA" fontSize="11" fontWeight="bold">
+                      M110 (Dwarf Elliptical)
+                    </text>
+
+                    {/* Scale bar */}
+                    <rect x="520" y="445" width="240" height="32" rx="4" fill="#030713" fillOpacity="0.85" stroke="white" strokeOpacity="0.2" />
+                    <text x="532" y="465" fill="#F7FAFF" fontSize="11">
+                      Span: 220,000 ly · Dist: 2.54 Mly
+                    </text>
+                  </g>
+                </svg>
+              ) : slug === 'crab-nebula' ? (
+                <svg
+                  viewBox="0 0 800 500"
+                  className="w-full h-full"
+                  role="presentation"
+                >
+                  <g className="font-mono text-xs">
+                    {/* Crab Pulsar */}
+                    <circle cx="400" cy="250" r="6" fill="#67E8F9" stroke="#FFF" strokeWidth="2" />
+                    <circle cx="400" cy="250" r="22" fill="none" stroke="#67E8F9" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <rect x="430" y="238" width="250" height="24" rx="4" fill="#030713" fillOpacity="0.85" stroke="#67E8F9" strokeWidth="0.8" />
+                    <text x="438" y="254" fill="#67E8F9" fontSize="11" fontWeight="bold">
+                      Crab Pulsar (Spin: 30.2 rev/s · B~10¹² G)
+                    </text>
+
+                    {/* Relativistic Wind Zone */}
+                    <ellipse cx="400" cy="250" rx="140" ry="90" fill="none" stroke="#F43F5E" strokeWidth="1.5" strokeDasharray="6 3" />
+                    <rect x="180" y="320" width="210" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#F43F5E" strokeWidth="0.8" />
+                    <text x="188" y="335" fill="#F43F5E" fontSize="11" fontWeight="bold">
+                      1054 CE Ejecta (v ~ 1,500 km/s)
+                    </text>
+
+                    {/* Scale bar */}
+                    <rect x="560" y="445" width="200" height="30" rx="4" fill="#030713" fillOpacity="0.85" stroke="white" strokeOpacity="0.2" />
+                    <text x="572" y="464" fill="#F7FAFF" fontSize="11">
+                      Span: 11 ly · Dist: 6,500 ly
+                    </text>
+                  </g>
+                </svg>
+              ) : slug === 'sagittarius-a' ? (
+                <svg
+                  viewBox="0 0 800 500"
+                  className="w-full h-full"
+                  role="presentation"
+                >
+                  <g className="font-mono text-xs">
+                    {/* Sgr A* Event Horizon */}
+                    <circle cx="400" cy="250" r="10" fill="#000" stroke="#F97316" strokeWidth="2.5" />
+                    <circle cx="400" cy="250" r="26" fill="none" stroke="#FDE047" strokeWidth="1.5" strokeDasharray="3 3" />
+                    <rect x="435" y="238" width="250" height="24" rx="4" fill="#030713" fillOpacity="0.85" stroke="#F97316" strokeWidth="0.8" />
+                    <text x="443" y="254" fill="#FDBA74" fontSize="11" fontWeight="bold">
+                      Sgr A* SMBH (Mass: 4.15 × 10⁶ M☉)
+                    </text>
+
+                    {/* Star S2 Pericenter Orbit */}
+                    <ellipse cx="400" cy="250" rx="130" ry="75" transform="rotate(-25 400 250)" fill="none" stroke="#38BDF8" strokeWidth="1.5" strokeDasharray="5 3" />
+                    <rect x="190" y="300" width="200" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#38BDF8" strokeWidth="0.8" />
+                    <text x="198" y="315" fill="#38BDF8" fontSize="11" fontWeight="bold">
+                      S2 Orbit (Closest: 17 light-hrs)
+                    </text>
+
+                    {/* Scale bar */}
+                    <rect x="530" y="445" width="230" height="30" rx="4" fill="#030713" fillOpacity="0.85" stroke="white" strokeOpacity="0.2" />
+                    <text x="542" y="464" fill="#F7FAFF" fontSize="11">
+                      Distance: 26,670 ly · Galactic Core
                     </text>
                   </g>
                 </svg>
@@ -214,9 +394,15 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
             <span className="text-white font-medium">Authentic Science:</span>
             <span className="mx-2 text-white/30">·</span>
             <span>
-              {isMilkyWay
+              {slug === 'milky-way'
                 ? 'External top-down view is a scientific reconstruction from Gaia & Spitzer data; internal optical view is real ISS photography.'
-                : 'Observed from Earth/Hubble line of sight at 1,344 light-years; presented as layered multi-spectral astronomical datasets.'}
+                : slug === 'andromeda'
+                  ? 'Real GALEX ultraviolet and Herschel infrared observations of our sister galaxy 2.54 million light-years away.'
+                  : slug === 'crab-nebula'
+                    ? 'Hubble visible and Herschel infrared observations of the 1054 CE supernova remnant expanding at 1,500 km/s.'
+                    : slug === 'sagittarius-a'
+                      ? 'Great Observatories multi-wavelength infrared/X-ray data penetrating 26,000 light-years of interstellar dust to Sgr A*.'
+                      : 'Observed from Earth/Hubble line of sight at 1,344 light-years; presented as layered multi-spectral astronomical datasets.'}
             </span>
           </div>
           <div className="flex items-center gap-1 p-1 rounded-lg bg-[#0D1526] border border-white/15">

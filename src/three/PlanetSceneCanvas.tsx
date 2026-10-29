@@ -31,7 +31,7 @@ export interface PlanetSceneCanvasProps {
   isPaused?: boolean;
   reducedMotion?: boolean;
   showScienceLabels?: boolean;
-  scaleMode?: 'educational' | 'true-ratios';
+  scaleMode?: 'educational' | 'true-ratios' | 'distance-scale';
   timeSpeedDaysPerSec?: number;
   qualityTier?: QualityTier;
   onSelectObject?: (slug: string) => void;
@@ -344,8 +344,8 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
       if (p.mode === 'solar-system') {
         sunKeyLight.intensity = 0.35;
         solarPointLight.intensity = 3.2;
-        controls.minDistance = 8;
-        controls.maxDistance = 125;
+        controls.minDistance = 6;
+        controls.maxDistance = p.scaleMode === 'distance-scale' ? 360 : 125;
 
         // Build Sun at origin
         const sunObj = getObjectBySlug('sun')!;
@@ -359,13 +359,13 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           sunKeyLight,
           cachedSunTex
         );
-        sunBuilt.root.scale.setScalar(2.6);
+        sunBuilt.root.scale.setScalar(p.scaleMode === 'distance-scale' ? 1.8 : 2.6);
         stageGroup.add(sunBuilt.root);
         activeDisposables.push(...sunBuilt.disposables);
         activeSpinMeshes.push({ mesh: sunBuilt.spinMesh, rate: 0.12 });
         clickables.push(sunBuilt.spinMesh);
 
-        // Asteroid Belt InstancedMesh (>150 varied rocky asteroids between Mars 17 & Jupiter 24.5)
+        // Asteroid Belt InstancedMesh (>150 varied rocky asteroids between Mars & Jupiter)
         const astCount = lowQ ? 110 : 200;
         const astGeo = new THREE.DodecahedronGeometry(0.11, 0);
         const astMat = new THREE.MeshStandardMaterial({
@@ -378,8 +378,9 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         const dummy = new THREE.Object3D();
         const c = new THREE.Color();
+        const astBaseR = p.scaleMode === 'distance-scale' ? 2.77 * 6.8 : 19.6;
         for (let i = 0; i < astCount; i++) {
-          const r = 19.6 + (i % 17) * 0.19 + Math.sin(i * 7.3) * 0.4;
+          const r = astBaseR + (i % 17) * 0.19 + Math.sin(i * 7.3) * 0.4;
           const angle = (i / astCount) * Math.PI * 2 + Math.cos(i * 3.1) * 0.2;
           const yOff = Math.sin(i * 11.7) * 0.45;
           dummy.position.set(Math.cos(angle) * r, yOff, Math.sin(angle) * r);
@@ -399,7 +400,9 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         // Build all 8 Solar System Planets + Orbital Paths
         SOLAR_SYSTEM_PLANETS.forEach((planet) => {
-          const dist = planet.visual.orbitSceneDistance || 10;
+          const dist = (p.scaleMode === 'distance-scale' && planet.metrics.distanceAu)
+            ? Math.max(3.2, planet.metrics.distanceAu * 6.8)
+            : (planet.visual.orbitSceneDistance || 10);
           const pts: THREE.Vector3[] = [];
           const segs = 96;
           for (let i = 0; i < segs; i++) {

@@ -63,24 +63,53 @@ export const LobbyView: React.FC<LobbyViewProps> = ({
 
         {/* Three Primary Experience Cards */}
         <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-5">
-          <button
-            type="button"
-            onClick={() => onStartShow('first-flight')}
-            className="group text-left p-7 rounded-2xl border border-white/15 bg-[#0D1526] hover:border-[#79D9ED] transition-colors flex flex-col justify-between min-h-[235px]"
-          >
+          <div className="group text-left p-7 rounded-2xl border border-white/15 bg-[#0D1526] hover:border-[#79D9ED] transition-colors flex flex-col justify-between min-h-[235px]">
             <div>
-              <div className="text-xs text-[#79D9ED] font-medium">01. Guided Show · ~7 min</div>
-              <h2 className="font-display text-2xl font-bold text-[#F7FAFF] mt-2 group-hover:text-[#79D9ED] transition-colors">
-                First Flight ↗
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-[#79D9ED] font-medium">01. Guided Planetarium Shows</span>
+                <span className="text-[11px] text-[#B8C4DE] font-mono">8–15 min</span>
+              </div>
+              <h2 className="font-display text-2xl font-bold text-[#F7FAFF] mt-2">
+                Theater Shows
               </h2>
-              <p className="text-sm text-[#B8C4DE] leading-relaxed mt-3">
-                Lift off from Earth, visit the Moon, cross the Solar System to Saturn’s rings, and step out into Orion and the Milky Way.
-              </p>
+              <div className="mt-3 flex flex-col gap-1.5">
+                <button
+                  type="button"
+                  onClick={() => onStartShow('first-flight')}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-[#79D9ED]/20 hover:text-[#79D9ED] text-xs font-medium text-[#F7FAFF] transition-colors flex items-center justify-between"
+                >
+                  <span>1. First Flight: Earth to Saturn</span>
+                  <span className="text-[10px] text-[#B8C4DE]">7 ch ↗</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onStartShow('our-home-milky-way')}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-[#79D9ED]/20 hover:text-[#79D9ED] text-xs font-medium text-[#F7FAFF] transition-colors flex items-center justify-between"
+                >
+                  <span>2. Our Home in the Milky Way</span>
+                  <span className="text-[10px] text-[#B8C4DE]">6 ch ↗</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onStartShow('moons-hidden-oceans')}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-[#79D9ED]/20 hover:text-[#79D9ED] text-xs font-medium text-[#F7FAFF] transition-colors flex items-center justify-between"
+                >
+                  <span>3. Moons &amp; Hidden Oceans</span>
+                  <span className="text-[10px] text-[#B8C4DE]">6 ch ↗</span>
+                </button>
+              </div>
             </div>
-            <div className="mt-6 pt-3 border-t border-white/10 text-xs text-[#7F90B0]">
-              Beginner-friendly · Captioned · Interruptible
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-[#7F90B0]">
+              <span>Captioned · Narration Opt-in</span>
+              <button
+                type="button"
+                onClick={() => onStartShow('first-flight')}
+                className="text-[#79D9ED] hover:underline text-[11px] font-semibold"
+              >
+                Launch First Flight ↗
+              </button>
             </div>
-          </button>
+          </div>
 
           <button
             type="button"

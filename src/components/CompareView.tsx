@@ -101,11 +101,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 role="radio"
                 aria-checked={scaleMode === 'true-scale'}
                 onClick={() => setScaleMode('true-scale')}
-                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                  scaleMode === 'true-scale'
+                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${scaleMode === 'true-scale'
                     ? 'bg-[#79D9ED] text-[#030713] shadow-md'
                     : 'text-[#B8C4DE] hover:text-white'
-                }`}
+                  }`}
               >
                 True Scale Ratio (1:1)
               </button>
@@ -114,11 +113,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 role="radio"
                 aria-checked={scaleMode === 'presentation'}
                 onClick={() => setScaleMode('presentation')}
-                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${
-                  scaleMode === 'presentation'
+                className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${scaleMode === 'presentation'
                     ? 'bg-[#D7B77B] text-[#030713] shadow-md'
                     : 'text-[#B8C4DE] hover:text-white'
-                }`}
+                  }`}
               >
                 Presentation Scale (Logarithmic)
               </button>
@@ -184,11 +182,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
         <div
           ref={stageContainerRef}
           data-testid="compare-stage-wrapper"
-          className={`relative rounded-2xl border border-white/15 bg-[#030713] overflow-hidden flex flex-col justify-between transition-all ${
-            isFullscreen
+          className={`relative rounded-2xl border border-white/15 bg-[#030713] overflow-hidden flex flex-col justify-between transition-all ${isFullscreen
               ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen'
               : 'min-h-[480px] h-[540px] sm:h-[600px] shadow-2xl'
-          }`}
+            }`}
         >
           {/* 3D Canvas Background */}
           <div className="absolute inset-0 w-full h-full z-0">
@@ -400,11 +397,10 @@ export const CompareView: React.FC<CompareViewProps> = ({
                       ? 'Synchronized: Both worlds spin at lockstep 20s period'
                       : 'Physical: Worlds spin according to physical sidereal rotation speeds'
                   }
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                    syncSpin
+                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${syncSpin
                       ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
                       : 'bg-[#0D1526] text-[#B8C4DE] hover:text-white'
-                  }`}
+                    }`}
                 >
                   Sync Spin: {syncSpin ? 'On' : 'Physical'}
                 </button>
@@ -416,33 +412,30 @@ export const CompareView: React.FC<CompareViewProps> = ({
                   <button
                     type="button"
                     onClick={() => handleApplyPreset('front')}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      cameraPreset === 'front'
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'front'
                         ? 'bg-white/20 text-white font-semibold'
                         : 'text-[#B8C4DE] hover:text-white'
-                    }`}
+                      }`}
                   >
                     Front
                   </button>
                   <button
                     type="button"
                     onClick={() => handleApplyPreset('above')}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      cameraPreset === 'above'
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'above'
                         ? 'bg-white/20 text-white font-semibold'
                         : 'text-[#B8C4DE] hover:text-white'
-                    }`}
+                      }`}
                   >
                     Above
                   </button>
                   <button
                     type="button"
                     onClick={() => handleApplyPreset('tilted')}
-                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${
-                      cameraPreset === 'tilted'
+                    className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'tilted'
                         ? 'bg-white/20 text-white font-semibold'
                         : 'text-[#B8C4DE] hover:text-white'
-                    }`}
+                      }`}
                   >
                     Tilted
                   </button>
