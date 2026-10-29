@@ -129,11 +129,10 @@ export const Header: React.FC<HeaderProps> = ({
                   onNavigate(item.route);
                 }}
                 aria-current={isActive ? 'page' : undefined}
-                className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 ${
-                  isActive
+                className={`py-1 border-b-2 transition-colors whitespace-nowrap shrink-0 ${isActive
                     ? 'border-[#79D9ED] text-[#F7FAFF]'
                     : 'border-transparent text-[#B8C4DE] hover:text-[#F7FAFF] hover:border-white/30'
-                }`}
+                  }`}
               >
                 {item.label}
               </a>
@@ -176,11 +175,10 @@ export const Header: React.FC<HeaderProps> = ({
                 setMobileMenuOpen(false);
                 onNavigate(item.route);
               }}
-              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                currentRoute === item.route
+              className={`w-full text-left px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${currentRoute === item.route
                   ? 'bg-[#79D9ED]/15 text-[#79D9ED]'
                   : 'text-[#F7FAFF] hover:bg-white/5'
-              }`}
+                }`}
             >
               {item.label}
             </button>

@@ -289,16 +289,14 @@ export const VoyageAndSourcesView: React.FC<VoyageAndSourcesViewProps> = ({
               {badges.map((b) => (
                 <div
                   key={b.id}
-                  className={`p-3.5 rounded-xl border flex items-start gap-3 print:p-2.5 print:rounded-md ${
-                    b.earned
+                  className={`p-3.5 rounded-xl border flex items-start gap-3 print:p-2.5 print:rounded-md ${b.earned
                       ? 'border-[#9FDFB6]/40 bg-[#9FDFB6]/8 print:bg-emerald-50 print:border-emerald-300'
                       : 'border-white/10 bg-[#070D1D] opacity-65 print:bg-white print:border-slate-200 print:opacity-100 print:border-dashed'
-                  }`}
+                    }`}
                 >
                   <Award
-                    className={`w-4 h-4 shrink-0 mt-0.5 ${
-                      b.earned ? 'text-[#9FDFB6] print:text-emerald-700' : 'text-[#7F90B0] print:text-slate-400'
-                    }`}
+                    className={`w-4 h-4 shrink-0 mt-0.5 ${b.earned ? 'text-[#9FDFB6] print:text-emerald-700' : 'text-[#7F90B0] print:text-slate-400'
+                      }`}
                     aria-hidden="true"
                   />
                   <div>
