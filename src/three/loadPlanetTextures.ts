@@ -163,6 +163,12 @@ export async function loadRealPlanetTextures(
       if (set.specularMap2k) {
         promises.specular = loadTextureCached(set.specularMap2k, THREE.NoColorSpace, maxAnisotropy);
       }
+      if (set.ringMap) {
+        promises.ring = loadTextureCached(set.ringMap, THREE.SRGBColorSpace, maxAnisotropy);
+      }
+      if (set.ringAlphaMap) {
+        promises.ringAlpha = loadTextureCached(set.ringAlphaMap, THREE.NoColorSpace, maxAnisotropy);
+      }
     }
 
     const keys = Object.keys(promises);
@@ -190,6 +196,8 @@ export async function loadRealPlanetTextures(
       nightMap: textures.night || undefined,
       cloudMap: textures.cloud || undefined,
       specularMap: textures.specular || undefined,
+      ringMap: textures.ring || undefined,
+      ringAlphaMap: textures.ringAlpha || undefined,
       isRealImagery: true,
       disposables,
     };

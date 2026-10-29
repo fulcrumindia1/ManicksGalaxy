@@ -252,6 +252,88 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
       },
     ],
   },
+  jupiter: {
+    textureStyle: 'jupiter',
+    dayMap2k: '/assets/planets/jupiter/jupiter_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-JUP-CASSINI-2K',
+        title: 'Jupiter Global Cylindrical Cloud Map',
+        creator: 'NASA / JPL-Caltech / Space Science Institute / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Jupiter cloud map: NASA/JPL/SSI Cassini & Juno cylindrical map. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'Cassini Jupiter flyby & Juno orbital science',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Cylindrical projection from Cassini Imaging Science Subsystem composite data. Captures alternating dark belts, pale zones, Great Red Spot anticyclone, and circumpolar vortices.',
+      },
+    ],
+  },
+  saturn: {
+    textureStyle: 'saturn',
+    dayMap2k: '/assets/planets/saturn/saturn_2k.jpg',
+    ringMap: '/assets/planets/saturn/saturn_ring_alpha.png',
+    ringAlphaMap: '/assets/planets/saturn/saturn_ring_alpha.png',
+    sources: [
+      {
+        assetId: 'NASA-SAT-CASSINI-2K',
+        title: 'Saturn Global Cloud Atmosphere Map & Ring System',
+        creator: 'NASA / JPL-Caltech / Space Science Institute / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Saturn globe & ring system: NASA/JPL/SSI Cassini ISS imagery. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024 (Globe) / 1024 × 64 (Rings)',
+        sourceDate: 'Cassini Orbital Tour (2004–2017)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular atmosphere map from Cassini ISS wide-angle camera data. Ring texture incorporates radial optical depth profiles for the C ring, B ring, Cassini Division, and A ring.',
+      },
+    ],
+  },
+  uranus: {
+    textureStyle: 'uranus',
+    dayMap2k: '/assets/planets/uranus/uranus_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-URA-VOYAGER2-2K',
+        title: 'Uranus Global Cloud Deck Map',
+        creator: 'NASA / JPL-Caltech / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Uranus atmosphere map: NASA/JPL Voyager 2 narrow-angle camera composite. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'Voyager 2 Flyby (1986) / Color calibrated',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Cylindrical map derived from calibrated Voyager 2 imaging data reflecting methane absorption bands in the upper troposphere.',
+      },
+    ],
+  },
+  neptune: {
+    textureStyle: 'neptune',
+    dayMap2k: '/assets/planets/neptune/neptune_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-NEP-VOYAGER2-2K',
+        title: 'Neptune Global Atmosphere & Storm Map',
+        creator: 'NASA / JPL-Caltech / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Neptune atmosphere map: NASA/JPL Voyager 2 imaging science data. CC BY 4.0 (Solar System Scope).',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'Voyager 2 Encounter (1989)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular map compiled from Voyager 2 clear, green, and orange filter mosaics, showing the azure atmospheric deck and high-altitude methane ice streaks.',
+      },
+    ],
+  },
 };
 
 /**

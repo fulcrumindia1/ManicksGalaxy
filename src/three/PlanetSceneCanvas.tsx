@@ -124,11 +124,12 @@ function buildCompositeCelestialGroup(
       metalness: 0.0,
     });
   } else if (hasRealTextures) {
-    // Real NASA/Satellite imagery path for Earth, Mercury, Venus, Moon, Mars, etc.
+    // Real NASA/Satellite imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune
     const isRockyAirless = ['mercury', 'moon', 'mars'].includes(obj.slug);
     const isVenus = obj.slug === 'venus';
-    const baseRoughness = isRockyAirless ? 0.88 : isVenus ? 0.52 : 0.62;
-    const baseMetalness = isRockyAirless ? 0.02 : 0.04;
+    const isGasGiant = ['jupiter', 'saturn', 'uranus', 'neptune'].includes(obj.slug);
+    const baseRoughness = isRockyAirless ? 0.88 : isVenus ? 0.52 : isGasGiant ? 0.68 : 0.62;
+    const baseMetalness = isRockyAirless ? 0.02 : isGasGiant ? 0.0 : 0.04;
 
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -258,8 +259,8 @@ function buildCompositeCelestialGroup(
     );
     const ringMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      map: maps?.ringMap,
-      alphaMap: maps?.ringAlphaMap,
+      map: realTextures?.ringMap || maps?.ringMap,
+      alphaMap: realTextures?.ringAlphaMap || maps?.ringAlphaMap,
       transparent: true,
       side: THREE.DoubleSide,
       roughness: 0.45,
@@ -730,8 +731,17 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           solarPlanets.push({ obj: planet, holder, meshGroup: built.root, orbitDist: dist });
         });
 
-        // Preload real inner planet textures for solar-system mode if not yet loaded
-        const stylesToPreload: TextureStyle[] = ['mercury', 'venus', 'earth', 'mars'];
+        // Preload real planet textures for solar-system mode if not yet loaded
+        const stylesToPreload: TextureStyle[] = [
+          'mercury',
+          'venus',
+          'earth',
+          'mars',
+          'jupiter',
+          'saturn',
+          'uranus',
+          'neptune',
+        ];
         stylesToPreload.forEach((style) => {
           const cKey = `${style}:standard`;
           if (!cachedPlanetTextures.has(cKey)) {
