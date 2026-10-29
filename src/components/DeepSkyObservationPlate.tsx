@@ -9,180 +9,214 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
   const [wavelengthLayer, setWavelengthLayer] = useState<'optical' | 'infrared' | 'annotated'>('annotated');
   const isMilkyWay = object.slug === 'milky-way';
 
+  // Scientific dataset metadata for each view mode
+  const getDatasetInfo = () => {
+    if (isMilkyWay) {
+      switch (wavelengthLayer) {
+        case 'optical':
+          return {
+            title: 'ISS Expedition Optical Night Panorama',
+            facility: 'NASA / International Space Station (ISS073)',
+            band: 'Visible Light (400–700 nm)',
+            src: '/assets/deepsky/milky-way/milky_way_optical.jpg',
+            alt: 'Milky Way galaxy starlight band photographed from orbit aboard the International Space Station',
+            caption: 'True visible-light view of our galaxy edge-on as seen from Earth orbit, showing the dark rift of interstellar dust lanes.',
+          };
+        case 'infrared':
+          return {
+            title: 'WISE All-Sky Infrared Galaxy Survey',
+            facility: 'NASA / Wide-field Infrared Survey Explorer (WISE)',
+            band: 'Mid-Infrared (3.4, 4.6, 12, 22 µm)',
+            src: '/assets/deepsky/milky-way/milky_way_infrared.jpg',
+            alt: 'All-sky mid-infrared survey of the Milky Way showing warm dust and stellar populations',
+            caption: 'Infrared wavelengths penetrate cold obscuring dust to reveal starburst regions and the blazing galactic nucleus.',
+          };
+        case 'annotated':
+        default:
+          return {
+            title: 'Milky Way Barred Spiral Model (Spitzer / Gaia DR3)',
+            facility: 'NASA / JPL-Caltech / R. Hurt / ESA Gaia',
+            band: 'Data-Informed Structural Reconstruction',
+            src: '/assets/deepsky/milky-way/milky_way_topdown.jpg',
+            alt: 'Top-down structural reconstruction of the Milky Way Galaxy showing spiral arms and the Sun position',
+            caption: 'External face-on reconstruction derived from Spitzer infrared star counts and ESA Gaia parallax distances.',
+          };
+      }
+    } else {
+      switch (wavelengthLayer) {
+        case 'optical':
+          return {
+            title: 'Hubble Space Telescope M42 Optical Mosaic',
+            facility: 'NASA / ESA / STScI (Hubble ACS/WFPC2)',
+            band: 'Visible Optical / H-alpha / [O III] (435–658 nm)',
+            src: '/assets/deepsky/orion/orion_optical.jpg',
+            alt: 'Hubble Space Telescope high-resolution visible light mosaic of the Orion Nebula M42',
+            caption: 'Stunning visible emission showing glowing hydrogen (red/orange) and ionized oxygen (teal/blue) energized by newborn stars.',
+          };
+        case 'infrared':
+          return {
+            title: 'Spitzer Space Telescope Orion Infrared View',
+            facility: 'NASA / JPL-Caltech (Spitzer IRAC/MIPS)',
+            band: 'Infrared (3.6, 4.5, 8.0, 24 µm)',
+            src: '/assets/deepsky/orion/orion_infrared.jpg',
+            alt: 'Spitzer Space Telescope infrared mosaic of the Orion Nebula showing embedded protostars',
+            caption: 'Infrared observation piercing dark dust clouds to reveal hundreds of embedded protostars and planetary disks in formation.',
+          };
+        case 'annotated':
+        default:
+          return {
+            title: 'Hubble Space Telescope Science Plate with Annotations',
+            facility: 'NASA / ESA / STScI Hubble ACS + Astrometric Markers',
+            band: 'Multi-Wavelength Optical with Coordinate Annotations',
+            src: '/assets/deepsky/orion/orion_optical.jpg',
+            alt: 'Annotated telescope observation plate of the Orion Nebula showing key astrophysical regions',
+            caption: 'Key scientific features resolved: Trapezium ionizing cluster, Orion Bar photo-evaporation front, and proplyds.',
+          };
+      }
+    }
+  };
+
+  const dataset = getDatasetInfo();
+
   return (
     <div
       className="w-full h-full relative flex flex-col items-center justify-center bg-[#030713] overflow-hidden p-6"
       data-testid="deep-sky-plate"
     >
       {/* Honest Scientific Framing Notice */}
-      <div className="relative z-10 w-full max-w-3xl flex flex-col items-center">
-        <div className="w-full aspect-[16/10] max-h-[62vh] rounded-xl border border-white/15 bg-[#060B19] relative overflow-hidden flex items-center justify-center">
-          {isMilkyWay ? (
-            <svg
-              viewBox="0 0 800 500"
-              className="w-full h-full"
-              role="img"
-              aria-label="Scientific top-down structural reconstruction of the Milky Way Galaxy showing the Sun's location in the Orion Arm"
-            >
-              <defs>
-                <radialGradient id="mwCore" cx="50%" cy="50%" r="45%">
-                  <stop offset="0%" stopColor="#FEF3C7" stopOpacity="0.95" />
-                  <stop offset="22%" stopColor="#FDE68A" stopOpacity="0.55" />
-                  <stop offset="55%" stopColor="#818CF8" stopOpacity="0.18" />
-                  <stop offset="100%" stopColor="#060B19" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <rect width="800" height="500" fill="#050915" />
-              {/* Galactic halo glow */}
-              <ellipse cx="400" cy="250" rx="310" ry="215" fill="url(#mwCore)" />
+      <div className="relative z-10 w-full max-w-4xl flex flex-col items-center">
+        {/* Main Observation Plate Frame */}
+        <div className="w-full aspect-[16/10] max-h-[60vh] rounded-xl border border-white/15 bg-[#060B19] relative overflow-hidden flex items-center justify-center shadow-2xl">
+          {/* Authentic Real Telescope Image */}
+          <img
+            src={dataset.src}
+            alt={dataset.alt}
+            className="w-full h-full object-cover transition-opacity duration-300"
+          />
 
-              {/* Central Galactic Bar */}
-              <ellipse
-                cx="400"
-                cy="250"
-                rx="88"
-                ry="26"
-                transform="rotate(-28 400 250)"
-                fill="#FEF08A"
-                fillOpacity={wavelengthLayer === 'infrared' ? 0.85 : 0.65}
-              />
+          {/* Scientific Overlay for Annotated Mode */}
+          {wavelengthLayer === 'annotated' && (
+            <div className="absolute inset-0 pointer-events-none">
+              {isMilkyWay ? (
+                <svg
+                  viewBox="0 0 800 500"
+                  className="w-full h-full"
+                  role="presentation"
+                >
+                  <g className="font-mono text-xs">
+                    {/* Galactic Center Sgr A* */}
+                    <circle cx="400" cy="250" r="5" fill="#FDE047" stroke="#000" strokeWidth="1.5" />
+                    <circle cx="400" cy="250" r="14" fill="none" stroke="#FDE047" strokeWidth="1" strokeDasharray="3 3" />
+                    <rect x="420" y="238" width="220" height="22" rx="4" fill="#030713" fillOpacity="0.82" stroke="#FDE047" strokeWidth="0.8" />
+                    <text x="428" y="253" fill="#FEF08A" fontSize="11" fontWeight="bold">
+                      Sagittarius A* (Galactic Center)
+                    </text>
 
-              {/* Logarithmic Barred Spiral Arms */}
-              {[0, Math.PI, Math.PI * 0.5, Math.PI * 1.5].map((offset, idx) => {
-                const points: string[] = [];
-                for (let t = 0; t <= 4.3; t += 0.1) {
-                  const r = 46 * Math.exp(0.36 * t);
-                  if (r > 235) break;
-                  const ang = t + offset - 0.45;
-                  const x = 400 + Math.cos(ang) * r * 1.22;
-                  const y = 250 + Math.sin(ang) * r * 0.92;
-                  points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
-                }
-                return (
-                  <polyline
-                    key={idx}
-                    points={points.join(' ')}
-                    fill="none"
-                    stroke={wavelengthLayer === 'infrared' ? '#FB923C' : idx < 2 ? '#93C5FD' : '#C4B5FD'}
-                    strokeWidth={idx < 2 ? 22 : 14}
-                    strokeLinecap="round"
-                    strokeOpacity={0.32}
-                  />
-                );
-              })}
+                    {/* Solar System position ~26,670 ly out */}
+                    <circle cx="400" cy="365" r="7" fill="none" stroke="#79D9ED" strokeWidth="2.5" />
+                    <circle cx="400" cy="365" r="3" fill="#79D9ED" />
+                    <line x1="400" y1="250" x2="400" y2="365" stroke="#79D9ED" strokeDasharray="4 4" strokeWidth="1.5" strokeOpacity="0.75" />
+                    <rect x="420" y="353" width="230" height="22" rx="4" fill="#030713" fillOpacity="0.82" stroke="#79D9ED" strokeWidth="0.8" />
+                    <text x="428" y="368" fill="#79D9ED" fontSize="11" fontWeight="bold">
+                      Sun &amp; Earth (Orion Spur · 26,670 ly)
+                    </text>
 
-              {/* Annotated Gaia Measurement Markers */}
-              {wavelengthLayer === 'annotated' && (
-                <g className="font-mono">
-                  {/* Galactic Center Sgr A* */}
-                  <circle cx="400" cy="250" r="4" fill="#FDE047" />
-                  <text x="412" y="246" fill="#FEF08A" fontSize="11">
-                    Sagittarius A* (Galactic Center)
-                  </text>
+                    {/* Gaia Survey Reach Sphere */}
+                    <circle
+                      cx="400"
+                      cy="365"
+                      r="65"
+                      fill="#79D9ED"
+                      fillOpacity="0.08"
+                      stroke="#79D9ED"
+                      strokeWidth="1.2"
+                      strokeDasharray="4 4"
+                      strokeOpacity="0.6"
+                    />
+                    <rect x="210" y="415" width="180" height="18" rx="3" fill="#030713" fillOpacity="0.82" />
+                    <text x="216" y="428" fill="#B8C4DE" fontSize="10">
+                      Gaia High-Precision Astrometry
+                    </text>
 
-                  {/* Solar System position ~26,670 ly out */}
-                  <circle cx="400" cy="362" r="6" fill="none" stroke="#79D9ED" strokeWidth="2" />
-                  <circle cx="400" cy="362" r="2.5" fill="#79D9ED" />
-                  <line x1="400" y1="250" x2="400" y2="362" stroke="#79D9ED" strokeDasharray="4 4" strokeOpacity="0.65" />
-                  <text x="414" y="366" fill="#79D9ED" fontSize="11">
-                    Sun &amp; Earth (Orion Spur · 26,670 ly)
-                  </text>
+                    {/* Scale bar */}
+                    <rect x="548" y="445" width="202" height="32" rx="4" fill="#030713" fillOpacity="0.82" stroke="white" strokeOpacity="0.2" />
+                    <line x1="560" y1="465" x2="736" y2="465" stroke="#F7FAFF" strokeWidth="2" />
+                    <line x1="560" y1="459" x2="560" y2="471" stroke="#F7FAFF" strokeWidth="2" />
+                    <line x1="736" y1="459" x2="736" y2="471" stroke="#F7FAFF" strokeWidth="2" />
+                    <text x="602" y="458" fill="#F7FAFF" fontSize="11" fontWeight="bold">
+                      ~35,000 light-years
+                    </text>
+                  </g>
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 800 500"
+                  className="w-full h-full"
+                  role="presentation"
+                >
+                  <g className="font-mono text-xs">
+                    {/* Trapezium Newborn OB Stars */}
+                    <circle cx="395" cy="225" r="22" fill="none" stroke="#79D9ED" strokeWidth="1.5" strokeDasharray="4 4" />
+                    <circle cx="395" cy="225" r="4" fill="#FFFFFF" />
+                    <rect x="425" y="213" width="260" height="24" rx="4" fill="#030713" fillOpacity="0.85" stroke="#79D9ED" strokeWidth="0.8" />
+                    <text x="433" y="229" fill="#79D9ED" fontSize="11" fontWeight="bold">
+                      Trapezium Cluster (θ¹ Ori · UV Source)
+                    </text>
 
-                  {/* Gaia Survey Reach Circle */}
-                  <circle
-                    cx="400"
-                    cy="362"
-                    r="68"
-                    fill="#79D9ED"
-                    fillOpacity="0.06"
-                    stroke="#79D9ED"
-                    strokeDasharray="3 3"
-                    strokeOpacity="0.5"
-                  />
-                  <text x="242" y="424" fill="#B8C4DE" fontSize="10">
-                    High-precision Gaia parallax sphere
-                  </text>
+                    {/* Orion Bar Photodissociation Ridge */}
+                    <path
+                      d="M 230 330 Q 400 300 560 345"
+                      fill="none"
+                      stroke="#FDE68A"
+                      strokeWidth="2.5"
+                      strokeDasharray="5 3"
+                    />
+                    <rect x="340" y="348" width="220" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#FDE68A" strokeWidth="0.8" />
+                    <text x="348" y="363" fill="#FDE68A" fontSize="11" fontWeight="bold">
+                      Orion Bar Photodissociation Front
+                    </text>
 
-                  {/* Scale bar */}
-                  <line x1="560" y1="455" x2="740" y2="455" stroke="#F7FAFF" strokeWidth="1.5" />
-                  <line x1="560" y1="450" x2="560" y2="460" stroke="#F7FAFF" strokeWidth="1.5" />
-                  <line x1="740" y1="450" x2="740" y2="460" stroke="#F7FAFF" strokeWidth="1.5" />
-                  <text x="612" y="446" fill="#F7FAFF" fontSize="11">
-                    ~35,000 light-years
-                  </text>
-                </g>
+                    {/* Protoplanetary Disks (Proplyds) */}
+                    <circle cx="330" cy="265" r="6" fill="none" stroke="#F472B6" strokeWidth="1.8" />
+                    <rect x="155" y="254" width="165" height="22" rx="4" fill="#030713" fillOpacity="0.85" stroke="#F472B6" strokeWidth="0.8" />
+                    <text x="163" y="269" fill="#F472B6" fontSize="10" fontWeight="bold">
+                      Protoplanetary Disks (Proplyds)
+                    </text>
+
+                    {/* Field Scale */}
+                    <rect x="575" y="445" width="185" height="30" rx="4" fill="#030713" fillOpacity="0.85" stroke="white" strokeOpacity="0.2" />
+                    <text x="585" y="464" fill="#F7FAFF" fontSize="11">
+                      Span: 24 ly · Dist: 1,344 ly
+                    </text>
+                  </g>
+                </svg>
               )}
-            </svg>
-          ) : (
-            <svg
-              viewBox="0 0 800 500"
-              className="w-full h-full"
-              role="img"
-              aria-label="Multi-wavelength telescope observation diagram of the Orion Nebula M42 showing the Trapezium stars and Orion Bar"
-            >
-              <defs>
-                <radialGradient id="m42Core" cx="48%" cy="46%" r="48%">
-                  <stop offset="0%" stopColor={wavelengthLayer === 'infrared' ? '#FDE047' : '#FDF2F8'} stopOpacity="0.95" />
-                  <stop offset="24%" stopColor={wavelengthLayer === 'infrared' ? '#FB923C' : '#F472B6'} stopOpacity="0.62" />
-                  <stop offset="56%" stopColor={wavelengthLayer === 'infrared' ? '#7C2D12' : '#6366F1'} stopOpacity="0.32" />
-                  <stop offset="100%" stopColor="#050915" stopOpacity="0" />
-                </radialGradient>
-                <radialGradient id="m43Wing" cx="62%" cy="32%" r="30%">
-                  <stop offset="0%" stopColor="#38BDF8" stopOpacity="0.45" />
-                  <stop offset="100%" stopColor="#050915" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <rect width="800" height="500" fill="#050915" />
-              <ellipse cx="390" cy="240" rx="320" ry="210" fill="url(#m42Core)" />
-              <ellipse cx="480" cy="175" rx="180" ry="120" fill="url(#m43Wing)" />
-
-              {/* Ionization Shock Front / Orion Bar */}
-              <path
-                d="M 210 340 Q 395 295 575 355"
-                fill="none"
-                stroke={wavelengthLayer === 'infrared' ? '#FDBA74' : '#F9A8D4'}
-                strokeWidth="12"
-                strokeOpacity="0.45"
-                strokeLinecap="round"
-              />
-
-              {/* Trapezium Newborn OB Stars */}
-              <circle cx="385" cy="228" r="4.5" fill="#FFFFFF" />
-              <circle cx="396" cy="222" r="3.5" fill="#E0F2FE" />
-              <circle cx="394" cy="236" r="3.5" fill="#E0F2FE" />
-              <circle cx="380" cy="237" r="3.0" fill="#BAE6FD" />
-
-              {wavelengthLayer === 'annotated' && (
-                <g className="font-mono">
-                  <circle cx="389" cy="230" r="22" fill="none" stroke="#79D9ED" strokeDasharray="3 3" />
-                  <text x="418" y="226" fill="#79D9ED" fontSize="11">
-                    Trapezium Cluster (θ¹ Orionis · UV Ionizing Source)
-                  </text>
-                  <text x="345" y="346" fill="#FDE68A" fontSize="11">
-                    Orion Bar Photodissociation Ridge
-                  </text>
-                  <circle cx="325" cy="268" r="5" fill="none" stroke="#D7B77B" />
-                  <text x="165" y="272" fill="#D7B77B" fontSize="10">
-                    Protoplanetary Disks (Proplyds)
-                  </text>
-                  <text x="565" y="458" fill="#F7FAFF" fontSize="11">
-                    Span: 24 light-years · Dist: 1,344 ly
-                  </text>
-                </g>
-              )}
-            </svg>
+            </div>
           )}
+
+          {/* Dataset Header Pill */}
+          <div className="absolute top-3 left-3 flex items-center gap-2 px-2.5 py-1 rounded-md bg-[#030713]/85 backdrop-blur-sm border border-white/15 text-[11px] font-mono text-[#79D9ED]">
+            <span className="w-2 h-2 rounded-full bg-[#79D9ED] animate-pulse" />
+            <span className="font-semibold text-white">{dataset.facility}</span>
+            <span className="text-white/40">|</span>
+            <span className="text-[#B8C4DE]">{dataset.band}</span>
+          </div>
         </div>
+
+        {/* Dataset Caption */}
+        <p className="mt-2 text-xs text-[#B8C4DE] text-center max-w-2xl">
+          <strong>{dataset.title}:</strong> {dataset.caption}
+        </p>
 
         {/* Wavelength & Annotation Controls */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4 w-full px-1">
           <div className="text-xs text-[#B8C4DE]">
-            <span>Why not 360° orbitable?</span>
+            <span className="text-white font-medium">Authentic Science:</span>
             <span className="mx-2 text-white/30">·</span>
             <span>
               {isMilkyWay
-                ? 'No camera can exit our 100,000-ly galaxy; structure is mapped from internal star & radio distances.'
-                : 'At 1,344 light-years away, Earth telescopes observe M42 from a single vantage line of sight.'}
+                ? 'External top-down view is a scientific reconstruction from Gaia & Spitzer data; internal optical view is real ISS photography.'
+                : 'Observed from Earth/Hubble line of sight at 1,344 light-years; presented as layered multi-spectral astronomical datasets.'}
             </span>
           </div>
           <div className="flex items-center gap-1 p-1 rounded-lg bg-[#0D1526] border border-white/15">
@@ -200,7 +234,7 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
                 {layer === 'annotated'
                   ? 'Annotated Science'
                   : layer === 'optical'
-                  ? 'Optical / H-alpha'
+                  ? 'Optical / Visible'
                   : 'Infrared Dust View'}
               </button>
             ))}

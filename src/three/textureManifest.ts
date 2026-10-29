@@ -334,6 +334,86 @@ export const TEXTURE_MANIFEST: Partial<Record<TextureStyle, PlanetTextureSet>> =
       },
     ],
   },
+  sun: {
+    textureStyle: 'sun',
+    dayMap2k: '/assets/planets/sun/sun_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-SDO-SUN-2K',
+        title: 'Solar Dynamics Observatory (SDO) Photosphere Map',
+        creator: 'NASA / GSFC / Solar System Scope',
+        license: 'NASA Open Data / CC BY 4.0',
+        creditLine:
+          'Sun photosphere map: NASA SDO multi-spectral imagery, processed by Solar System Scope. CC BY 4.0.',
+        sourceUrl: 'https://www.solarsystemscope.com/textures/',
+        resolution: '2048 × 1024',
+        sourceDate: 'Solar Dynamics Observatory Mission Data',
+        authenticity: 'DATA-BASED',
+        processingNotes:
+          'Equirectangular projection derived from NASA Solar Dynamics Observatory AIA and HMI instruments, mapping solar granules and magnetic active regions across the photosphere.',
+      },
+    ],
+  },
+  europa: {
+    textureStyle: 'europa',
+    dayMap2k: '/assets/planets/europa/europa_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-GALILEO-EUROPA-2K',
+        title: 'Galileo SSI & JunoCam Europa Global Cylindrical Map',
+        creator: 'NASA / JPL-Caltech / USGS / Steve Albers',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'Europa global map: NASA/JPL/USGS Galileo SSI & JunoCam data, cylindrical projection by Steve Albers.',
+        sourceUrl: 'https://stevealbers.net/albers/sos/sos.html',
+        resolution: '2048 × 1024',
+        sourceDate: 'Galileo SSI (1995–2003) & JunoCam (2022)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular mosaic blending Galileo Solid-State Imaging (SSI) camera multi-spectral strips with JunoCam flyby imagery, resolving icy chaos terrain, ridged plains, and reddish linea fractures.',
+      },
+    ],
+  },
+  titan: {
+    textureStyle: 'titan',
+    dayMap2k: '/assets/planets/titan/titan_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-CASSINI-TITAN-2K',
+        title: 'Cassini ISS & VIMS Titan Global Surface Mosaic',
+        creator: 'NASA / JPL-Caltech / SSI / Steve Albers',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'Titan surface map: NASA/JPL/SSI Cassini ISS narrow-angle camera near-infrared mosaic, processed by Steve Albers.',
+        sourceUrl: 'https://stevealbers.net/albers/sos/sos.html',
+        resolution: '2048 × 1024',
+        sourceDate: 'Cassini Orbital Tour (2004–2017)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular map compiled from Cassini Imaging Science Subsystem (ISS) narrow-angle camera data using the 938-nm near-infrared filter to penetrate Titan dense photochemical haze, mapping dark hydrocarbon dunes (Shangri-La) and bright icy highlands (Xanadu).',
+      },
+    ],
+  },
+  pluto: {
+    textureStyle: 'pluto',
+    dayMap2k: '/assets/planets/pluto/pluto_2k.jpg',
+    sources: [
+      {
+        assetId: 'NASA-NH-PLUTO-2K',
+        title: 'New Horizons LORRI & MVIC Pluto Global Color Mosaic',
+        creator: 'NASA / JHUAPL / SwRI / Steve Albers',
+        license: 'NASA Open Data / Public Domain',
+        creditLine:
+          'Pluto global map: NASA/JHUAPL/SwRI New Horizons LORRI panchromatic and MVIC color mosaic, cylindrical map by Steve Albers.',
+        sourceUrl: 'https://stevealbers.net/albers/sos/sos.html',
+        resolution: '2048 × 1024',
+        sourceDate: 'New Horizons Encounter (July 2015)',
+        authenticity: 'OBSERVED',
+        processingNotes:
+          'Equirectangular mosaic from New Horizons Long Range Reconnaissance Imager (LORRI) and Multispectral Visible Imaging Camera (MVIC). Shows Tombaugh Regio, the bright nitrogen-ice glacier Sputnik Planitia, and darker tholin-coated equatorial regions (Cthulhu Macula). Non-encounter hemisphere derived from lower-resolution approach imagery.',
+      },
+    ],
+  },
 };
 
 /**

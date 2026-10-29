@@ -114,22 +114,35 @@ function buildCompositeCelestialGroup(
   let bodyMat: THREE.MeshStandardMaterial;
 
   if (isStar) {
+    const starMap = hasRealTextures ? realTextures!.albedoMap : maps?.albedoMap;
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
-      map: maps?.albedoMap,
+      map: starMap,
       emissive: new THREE.Color('#f97316'),
-      emissiveMap: maps?.albedoMap,
-      emissiveIntensity: 1.35,
+      emissiveMap: starMap,
+      emissiveIntensity: hasRealTextures ? 1.15 : 1.35,
       roughness: 0.4,
       metalness: 0.0,
     });
   } else if (hasRealTextures) {
-    // Real NASA/Satellite imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune
+    // Real NASA/Satellite imagery path for Earth, Mercury, Venus, Moon, Mars, Jupiter, Saturn, Uranus, Neptune, Europa, Titan, Pluto
     const isRockyAirless = ['mercury', 'moon', 'mars'].includes(obj.slug);
     const isVenus = obj.slug === 'venus';
     const isGasGiant = ['jupiter', 'saturn', 'uranus', 'neptune'].includes(obj.slug);
-    const baseRoughness = isRockyAirless ? 0.88 : isVenus ? 0.52 : isGasGiant ? 0.68 : 0.62;
-    const baseMetalness = isRockyAirless ? 0.02 : isGasGiant ? 0.0 : 0.04;
+    const isIcyMoon = ['europa', 'pluto'].includes(obj.slug);
+    const isTitan = obj.slug === 'titan';
+    const baseRoughness = isRockyAirless
+      ? 0.88
+      : isVenus
+      ? 0.52
+      : isGasGiant
+      ? 0.68
+      : isIcyMoon
+      ? 0.38
+      : isTitan
+      ? 0.72
+      : 0.62;
+    const baseMetalness = isRockyAirless ? 0.02 : isGasGiant ? 0.0 : isIcyMoon ? 0.04 : 0.04;
 
     bodyMat = new THREE.MeshStandardMaterial({
       color: 0xffffff,
@@ -633,7 +646,16 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         // Build Sun at origin
         const sunObj = getObjectBySlug('sun')!;
-        const sunBuilt = buildCompositeCelestialGroup(sunObj, maxAnisotropy, lowQ, false, false, sunKeyLight);
+        const cachedSunTex = cachedPlanetTextures.get('sun:standard');
+        const sunBuilt = buildCompositeCelestialGroup(
+          sunObj,
+          maxAnisotropy,
+          lowQ,
+          false,
+          false,
+          sunKeyLight,
+          cachedSunTex
+        );
         sunBuilt.root.scale.setScalar(2.6);
         stageGroup.add(sunBuilt.root);
         activeDisposables.push(...sunBuilt.disposables);
@@ -733,6 +755,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
 
         // Preload real planet textures for solar-system mode if not yet loaded
         const stylesToPreload: TextureStyle[] = [
+          'sun',
           'mercury',
           'venus',
           'earth',
