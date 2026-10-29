@@ -7,10 +7,11 @@
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#030817" />
 
-  <!-- Primary Title & SEO -->
+  <!-- Primary Title & Canonical SEO -->
   <title>ManicksGalaxy — The Universe, Made Explorable</title>
   <meta name="description"
     content="An immersive browser-based 3D planetarium, night sky observatory, and source-verified astronomy encyclopedia for learners, educators, and curious minds." />
+  <link rel="canonical" href="https://manicksgalaxy.pages.dev/" />
 
   <!-- Favicons & App Icons -->
   <link rel="icon" type="image/svg+xml" href="/brand/icons/favicon.svg" />
@@ -25,23 +26,50 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="ManicksGalaxy" />
 
-  <!-- Open Graph / Facebook / LinkedIn / Discord / Telegram -->
+  <!-- Open Graph (Facebook, WhatsApp, LinkedIn, Discord, Telegram, Slack) -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="ManicksGalaxy" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content="https://manicksgalaxy.pages.dev/" />
   <meta property="og:title" content="ManicksGalaxy — The Universe, Made Explorable" />
   <meta property="og:description"
     content="Explore planets, moons, galaxies, and constellations in an immersive 3D interactive planetarium and space encyclopedia." />
-  <meta property="og:image" content="/brand/social/og-default-1200x630.png" />
+  <meta property="og:image" content="https://manicksgalaxy.pages.dev/brand/social/og-default-1200x630.jpg" />
+  <meta property="og:image:secure_url" content="https://manicksgalaxy.pages.dev/brand/social/og-default-1200x630.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="ManicksGalaxy interactive 3D planetarium and space encyclopedia" />
+  <meta property="og:image:alt" content="ManicksGalaxy — Interactive 3D Planetarium & Space Encyclopedia" />
 
   <!-- Twitter / X Card -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:site" content="@ManicksGalaxy" />
+  <meta name="twitter:creator" content="@ManicksGalaxy" />
   <meta name="twitter:title" content="ManicksGalaxy — The Universe, Made Explorable" />
   <meta name="twitter:description"
-    content="Explore planets, moons, galaxies, and constellations in an immersive 3D interactive planetarium." />
-  <meta name="twitter:image" content="/brand/social/x-card-1200x675.png" />
+    content="Explore planets, moons, galaxies, and constellations in an immersive 3D interactive planetarium and space encyclopedia." />
+  <meta name="twitter:image" content="https://manicksgalaxy.pages.dev/brand/social/x-card-1200x675.jpg" />
+
+  <!-- Structured Data (JSON-LD) for Search Engine Rich Snippets -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "ManicksGalaxy",
+    "alternateName": "ManicksGalaxy — The Universe, Made Explorable",
+    "url": "https://manicksgalaxy.pages.dev/",
+    "description": "An immersive browser-based 3D planetarium, night sky observatory, and source-verified astronomy encyclopedia for learners, educators, and curious minds.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "inLanguage": "en-US",
+    "image": "https://manicksgalaxy.pages.dev/brand/social/og-default-1200x630.jpg",
+    "author": {
+      "@type": "Organization",
+      "name": "ManicksGalaxy",
+      "url": "https://manicksgalaxy.pages.dev/"
+    }
+  }
+  </script>
 
   <!-- Typography Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,7 +80,18 @@
 </head>
 
 <body class="bg-[#030713] text-[#F7FAFF] antialiased selection:bg-[#79D9ED]/25 selection:text-[#F7FAFF]">
-  <div id="root"></div>
+  <div id="root">
+    <!-- Static H1 heading for search engine crawlers prior to client hydration -->
+    <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;">
+      ManicksGalaxy — Interactive 3D Planetarium &amp; Space Encyclopedia
+    </h1>
+  </div>
+  <noscript>
+    <div style="padding:2rem;text-align:center;color:#fff;background:#030713;font-family:sans-serif;">
+      <h1>ManicksGalaxy — Interactive 3D Planetarium &amp; Space Encyclopedia</h1>
+      <p>JavaScript is required to run the interactive 3D solar system and planetarium.</p>
+    </div>
+  </noscript>
   <script>
     window.__vite_plugin_react_preamble_installed__ = true;
   </script>
