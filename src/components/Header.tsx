@@ -41,7 +41,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   if (classroomPresentation) {
     return (
-      <header className="h-12 border-b border-white/10 bg-[#030713] px-6 flex items-center justify-between gap-8 z-40">
+      <header className="h-12 border-b border-white/10 bg-[#030713] px-6 flex items-center justify-between gap-8 z-40 print:hidden">
         <a
           href="#home"
           onClick={(e) => {
@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
   }
 
   return (
-    <header className="sticky top-0 z-40 h-14 md:h-16 border-b border-white/10 bg-[#030713]/95">
+    <header className="sticky top-0 z-40 h-14 md:h-16 border-b border-white/10 bg-[#030713]/95 print:hidden">
       <div className="max-w-[1280px] mx-auto h-full px-4 sm:px-6 flex items-center justify-between gap-8">
         {/* Zone 1: Single text element wordmark */}
         <a

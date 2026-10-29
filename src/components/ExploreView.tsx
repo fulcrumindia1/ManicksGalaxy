@@ -33,7 +33,7 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
   const [query, setQuery] = useState<string>('');
   const [orbitsPaused, setOrbitsPaused] = useState<boolean>(false);
   const [scaleMode, setScaleMode] = useState<'educational' | 'true-ratios' | 'distance-scale'>('educational');
-  const [timeSpeed, setTimeSpeed] = useState<number>(15);
+  const [timeSpeed, setTimeSpeed] = useState<number>(30);
   const [showLabels, setShowLabels] = useState<boolean>(true);
   const [highlightedSlug, setHighlightedSlug] = useState<string>('saturn');
 
@@ -83,8 +83,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 type="button"
                 onClick={() => setViewTab('solar-map')}
                 className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${viewTab === 'solar-map'
-                    ? 'bg-[#79D9ED] text-[#030713]'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#79D9ED] text-[#030713]'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 3D Solar System Map
@@ -93,8 +93,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 type="button"
                 onClick={() => setViewTab('directory')}
                 className={`px-3.5 py-2 text-xs font-semibold rounded-md transition-colors whitespace-nowrap shrink-0 ${viewTab === 'directory'
-                    ? 'bg-[#79D9ED] text-[#030713]'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#79D9ED] text-[#030713]'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 Encyclopedia Directory ({CELESTIAL_CATALOG.length})
@@ -120,8 +120,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
             ref={solarMapContainerRef}
             data-testid="solar-map-stage"
             className={`transition-all overflow-hidden relative ${isFullscreen
-                ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen bg-[#030713]'
-                : 'rounded-2xl border border-white/15 bg-[#060B18] h-[520px] sm:h-[600px] shadow-2xl'
+              ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen bg-[#030713]'
+              : 'rounded-2xl border border-white/15 bg-[#060B18] h-[520px] sm:h-[600px] shadow-2xl'
               }`}
           >
             <PlanetSceneCanvas
@@ -207,17 +207,41 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
 
                   <div className="flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#030713] border border-white/10 text-xs">
                     <label htmlFor="orbit-speed-slider" className="text-[#B8C4DE] whitespace-nowrap">
-                      Rate: <span className="font-mono text-[#F7FAFF]">{timeSpeed} d/s</span>
+                      Speed: <span className="font-mono text-[#F7FAFF]">{timeSpeed} d/s</span>
                     </label>
                     <input
                       id="orbit-speed-slider"
                       type="range"
                       min={1}
-                      max={90}
+                      max={365}
                       value={timeSpeed}
                       onChange={(e) => setTimeSpeed(Number(e.target.value))}
-                      className="w-20 accent-[#79D9ED]"
+                      className="w-24 accent-[#79D9ED]"
+                      title="Adjust orbital speed (1 to 365 days/second)"
                     />
+                    <div className="flex items-center gap-1 border-l border-white/10 pl-1.5 ml-0.5">
+                      <button
+                        type="button"
+                        onClick={() => setTimeSpeed(15)}
+                        className={`px-1.5 py-0.5 text-[10px] rounded ${timeSpeed === 15 ? 'bg-[#79D9ED] text-[#030713] font-bold' : 'text-[#B8C4DE] hover:text-white'}`}
+                      >
+                        1×
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTimeSpeed(60)}
+                        className={`px-1.5 py-0.5 text-[10px] rounded ${timeSpeed === 60 ? 'bg-[#79D9ED] text-[#030713] font-bold' : 'text-[#B8C4DE] hover:text-white'}`}
+                      >
+                        4×
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setTimeSpeed(365)}
+                        className={`px-1.5 py-0.5 text-[10px] rounded ${timeSpeed === 365 ? 'bg-[#79D9ED] text-[#030713] font-bold' : 'text-[#B8C4DE] hover:text-white'}`}
+                      >
+                        1yr/s
+                      </button>
+                    </div>
                   </div>
 
                   <button
@@ -321,8 +345,8 @@ export const ExploreView: React.FC<ExploreViewProps> = ({
                 type="button"
                 onClick={() => setCategoryFilter(tab.id)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${categoryFilter === tab.id
-                    ? 'bg-[#79D9ED] text-[#030713] font-semibold'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#79D9ED] text-[#030713] font-semibold'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 {tab.label}

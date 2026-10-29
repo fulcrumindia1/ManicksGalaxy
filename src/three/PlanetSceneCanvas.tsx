@@ -362,7 +362,7 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         sunBuilt.root.scale.setScalar(p.scaleMode === 'distance-scale' ? 1.8 : 2.6);
         stageGroup.add(sunBuilt.root);
         activeDisposables.push(...sunBuilt.disposables);
-        activeSpinMeshes.push({ mesh: sunBuilt.spinMesh, rate: 0.12 });
+        activeSpinMeshes.push({ mesh: sunBuilt.spinMesh, rate: 0.25 });
         clickables.push(sunBuilt.spinMesh);
 
         // Asteroid Belt InstancedMesh (>150 varied rocky asteroids between Mars & Jupiter)
@@ -450,10 +450,13 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           holder.position.set(Math.cos(angle) * dist, 0, Math.sin(angle) * dist);
 
           activeDisposables.push(...built.disposables);
-          activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.35 });
+          activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.55 });
           if (built.nightMesh) {
-            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.35 });
+            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.55 });
             activeNightMaterials.push(built.nightMesh.material as THREE.Material);
+          }
+          if (built.cloudMesh) {
+            activeSpinMeshes.push({ mesh: built.cloudMesh, rate: 0.65 });
           }
           clickables.push(built.spinMesh);
           solarPlanets.push({ obj: planet, holder, meshGroup: built.root, orbitDist: dist });
@@ -507,13 +510,13 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
           );
           stageGroup.add(built.root);
           activeDisposables.push(...built.disposables);
-          activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.16 });
+          activeSpinMeshes.push({ mesh: built.spinMesh, rate: 0.35 });
           if (built.nightMesh) {
-            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.16 });
+            activeSpinMeshes.push({ mesh: built.nightMesh, rate: 0.35 });
             activeNightMaterials.push(built.nightMesh.material as THREE.Material);
           }
           if (built.cloudMesh) {
-            activeSpinMeshes.push({ mesh: built.cloudMesh, rate: 0.21 });
+            activeSpinMeshes.push({ mesh: built.cloudMesh, rate: 0.42 });
           }
           activeMoonPivots.push(...built.moonpivots);
           built.root.traverse((child) => {
@@ -602,34 +605,12 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
     renderer.domElement.addEventListener('pointerdown', onPointerDown);
     renderer.domElement.addEventListener('pointerup', onPointerUp);
 
-    // Software-WebGL friendly frame pacing + on-demand coalescing
+    // Smooth hardware-accelerated frame animation loop
     let frameId = 0;
-    let timerId = 0;
     let unmounted = false;
     let renderBusy = false;
     let renderDirty = false;
     let lastTimeMs = performance.now();
-
-    function afterDraw(cb: () => void) {
-      const gl = renderer.getContext() as WebGL2RenderingContext;
-      if (gl && typeof gl.fenceSync === 'function') {
-        const sync = gl.fenceSync(gl.SYNC_GPU_COMMANDS_COMPLETE, 0);
-        gl.flush();
-        const poll = () => {
-          if (unmounted) return;
-          const state = sync && gl.getSyncParameter(sync, gl.SYNC_STATUS);
-          if (state === gl.UNSIGNALED) {
-            timerId = window.setTimeout(poll, 5);
-          } else {
-            if (sync) gl.deleteSync(sync);
-            timerId = window.setTimeout(cb, 85);
-          }
-        };
-        timerId = window.setTimeout(poll, 5);
-      } else {
-        timerId = window.setTimeout(cb, 85);
-      }
-    }
 
     function advanceSimulation(dt: number): boolean {
       const p = propsRef.current;
@@ -708,19 +689,9 @@ export const PlanetSceneCanvas: React.FC<PlanetSceneCanvasProps> = ({
         lastTimeMs = nowMs;
         const keepGoing = advanceSimulation(dt);
         renderer.render(scene, camera);
-
-        const done = () => {
-          renderBusy = false;
-          if (unmounted) return;
-          if (renderDirty || keepGoing) {
-            requestRender();
-          }
-        };
-
-        if (isSoftwareGl) {
-          afterDraw(done);
-        } else {
-          done();
+        renderBusy = false;
+        if (renderDirty || keepGoing) {
+          requestRender();
         }
       });
     }

@@ -412,8 +412,8 @@ export const DeepSkyObservationPlate: React.FC<DeepSkyObservationPlateProps> = (
                 type="button"
                 onClick={() => setWavelengthLayer(layer)}
                 className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 ${wavelengthLayer === layer
-                    ? 'bg-[#79D9ED] text-[#030713]'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#79D9ED] text-[#030713]'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 {layer === 'annotated'
