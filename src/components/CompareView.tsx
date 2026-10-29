@@ -104,8 +104,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 aria-checked={scaleMode === 'true-scale'}
                 onClick={() => setScaleMode('true-scale')}
                 className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${scaleMode === 'true-scale'
-                    ? 'bg-[#79D9ED] text-[#030713] shadow-md'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#79D9ED] text-[#030713] shadow-md'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 True Scale Ratio (1:1)
@@ -116,8 +116,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                 aria-checked={scaleMode === 'presentation'}
                 onClick={() => setScaleMode('presentation')}
                 className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all whitespace-nowrap ${scaleMode === 'presentation'
-                    ? 'bg-[#D7B77B] text-[#030713] shadow-md'
-                    : 'text-[#B8C4DE] hover:text-white'
+                  ? 'bg-[#D7B77B] text-[#030713] shadow-md'
+                  : 'text-[#B8C4DE] hover:text-white'
                   }`}
               >
                 Presentation Scale (Logarithmic)
@@ -185,8 +185,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
           ref={stageContainerRef}
           data-testid="compare-stage-wrapper"
           className={`relative rounded-2xl border border-white/15 bg-[#030713] overflow-hidden flex flex-col justify-between transition-all ${isFullscreen
-              ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen'
-              : 'min-h-[480px] h-[540px] sm:h-[600px] shadow-2xl'
+            ? 'fixed inset-0 z-50 rounded-none border-0 w-screen h-screen'
+            : 'min-h-[480px] h-[540px] sm:h-[600px] shadow-2xl'
             }`}
         >
           {/* 3D Canvas Background */}
@@ -412,8 +412,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                       : 'Physical: Worlds spin according to physical sidereal rotation speeds'
                   }
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${syncSpin
-                      ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
-                      : 'bg-[#0D1526] text-[#B8C4DE] hover:text-white'
+                    ? 'bg-[#79D9ED]/20 text-[#79D9ED] border border-[#79D9ED]/40'
+                    : 'bg-[#0D1526] text-[#B8C4DE] hover:text-white'
                     }`}
                 >
                   Sync Spin: {syncSpin ? 'On' : 'Physical'}
@@ -427,8 +427,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                     type="button"
                     onClick={() => handleApplyPreset('front')}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'front'
-                        ? 'bg-white/20 text-white font-semibold'
-                        : 'text-[#B8C4DE] hover:text-white'
+                      ? 'bg-white/20 text-white font-semibold'
+                      : 'text-[#B8C4DE] hover:text-white'
                       }`}
                   >
                     Front
@@ -437,8 +437,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                     type="button"
                     onClick={() => handleApplyPreset('above')}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'above'
-                        ? 'bg-white/20 text-white font-semibold'
-                        : 'text-[#B8C4DE] hover:text-white'
+                      ? 'bg-white/20 text-white font-semibold'
+                      : 'text-[#B8C4DE] hover:text-white'
                       }`}
                   >
                     Above
@@ -447,8 +447,8 @@ export const CompareView: React.FC<CompareViewProps> = ({
                     type="button"
                     onClick={() => handleApplyPreset('tilted')}
                     className={`px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors ${cameraPreset === 'tilted'
-                        ? 'bg-white/20 text-white font-semibold'
-                        : 'text-[#B8C4DE] hover:text-white'
+                      ? 'bg-white/20 text-white font-semibold'
+                      : 'text-[#B8C4DE] hover:text-white'
                       }`}
                   >
                     Tilted
